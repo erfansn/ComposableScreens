@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Composable Screens"
-include ':app'
+include(":app")
