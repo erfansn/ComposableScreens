@@ -1,11 +1,15 @@
-ext {
-    this["compose_compiler_version"] = "1.3.0"
-    this["compose_version"] = "1.2.1"
-}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+@Suppress(
+    "DSL_SCOPE_VIOLATION",
+    "MISSING_DEPENDENCY_CLASS",
+    "UNRESOLVED_REFERENCE_WRONG_RECEIVER",
+    "FUNCTION_CALL_EXPECTED"
+)
 plugins {
-    id("com.android.application") version "7.2.2" apply false
-    id("com.android.library") version "7.2.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.7.10" apply false
+    val agpVersion = libs.versions.agp
+    id("com.android.application") version agpVersion apply false
+    id("com.android.library") version agpVersion apply false
+    kotlin("android") version "1.7.10" apply false
 }
 
 tasks.register<Delete>("clean") {
