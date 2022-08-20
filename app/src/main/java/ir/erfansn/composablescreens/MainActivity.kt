@@ -15,6 +15,7 @@ import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ComposableScreensTheme {
                 // A surface container using the 'background' color from the theme
