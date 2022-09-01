@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     kotlin("android")
 }
 
@@ -7,16 +7,11 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "ir.erfansn.composablescreens"
         minSdk = 21
         targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -46,10 +41,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":travel"))
-
     implementation(libs.androidx.core)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.constraintlayout)
 
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)

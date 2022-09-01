@@ -6,7 +6,7 @@
     "FUNCTION_CALL_EXPECTED"
 )
 plugins {
-    val agpVersion = libs.versions.agp
+    val agpVersion = libs.versions.agp.get()
     id("com.android.application") version agpVersion apply false
     id("com.android.library") version agpVersion apply false
     kotlin("android") version "1.7.10" apply false

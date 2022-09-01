@@ -20,20 +20,22 @@ dependencyResolutionManagement {
 
             library("androidx-compose-ui", "androidx.compose.ui", "ui").versionRef("compose")
             library("androidx-compose-material", "androidx.compose.material", "material").versionRef("compose")
+            library("androidx-compose-material-icons", "androidx.compose.material", "material-icons-extended").versionRef("compose")
             library("androidx-compose-ui-tooling-preview", "androidx.compose.ui", "ui-tooling-preview").versionRef("compose")
-            library("androidx-core", "androidx.core:core-ktx:1.8.0")
-            library("androidx-lifecycle", "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-            library("androidx-activity-compose", "androidx.activity:activity-compose:1.5.1")
 
-            library("junit", "junit:junit:4.13.2")
-
-            library("androidx-test-ext", "androidx.test.ext:junit:1.1.3")
-            library("androidx-test-espresso", "androidx.test.espresso:espresso-core:3.4.0")
-            library("androidx-compose-ui-test", "androidx.compose.ui", "ui-test-junit4").versionRef("compose")
             library("androidx-compose-ui-tooling", "androidx.compose.ui", "ui-tooling").versionRef("compose")
-            library("androidx-compose-ui-test-manifest", "androidx.compose.ui", "ui-test-manifest").versionRef("compose")
+            library("androidx-compose.ui-test-manifest", "androidx.compose.ui", "ui-test-manifest").versionRef("compose")
+            // https://issuetracker.google.com/issues/227767363
+            library("androidx-customview", "androidx.customview:customview-poolingcontainer:1.0.0")
+
+            bundle("compose", listOf("androidx-compose-ui", "androidx-compose-material", "androidx-compose-material-icons", "androidx-compose-ui-tooling-preview"))
+            bundle("compose-debug", listOf("androidx-compose-ui-tooling", "androidx-compose.ui-test-manifest", "androidx-customview"))
+            library("androidx-activity-compose", "androidx.activity:activity-compose:1.5.1")
+            library("androidx-core", "androidx.core:core-ktx:1.8.0")
+            library("androidx-constraintlayout", "androidx.constraintlayout:constraintlayout-compose:1.0.1")
         }
     }
 }
 rootProject.name = "Composable Screens"
 include(":app")
+include(":travel")
