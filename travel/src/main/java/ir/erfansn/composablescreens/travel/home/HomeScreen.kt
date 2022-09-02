@@ -29,11 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.geometry.boundingRect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -47,6 +49,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.MotionLayout
 import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.theme.TravelOneTheme
 import kotlin.random.Random
@@ -92,7 +98,7 @@ fun HomeScreen() {
                                         top = 20.dp,
                                         bottom = 8.dp
                                     )
-                                    .padding(horizontal = 12.dp),
+                                    .padding(horizontal = 24.dp),
                                 selectedCategory = selectedCategory,
                                 onTabSelect = { selectedCategory = it }
                             )
@@ -238,7 +244,10 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(horizontal = 24.dp)
-            .padding(bottom = 20.dp)
+            .padding(
+                bottom = 20.dp,
+                top = 4.dp
+            )
             .fillMaxWidth()
             .height(64.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -418,8 +427,9 @@ fun PlaceCategoryTab(
 }
 
 @Composable
-fun TravelPlacesRow() {
-    val trips = remember {
+fun TravelPlacesRow(
+    modifier: Modifier = Modifier,
+    trips: List<Trip> = remember {
         List(10) {
             if (it % 2 == 0) {
                 Trip(
@@ -446,12 +456,13 @@ fun TravelPlacesRow() {
             }
         }
     }
+) {
     LazyRow(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(start = 8.dp, end = 16.dp)
     ) {
-        items(items = trips, key = { it.id }) { trip ->
+        items(trips) { trip ->
             TravelPlaceItem(
                 modifier = Modifier
                     .fillParentMaxHeight()
@@ -470,11 +481,11 @@ fun TravelPlaceItem(
 ) {
     Box(modifier = modifier
         .shadow(
-            color = Color.LightGray.copy(alpha = 0.4f),
+            color = Color.LightGray.copy(alpha = 0.3f),
             shape = RoundedCornerShape(32.dp),
-            radius = 18.dp,
-            dx = 10.dp,
-            dy = 10.dp
+            radius = 16.dp,
+            dx = 8.dp,
+            dy = 8.dp
         )
     ) {
         Icon(
@@ -561,13 +572,13 @@ fun TravelPlaceItem(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(40))
-                                .background(Color.LightGray.copy(alpha = 0.4f))
-                                .wrapContentSize()
-                                .padding(8.dp),
+                                .background(Color.LightGray.copy(alpha = 0.4f)),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                modifier = Modifier.alpha(ContentAlpha.disabled),
+                                modifier = Modifier
+                                    .alpha(ContentAlpha.disabled)
+                                    .padding(6.dp),
                                 text = pluralStringResource(R.plurals.n_day, trip.days, trip.days),
                                 style = MaterialTheme.typography.overline
                             )
@@ -596,8 +607,9 @@ data class Group(
 )
 
 @Composable
-fun TravelGroupsRow() {
-    val groups = remember {
+fun TravelGroupsRow(
+    modifier: Modifier = Modifier,
+    groups: List<Group> = remember {
         List(10) {
             Group(
                 id = it,
@@ -606,12 +618,13 @@ fun TravelGroupsRow() {
             )
         }
     }
+) {
     LazyRow(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(horizontal = 24.dp)
     ) {
-        items(items = groups, key = { it.id }) { group ->
+        items(items = groups) { group ->
             TravelOneGroupItem(
                 modifier = Modifier
                     .fillParentMaxHeight()
@@ -630,11 +643,11 @@ fun TravelOneGroupItem(
     Box(
         modifier = modifier
             .shadow(
-                color = Color.LightGray.copy(alpha = 0.4f),
+                color = Color.LightGray.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(32.dp),
-                radius = 18.dp,
-                dx = 10.dp,
-                dy = 10.dp
+                radius = 16.dp,
+                dx = 8.dp,
+                dy = 8.dp
             ),
     ) {
         Row(
