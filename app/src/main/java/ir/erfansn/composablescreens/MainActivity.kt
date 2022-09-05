@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import ir.erfansn.composablescreens.travel.home.HomeScreen
+import ir.erfansn.composablescreens.travel.ui.theme.TravelOneTheme
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,9 +22,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposableScreensTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                TravelOneTheme {
+                    HomeScreen()
                 }
             }
         }

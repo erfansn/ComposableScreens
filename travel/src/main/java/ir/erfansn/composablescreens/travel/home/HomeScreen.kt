@@ -2,22 +2,29 @@
 
 package ir.erfansn.composablescreens.travel.home
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
+import android.view.View
+import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -29,15 +36,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.boundingRect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -50,24 +58,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
-import androidx.constraintlayout.compose.MotionLayout
 import ir.erfansn.composablescreens.travel.R
+import ir.erfansn.composablescreens.travel.ui.OrientationLocker
+import ir.erfansn.composablescreens.travel.ui.OrientationMode
+import ir.erfansn.composablescreens.travel.ui.theme.AbrilFatfaceFontFamily
 import ir.erfansn.composablescreens.travel.ui.theme.TravelOneTheme
 import kotlin.random.Random
 import android.graphics.Color as PlatformColor
 
+@SuppressLint("SourceLockedOrientationActivity")
 @Composable
 fun HomeScreen() {
+    OrientationLocker(orientationMode = OrientationMode.Portrait)
+
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         Scaffold(
             modifier = Modifier
-                .background(Color(0xFFF5F5F5))
+                .background(MaterialTheme.colors.background)
                 .fillMaxSize()
                 .systemGesturesPadding()
                 .systemBarsPadding(),
-            backgroundColor = Color(0xFFF5F5F5),
             topBar = {
                 TravelOneTopBar()
             },
@@ -75,18 +87,46 @@ fun HomeScreen() {
                 TravelOneBottomNavigationBar()
             }
         ) { contentPadding ->
-            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-                val availableHeightSpace = maxHeight
-                Column(modifier = Modifier
+            BoxWithConstraints(
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding)
+            ) {
+                val minHeightAvailable = maxHeight > 400.dp
+                if (!minHeightAvailable) {
+                    Box(
+                        modifier = Modifier
+                            .zIndex(1.0f)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        MaterialTheme.colors.background,
+                                        MaterialTheme.colors.background.copy(alpha = 0.98f),
+                                        MaterialTheme.colors.background.copy(alpha = 0.94f),
+                                        MaterialTheme.colors.background.copy(alpha = 0.86f),
+                                        MaterialTheme.colors.background.copy(alpha = 0.70f),
+                                        MaterialTheme.colors.background.copy(alpha = 0.38f),
+                                        Color.Transparent
+                                    ),
+                                    start = Offset(0.0f, Float.POSITIVE_INFINITY),
+                                    end = Offset.Zero,
+                                    tileMode = TileMode.Clamp
+                                )
+                            )
+                            .height(32.dp)
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                    )
+                }
+                Column(modifier = Modifier
+                    .zIndex(0.0f)
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                 ) {
                     HomeSection(
                         title = "Travel Places",
-                        modifier = Modifier.weight(0.625f).takeIf {
-                            availableHeightSpace > 400.dp
-                        } ?: Modifier.height(264.dp)
+                        modifier = Modifier.weight(0.65f).takeIf { minHeightAvailable }
+                            ?: Modifier.height(264.dp)
                     ) {
                         Row(modifier = Modifier.fillMaxHeight()) {
                             var selectedCategory by remember { mutableStateOf(PlaceCategory.Popular) }
@@ -97,8 +137,7 @@ fun HomeScreen() {
                                     .padding(
                                         top = 20.dp,
                                         bottom = 8.dp
-                                    )
-                                    .padding(horizontal = 24.dp),
+                                    ),
                                 selectedCategory = selectedCategory,
                                 onTabSelect = { selectedCategory = it }
                             )
@@ -108,9 +147,8 @@ fun HomeScreen() {
                     }
                     Spacer(modifier = Modifier.height(24.dp))
                     HomeSection(
-                        modifier = Modifier.weight(0.375f).takeIf {
-                            availableHeightSpace > 400.dp
-                        } ?: Modifier.height(150.dp),
+                        modifier = Modifier.weight(0.35f).takeIf { minHeightAvailable }
+                            ?: Modifier.height(150.dp),
                         title = "Travel Groups",
                     ) {
                         TravelGroupsRow()
@@ -156,7 +194,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
             TravelOneButton(
                 modifier = Modifier
                     .shadow(
-                        color = Color(0xCCCCCCCC),
+                        color = Color(0xFFCCCCCC).copy(alpha = 0.7f),
                         shape = RoundedCornerShape(18.dp),
                         radius = 24.dp,
                         dx = 10.dp,
@@ -167,6 +205,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
                 backgroundColor = Color.White
             ) {
                 Icon(
+                    tint = Color.Black,
                     painter = painterResource(id = R.drawable.ic_category),
                     contentDescription = "Menu"
                 )
@@ -206,11 +245,11 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
             TravelOneButton(
                 modifier = Modifier
                     .shadow(
-                        color = Color(0xFFFFE03F).copy(alpha = 0.8f),
+                        color = MaterialTheme.colors.secondary.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(18.dp),
                         radius = 24.dp,
-                        dx = 10.dp,
-                        dy = 10.dp
+                        dx = 8.dp,
+                        dy = 8.dp
                     )
                     .size(56.dp),
                 onClick = { },
@@ -220,16 +259,15 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
                         .fillMaxSize()
                         .background(
                             brush = Brush.linearGradient(
-                                colors = listOf(
-                                    Color(0xFFFFE03F),
-                                    Color(0xFFFFAB00),
-                                )
-                            )
+                                0.0f to MaterialTheme.colors.primary,
+                                1.0f to MaterialTheme.colors.primaryVariant
+                                    .copy(alpha = 0.6f)
+                                    .compositeOver(MaterialTheme.colors.primary),
+                            ),
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        tint = Color.White,
                         painter = painterResource(id = R.drawable.ic_filter),
                         contentDescription = "Settings"
                     )
@@ -244,16 +282,14 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(horizontal = 24.dp)
-            .padding(
-                bottom = 20.dp,
-                top = 4.dp
-            )
+            .padding(bottom = 24.dp)
             .fillMaxWidth()
             .height(64.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         TravelOneButton(
             modifier = Modifier.aspectRatio(1.0f),
+            backgroundColor = Color.Transparent,
             indication = null,
             onClick = { /*TODO*/ }
         ) {
@@ -265,12 +301,11 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
         }
         TravelOneButton(
             modifier = Modifier.aspectRatio(1.0f),
-            backgroundColor = Color.Black,
+            backgroundColor = MaterialTheme.colors.secondaryVariant,
             indication = rememberRipple(color = Color.White),
             onClick = { /*TODO*/ }
         ) {
             Icon(
-                tint = Color.White,
                 imageVector = Icons.Rounded.Add,
                 contentDescription = "Add"
             )
@@ -278,6 +313,7 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
         TravelOneButton(
             modifier = Modifier.aspectRatio(1.0f),
             indication = null,
+            backgroundColor = Color.Transparent,
             onClick = { /*TODO*/ }
         ) {
             Icon(
@@ -293,13 +329,13 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
 fun TravelOneButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    backgroundColor: Color = Color.Transparent,
+    backgroundColor: Color = MaterialTheme.colors.primary,
     indication: Indication? = rememberRipple(),
     content: @Composable () -> Unit,
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(22.4.dp))
+            .clip(MaterialTheme.shapes.small)
             .background(color = backgroundColor)
             .defaultMinSize(
                 minWidth = 48.dp,
@@ -314,7 +350,9 @@ fun TravelOneButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        content()
+        CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
+            content()
+        }
     }
 }
 
@@ -342,9 +380,7 @@ fun HomeSection(
                 style = MaterialTheme.typography.caption
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         content()
     }
 }
@@ -357,31 +393,56 @@ fun PlaceCategoryTabsRow(
     selectedCategory: PlaceCategory,
     onTabSelect: (PlaceCategory) -> Unit,
 ) {
-    Row(
-        modifier = modifier.selectableGroup(),
-        horizontalArrangement = Arrangement.spacedBy(Arrangement.SpaceBetween.spacing)
-    ) {
-        PlaceCategoryTab(
-            modifier = Modifier
-                .weight(1.0f),
-            title = "All",
-            selected = selectedCategory == PlaceCategory.All,
-            onClick = { onTabSelect(PlaceCategory.All) }
-        )
-        PlaceCategoryTab(
-            modifier = Modifier
-                .weight(1.0f),
-            title = "Latest",
-            selected = selectedCategory == PlaceCategory.Latest,
-            onClick = { onTabSelect(PlaceCategory.Latest) }
-        )
-        PlaceCategoryTab(
-            modifier = Modifier
-                .weight(1.0f),
-            title = "Popular",
-            selected = selectedCategory == PlaceCategory.Popular,
-            onClick = { onTabSelect(PlaceCategory.Popular) }
-        )
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.primaryVariant) {
+        ConstraintLayout(modifier = modifier.animateContentSize()) {
+            val (cursor, all, latest, popular) = createRefs()
+            createHorizontalChain(all, latest, popular, chainStyle = ChainStyle.Spread)
+
+            var cursorPlacement by remember { mutableStateOf(popular) }
+            Divider(
+                modifier = Modifier
+                    .width(24.dp)
+                    .padding()
+                    .clip(CircleShape)
+                    .constrainAs(cursor) {
+                        linkTo(
+                            start = cursorPlacement.start,
+                            end = cursorPlacement.end,
+                        )
+                    },
+                color = LocalContentColor.current,
+                thickness = 4.dp
+            )
+
+            val constraintBlock: ConstrainScope.() -> Unit = { top.linkTo(cursor.bottom) }
+            PlaceCategoryTab(
+                modifier = Modifier.constrainAs(all, constraintBlock),
+                title = "All",
+                selected = selectedCategory == PlaceCategory.All,
+                onClick = {
+                    onTabSelect(PlaceCategory.All)
+                    cursorPlacement = all
+                }
+            )
+            PlaceCategoryTab(
+                modifier = Modifier.constrainAs(latest, constraintBlock),
+                title = "Latest",
+                selected = selectedCategory == PlaceCategory.Latest,
+                onClick = {
+                    onTabSelect(PlaceCategory.Latest)
+                    cursorPlacement = latest
+                }
+            )
+            PlaceCategoryTab(
+                modifier = Modifier.constrainAs(popular, constraintBlock),
+                title = "Popular",
+                selected = selectedCategory == PlaceCategory.Popular,
+                onClick = {
+                    onTabSelect(PlaceCategory.Popular)
+                    cursorPlacement = popular
+                }
+            )
+        }
     }
 }
 
@@ -399,30 +460,17 @@ fun PlaceCategoryTab(
                 onClick = onClick,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
-            ),
-    ) {
-        val contentColor = if (selected) Color(0xFFFF6F00) else Color.Black
-        CompositionLocalProvider(
-            LocalContentColor provides contentColor,
-            LocalContentAlpha provides ContentAlpha.high
-        ) {
-            if (selected) {
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f)
-                        .align(Alignment.CenterHorizontally)
-                        .clip(CircleShape)
-                        .background(LocalContentColor.current),
-                    thickness = 4.dp
-                )
-            }
-            Spacer(modifier = Modifier.height(if (selected) 8.dp else 12.dp))
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = title,
-                style = MaterialTheme.typography.button
             )
-        }
+            .padding(top = 8.dp),
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = title,
+            style = MaterialTheme.typography.button.copy(
+                fontFamily = AbrilFatfaceFontFamily
+            ),
+            color = if (selected) LocalContentColor.current else MaterialTheme.colors.onBackground
+        )
     }
 }
 
@@ -455,12 +503,12 @@ fun TravelPlacesRow(
                 )
             }
         }
-    }
+    },
 ) {
     LazyRow(
         modifier = modifier.fillMaxHeight(),
         horizontalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(start = 8.dp, end = 16.dp)
+        contentPadding = PaddingValues(start = 8.dp, end = 24.dp)
     ) {
         items(trips) { trip ->
             TravelPlaceItem(
@@ -482,7 +530,7 @@ fun TravelPlaceItem(
     Box(modifier = modifier
         .shadow(
             color = Color.LightGray.copy(alpha = 0.3f),
-            shape = RoundedCornerShape(32.dp),
+            shape = MaterialTheme.shapes.medium,
             radius = 16.dp,
             dx = 8.dp,
             dy = 8.dp
@@ -499,12 +547,14 @@ fun TravelPlaceItem(
                 ),
             painter = painterResource(id = R.drawable.ic_bookmark),
             contentDescription = null,
-            tint = if (Random.nextBoolean()) Color(0xFFFFD600) else Color.LightGray
+            tint = with(MaterialTheme.colors) {
+                if (Random.nextBoolean()) primary else secondary
+            }
         )
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(32.dp))
-                .background(Color.White)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colors.surface)
         ) {
             Column(modifier = Modifier
                 .fillMaxHeight()
@@ -514,7 +564,7 @@ fun TravelPlaceItem(
                     Image(
                         modifier = Modifier
                             .aspectRatio(10 / 9f)
-                            .clip(RoundedCornerShape(22.dp)),
+                            .clip(MaterialTheme.shapes.medium.copy(CornerSize(22.dp))),
                         painter = painterResource(id = trip.destination.imageId),
                         contentDescription = "Place",
                         contentScale = ContentScale.Crop
@@ -525,10 +575,11 @@ fun TravelPlaceItem(
                             .padding(end = 10.dp, bottom = 12.dp)
                             .size(64.dp, 32.dp)
                             .clip(RoundedCornerShape(40))
-                            .background(Color.LightGray),
+                            .background(MaterialTheme.colors.background),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
+                            modifier = Modifier,
                             text = stringResource(R.string.price, trip.price),
                             style = MaterialTheme.typography.overline
                         )
@@ -564,24 +615,24 @@ fun TravelPlaceItem(
                                 Spacer(modifier = Modifier.width(2.dp))
                                 Text(
                                     text = trip.destination.countryName,
-                                    color = Color.Gray,
                                     style = MaterialTheme.typography.overline
                                 )
                             }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(40))
-                                .background(Color.LightGray.copy(alpha = 0.4f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
+                            Box(
                                 modifier = Modifier
-                                    .alpha(ContentAlpha.disabled)
-                                    .padding(6.dp),
-                                text = pluralStringResource(R.plurals.n_day, trip.days, trip.days),
-                                style = MaterialTheme.typography.overline
-                            )
+                                    .clip(RoundedCornerShape(40))
+                                    .background(MaterialTheme.colors.background),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(6.dp),
+                                    text = pluralStringResource(R.plurals.n_day,
+                                        trip.days,
+                                        trip.days),
+                                    style = MaterialTheme.typography.overline
+                                )
+                            }
                         }
                     }
                 }
@@ -589,22 +640,6 @@ fun TravelPlaceItem(
         }
     }
 }
-
-fun Context.findActivity(): Activity {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) return context
-        context = context.baseContext
-    }
-    throw IllegalStateException()
-}
-
-
-data class Group(
-    val id: Int,
-    val name: String,
-    @DrawableRes val image: Int,
-)
 
 @Composable
 fun TravelGroupsRow(
@@ -617,7 +652,7 @@ fun TravelGroupsRow(
                 image = if (it % 2 == 0) R.drawable.the_wave else R.drawable.greece
             )
         }
-    }
+    },
 ) {
     LazyRow(
         modifier = modifier.fillMaxHeight(),
@@ -644,7 +679,7 @@ fun TravelOneGroupItem(
         modifier = modifier
             .shadow(
                 color = Color.LightGray.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(32.dp),
+                shape = MaterialTheme.shapes.medium,
                 radius = 16.dp,
                 dx = 8.dp,
                 dy = 8.dp
@@ -652,16 +687,17 @@ fun TravelOneGroupItem(
     ) {
         Row(
             modifier = Modifier
-                .background(Color.White, RoundedCornerShape(28.dp))
-                .padding(14.dp)
-                .width(IntrinsicSize.Max),
+                .background(
+                    color = MaterialTheme.colors.surface,
+                    shape = MaterialTheme.shapes.medium.copy(CornerSize(28.dp))
+                )
+                .padding(14.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Image(
                 modifier = Modifier
                     .aspectRatio(4 / 5f)
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(color = Color.Green),
+                    .clip(RoundedCornerShape(18.dp)),
                 painter = painterResource(id = group.image),
                 contentScale = ContentScale.Crop,
                 contentDescription = "Location"
@@ -681,7 +717,7 @@ fun TravelOneGroupItem(
                         style = MaterialTheme.typography.overline
                     )
                 }
-                Box(modifier = Modifier.weight(0.45f)) {
+                Box(modifier = Modifier.weight(0.475f)) {
                     repeat(4) {
                         Box(
                             modifier = Modifier
@@ -689,17 +725,19 @@ fun TravelOneGroupItem(
                                 .fillMaxSize()
                                 .offset(x = (28 * it).dp)
                                 .background(
-                                    color = Color.White,
+                                    color = MaterialTheme.colors.surface,
                                     shape = CircleShape
-                                ),
+                                )
+                                .padding(2.dp)
+                                .background(
+                                    color = MaterialTheme.colors.primaryVariant,
+                                    shape = CircleShape
+                                )
+                                .clip(CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             if (it != 3) {
                                 Image(
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .fillMaxSize()
-                                        .clip(CircleShape),
                                     painter = painterResource(when (it) {
                                         1 -> R.drawable.person_one
                                         2 -> R.drawable.person_two
@@ -709,22 +747,11 @@ fun TravelOneGroupItem(
                                     contentScale = ContentScale.Crop
                                 )
                             } else {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .fillMaxSize()
-                                        .background(
-                                            color = Color(0xFFFF6F00),
-                                            shape = CircleShape
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "20+",
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.overline
-                                    )
-                                }
+                                Text(
+                                    text = "20+",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.overline
+                                )
                             }
                         }
                     }
@@ -741,52 +768,56 @@ fun TravelOneSearchBar(
     value: String,
     onValueChange: (String) -> Unit,
 ) {
-    BasicTextField(
-        value = value,
-        modifier = modifier
-            .background(Color.White, RoundedCornerShape(22.4.dp))
-            .defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            ),
-        onValueChange = onValueChange,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(),
-        singleLine = true,
-        decorationBox = @Composable { innerTextField ->
-            TextFieldDefaults.TextFieldDecorationBox(
-                value = value,
-                visualTransformation = VisualTransformation.None,
-                innerTextField = innerTextField,
-                placeholder = {
-                    Text(
-                        text = "Search places",
-                        style = MaterialTheme.typography.body2,
-
-                    )
-                },
-                label = null,
-                leadingIcon = {
-                    Icon(
-                        modifier = Modifier.padding(start = 28.dp),
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = "Search"
-                    )
-                },
-                trailingIcon = null,
-                singleLine = true,
-                enabled = true,
-                interactionSource = remember { MutableInteractionSource() },
-                colors = TextFieldDefaults.textFieldColors(
-                    leadingIconColor = Color.Black,
-                    placeholderColor = Color.Black.copy(ContentAlpha.medium)
-                ),
-                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                    start = 28.dp
-                )
-            )
-        }
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor = MaterialTheme.colors.primary,
+        backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.4f)
     )
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+        BasicTextField(
+            value = value,
+            modifier = modifier
+                .background(MaterialTheme.colors.surface, MaterialTheme.shapes.small)
+                .defaultMinSize(
+                    minWidth = TextFieldDefaults.MinWidth,
+                    minHeight = TextFieldDefaults.MinHeight
+                ),
+            onValueChange = onValueChange,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(),
+            singleLine = true,
+            decorationBox = @Composable { innerTextField ->
+                TextFieldDefaults.TextFieldDecorationBox(
+                    value = value,
+                    visualTransformation = VisualTransformation.None,
+                    innerTextField = innerTextField,
+                    placeholder = {
+                        Text(
+                            text = "Search places",
+                            style = MaterialTheme.typography.body2,
+                        )
+                    },
+                    label = null,
+                    leadingIcon = {
+                        Icon(
+                            modifier = Modifier.padding(start = 28.dp),
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = null
+                        )
+                    },
+                    trailingIcon = null,
+                    singleLine = true,
+                    enabled = true,
+                    interactionSource = remember { MutableInteractionSource() },
+                    colors = TextFieldDefaults.textFieldColors(
+                        leadingIconColor = MaterialTheme.colors.onSurface,
+                    ),
+                    contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                        start = 28.dp
+                    )
+                )
+            }
+        )
+    }
 }
 
 data class Trip(
@@ -800,6 +831,12 @@ data class Place(
     @DrawableRes val imageId: Int,
     val cityName: String,
     val countryName: String,
+)
+
+data class Group(
+    val id: Int,
+    val name: String,
+    @DrawableRes val image: Int,
 )
 
 private fun Modifier.intoVertical() = layout { measurable, constraints ->

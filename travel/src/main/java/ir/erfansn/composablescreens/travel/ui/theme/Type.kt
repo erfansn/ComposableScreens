@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTextApi::class, ExperimentalTextApi::class)
+
 package ir.erfansn.composablescreens.travel.ui.theme
 
 import androidx.compose.material.Typography
@@ -32,20 +34,12 @@ val AbrilFatfaceFontFamily = FontFamily(
     )
 )
 
-@ExperimentalTextApi
 val Typography = Typography(
-    body1 = TextStyle(
-        fontFamily = PoppinsFontFamily,
+    h5 = TextStyle(
+        fontFamily = AbrilFatfaceFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        letterSpacing = 0.5.sp,
-        platformStyle = PlatformTextStyle(includeFontPadding = false)
-    ),
-    body2 = TextStyle(
-        fontFamily = PoppinsFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        letterSpacing = 0.25.sp,
+        fontSize = 24.sp,
+        letterSpacing = 0.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
     subtitle1 = TextStyle(
@@ -62,18 +56,32 @@ val Typography = Typography(
         letterSpacing = 0.1.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
-    h5 = TextStyle(
-        fontFamily = AbrilFatfaceFontFamily,
+    body1 = TextStyle(
+        fontFamily = PoppinsFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
-        letterSpacing = 0.sp,
+        fontSize = 16.sp,
+        letterSpacing = 0.5.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    body2 = TextStyle(
+        fontFamily = PoppinsFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        letterSpacing = 0.25.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = false)
+    ),
+    button = TextStyle(
+        fontFamily = PoppinsFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        letterSpacing = 0.4.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
     caption = TextStyle(
         fontFamily = PoppinsFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        letterSpacing = 0.sp,
+        letterSpacing = 0.0.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
     ),
     overline = TextStyle(
@@ -82,24 +90,5 @@ val Typography = Typography(
         fontSize = 10.sp,
         letterSpacing = 0.sp,
         platformStyle = PlatformTextStyle(includeFontPadding = false)
-    ),
-    button = TextStyle(
-        fontFamily = AbrilFatfaceFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        letterSpacing = 0.4.sp,
-        platformStyle = PlatformTextStyle(includeFontPadding = false)
     )
-    /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
-    ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-    */
 )
