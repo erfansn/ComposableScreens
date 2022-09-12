@@ -64,7 +64,8 @@ import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.OrientationLocker
 import ir.erfansn.composablescreens.travel.ui.OrientationMode
 import ir.erfansn.composablescreens.travel.ui.theme.AbrilFatfaceFontFamily
-import ir.erfansn.composablescreens.travel.ui.theme.TravelOneTheme
+import ir.erfansn.composablescreens.travel.ui.theme.PoppinsFontFamily
+import ir.erfansn.composablescreens.travel.ui.theme.TravelTheme
 import kotlin.random.Random
 import android.graphics.Color as PlatformColor
 
@@ -81,10 +82,10 @@ fun HomeScreen() {
                 .systemGesturesPadding()
                 .systemBarsPadding(),
             topBar = {
-                TravelOneTopBar()
+                TravelHomeTopBar()
             },
             bottomBar = {
-                TravelOneBottomNavigationBar()
+                TravelHomeBottomNavigationBar()
             }
         ) { contentPadding ->
             BoxWithConstraints(
@@ -161,7 +162,7 @@ fun HomeScreen() {
 }
 
 @Composable
-fun TravelOneTopBar(modifier: Modifier = Modifier) {
+fun TravelHomeTopBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(
@@ -174,7 +175,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row {
-                TravelOneButton(
+                TravelButton(
                     modifier = Modifier.size(56.dp),
                     onClick = { /*TODO*/ }
                 ) {
@@ -188,10 +189,13 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     text = "Hello Laura",
-                    style = MaterialTheme.typography.subtitle2
+                    style = MaterialTheme.typography.subtitle1.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = PoppinsFontFamily
+                    )
                 )
             }
-            TravelOneButton(
+            TravelButton(
                 modifier = Modifier
                     .shadow(
                         color = Color(0xFFCCCCCC).copy(alpha = 0.7f),
@@ -232,7 +236,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             var searchKey by remember { mutableStateOf("") }
-            TravelOneSearchBar(
+            TravelSearchBar(
                 modifier = Modifier.weight(1.0f),
                 value = searchKey,
                 onValueChange = {
@@ -242,7 +246,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            TravelOneButton(
+            TravelButton(
                 modifier = Modifier
                     .shadow(
                         color = MaterialTheme.colors.secondary.copy(alpha = 0.7f),
@@ -278,7 +282,7 @@ fun TravelOneTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
+fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(horizontal = 24.dp)
@@ -287,7 +291,7 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
             .height(64.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        TravelOneButton(
+        TravelButton(
             modifier = Modifier.aspectRatio(1.0f),
             backgroundColor = Color.Transparent,
             indication = null,
@@ -299,7 +303,7 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
                 contentDescription = "Add"
             )
         }
-        TravelOneButton(
+        TravelButton(
             modifier = Modifier.aspectRatio(1.0f),
             backgroundColor = MaterialTheme.colors.secondaryVariant,
             indication = rememberRipple(color = Color.White),
@@ -310,7 +314,7 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
                 contentDescription = "Add"
             )
         }
-        TravelOneButton(
+        TravelButton(
             modifier = Modifier.aspectRatio(1.0f),
             indication = null,
             backgroundColor = Color.Transparent,
@@ -326,7 +330,7 @@ fun TravelOneBottomNavigationBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelOneButton(
+fun TravelButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colors.primary,
@@ -574,7 +578,7 @@ fun TravelPlaceItem(
                             .align(Alignment.BottomEnd)
                             .padding(end = 10.dp, bottom = 12.dp)
                             .size(64.dp, 32.dp)
-                            .clip(RoundedCornerShape(40))
+                            .clip(RoundedCornerShape(33))
                             .background(MaterialTheme.colors.background),
                         contentAlignment = Alignment.Center
                     ) {
@@ -660,7 +664,7 @@ fun TravelGroupsRow(
         contentPadding = PaddingValues(horizontal = 24.dp)
     ) {
         items(items = groups) { group ->
-            TravelOneGroupItem(
+            TravelGroupItem(
                 modifier = Modifier
                     .fillParentMaxHeight()
                     .wrapContentWidth(),
@@ -671,7 +675,7 @@ fun TravelGroupsRow(
 }
 
 @Composable
-fun TravelOneGroupItem(
+fun TravelGroupItem(
     modifier: Modifier = Modifier,
     group: Group,
 ) {
@@ -763,7 +767,7 @@ fun TravelOneGroupItem(
 
 @ExperimentalMaterialApi
 @Composable
-fun TravelOneSearchBar(
+fun TravelSearchBar(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -907,7 +911,7 @@ fun Modifier.shadow(
 )
 @Composable
 fun HomeScreenPreview() {
-    TravelOneTheme {
+    TravelTheme {
         HomeScreen()
     }
 }

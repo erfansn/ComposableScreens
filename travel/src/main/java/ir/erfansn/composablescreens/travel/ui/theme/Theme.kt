@@ -19,7 +19,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun TravelOneTheme(content: @Composable () -> Unit) {
+fun TravelTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colors = LightColorPalette,
         typography = Typography,
