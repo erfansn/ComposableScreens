@@ -24,6 +24,10 @@ val PoppinsFontFamily = FontFamily(
     Font(
         resId = R.font.poppins_bold,
         weight = FontWeight.Bold
+    ),
+    Font(
+        resId = R.font.poppins_semi_bold,
+        weight = FontWeight.SemiBold
     )
 )
 
