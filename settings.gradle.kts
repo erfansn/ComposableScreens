@@ -17,8 +17,8 @@ dependencyResolutionManagement {
             version("compileSdk", "33")
             version("minSdk", "21")
             version("targetSdk", "33")
-            version("agp", "7.2.2")
-            version("compose-compiler", "1.3.0")
+            version("agp", "7.3.0")
+            version("compose-compiler", "1.3.1")
             version("compose", "1.2.1")
 
             library("androidx-compose-ui", "androidx.compose.ui", "ui").versionRef("compose")
@@ -28,11 +28,9 @@ dependencyResolutionManagement {
 
             library("androidx-compose-ui-tooling", "androidx.compose.ui", "ui-tooling").versionRef("compose")
             library("androidx-compose.ui-test-manifest", "androidx.compose.ui", "ui-test-manifest").versionRef("compose")
-            // https://issuetracker.google.com/issues/227767363
-            library("androidx-customview", "androidx.customview:customview-poolingcontainer:1.0.0")
 
             bundle("compose", listOf("androidx-compose-ui", "androidx-compose-material", "androidx-compose-material-icons", "androidx-compose-ui-tooling-preview"))
-            bundle("compose-debug", listOf("androidx-compose-ui-tooling", "androidx-compose.ui-test-manifest", "androidx-customview"))
+            bundle("compose-debug", listOf("androidx-compose-ui-tooling", "androidx-compose.ui-test-manifest"))
             library("androidx-activity-compose", "androidx.activity:activity-compose:1.5.1")
             library("androidx-core", "androidx.core:core-ktx:1.8.0")
             library("androidx-constraintlayout", "androidx.constraintlayout:constraintlayout-compose:1.0.1")
