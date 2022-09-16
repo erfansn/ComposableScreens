@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "ir.erfansn.composablescreens"
-        minSdk = 21
-        targetSdk = 32
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 

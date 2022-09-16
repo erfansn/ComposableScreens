@@ -14,6 +14,9 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
+            version("compileSdk", "33")
+            version("minSdk", "21")
+            version("targetSdk", "33")
             version("agp", "7.2.2")
             version("compose-compiler", "1.3.0")
             version("compose", "1.2.1")
