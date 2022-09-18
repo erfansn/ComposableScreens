@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="price">$%d</string>
+    <string name="travel_group_detail_text">
+        The Wave is a sandstone rock formation located in Arizona, United States, near its northern border with Utah.
+        The formation is situated on the slopes of the Coyote buttes in the Paria Canyon-Vermilion Cliffs Wilderness.
+    </string>
     <plurals name="n_day">
         <item quantity="one">1 day</item>
         <item quantity="other">%d days</item>
