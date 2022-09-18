@@ -2,9 +2,7 @@
 
 package ir.erfansn.composablescreens.travel.home
 
-import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -29,138 +27,109 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.boundingRect
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstraintLayout
 import ir.erfansn.composablescreens.travel.R
-import ir.erfansn.composablescreens.travel.ui.OrientationLocker
-import ir.erfansn.composablescreens.travel.ui.OrientationMode
+import ir.erfansn.composablescreens.travel.ui.components.TravelButton
 import ir.erfansn.composablescreens.travel.ui.components.layout.OverlappingRow
+import ir.erfansn.composablescreens.travel.ui.components.modifier.shadow
 import ir.erfansn.composablescreens.travel.ui.theme.AbrilFatfaceFontFamily
 import ir.erfansn.composablescreens.travel.ui.theme.PoppinsFontFamily
 import ir.erfansn.composablescreens.travel.ui.theme.TravelTheme
 import kotlin.random.Random
-import android.graphics.Color as PlatformColor
 
-@SuppressLint("SourceLockedOrientationActivity")
 @Composable
-fun TravelHomeScreen() {
-    OrientationLocker(orientationMode = OrientationMode.Portrait)
-
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        Scaffold(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize()
-                .systemGesturesPadding()
-                .systemBarsPadding(),
-            topBar = {
-                TravelHomeTopBar()
-            },
-            bottomBar = {
-                TravelHomeBottomNavigationBar()
-            }
-        ) { contentPadding ->
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
-                val minHeightAvailable = maxHeight > 400.dp
-                if (!minHeightAvailable) {
-                    Box(
-                        modifier = Modifier
-                            .zIndex(1.0f)
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        MaterialTheme.colors.background,
-                                        MaterialTheme.colors.background.copy(alpha = 0.98f),
-                                        MaterialTheme.colors.background.copy(alpha = 0.94f),
-                                        MaterialTheme.colors.background.copy(alpha = 0.86f),
-                                        MaterialTheme.colors.background.copy(alpha = 0.70f),
-                                        MaterialTheme.colors.background.copy(alpha = 0.38f),
-                                        Color.Transparent
-                                    ),
-                                    start = Offset(0.0f, Float.POSITIVE_INFINITY),
-                                    end = Offset.Zero,
-                                    tileMode = TileMode.Clamp
-                                )
-                            )
-                            .height(32.dp)
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                    )
-                }
-                TravelHomeContent(
-                    modifier = Modifier
-                        .zIndex(0.0f)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                    minHeightAvailable = minHeightAvailable
-                )
-            }
-        }
+fun TravelHomeRoute(
+    onTravelGroupItemClick: () -> Unit,
+) {
+    TravelTheme {
+        TravelHomeScreen(onTravelGroupItemClick = onTravelGroupItemClick)
     }
 }
 
 @Composable
-fun TravelHomeContent(
-    modifier: Modifier = Modifier,
-    minHeightAvailable: Boolean = true,
+fun TravelHomeScreen(
+    onTravelGroupItemClick: () -> Unit,
 ) {
-    Column(modifier = modifier) {
-        HomeSection(
-            title = "Travel Places",
-            modifier = Modifier.weight(0.65f).takeIf { minHeightAvailable }
-                ?: Modifier.height(264.dp)
+    val baseModifier = Modifier.padding(horizontal = 24.dp)
+    Scaffold(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+            .systemGesturesPadding()
+            .systemBarsPadding(),
+        topBar = {
+            TravelHomeTopBar(
+                modifier = baseModifier
+            )
+        },
+        bottomBar = {
+            TravelHomeBottomNavigationBar(
+                modifier = baseModifier
+            )
+        }
+    ) { contentPadding ->
+        BoxWithConstraints(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
         ) {
-            Row(modifier = Modifier.fillMaxHeight()) {
-                var selectedCategory by remember { mutableStateOf(PlaceCategory.Popular) }
-                PlaceCategoryTabsRow(
+            val minHeightAvailable = maxHeight > 400.dp
+            if (!minHeightAvailable) {
+                Box(
                     modifier = Modifier
-                        .intoVertical()
+                        .zIndex(1.0f)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    MaterialTheme.colors.background,
+                                    MaterialTheme.colors.background.copy(alpha = 0.98f),
+                                    MaterialTheme.colors.background.copy(alpha = 0.94f),
+                                    MaterialTheme.colors.background.copy(alpha = 0.86f),
+                                    MaterialTheme.colors.background.copy(alpha = 0.70f),
+                                    MaterialTheme.colors.background.copy(alpha = 0.38f),
+                                    Color.Transparent
+                                ),
+                                start = Offset(0.0f, Float.POSITIVE_INFINITY),
+                                end = Offset.Zero,
+                                tileMode = TileMode.Clamp
+                            )
+                        )
+                        .height(32.dp)
                         .fillMaxWidth()
-                        .padding(
-                            top = 20.dp,
-                            bottom = 8.dp
-                        ),
-                    selectedCategory = selectedCategory,
-                    onTabSelect = { selectedCategory = it }
+                        .align(Alignment.BottomCenter)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                TravelPlacesRow()
             }
+            TravelHomeContent(
+                modifier = Modifier
+                    .zIndex(0.0f)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                minHeightAvailable = minHeightAvailable,
+                onTravelGroupItemClick = onTravelGroupItemClick
+            )
         }
-        Spacer(modifier = Modifier.height(24.dp))
-        HomeSection(
-            modifier = Modifier.weight(0.35f).takeIf { minHeightAvailable }
-                ?: Modifier.height(150.dp),
-            title = "Travel Groups",
-        ) {
-            TravelGroupsRow()
-        }
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -168,10 +137,7 @@ fun TravelHomeContent(
 fun TravelHomeTopBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .padding(
-                horizontal = 24.dp,
-                vertical = 16.dp
-            )
+            .padding(vertical = 16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -252,7 +218,7 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
             TravelButton(
                 modifier = Modifier
                     .shadow(
-                        color = MaterialTheme.colors.secondary.copy(alpha = 0.7f),
+                        color = MaterialTheme.colors.primary.copy(alpha = 0.7f),
                         shape = RoundedCornerShape(18.dp),
                         radius = 24.dp,
                         dx = 8.dp,
@@ -333,34 +299,45 @@ fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelButton(
+fun TravelHomeContent(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    backgroundColor: Color = MaterialTheme.colors.primary,
-    shape: Shape = MaterialTheme.shapes.small,
-    indication: Indication? = rememberRipple(),
-    content: @Composable () -> Unit,
+    minHeightAvailable: Boolean = true,
+    onTravelGroupItemClick: () -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .clip(shape)
-            .background(color = backgroundColor)
-            .defaultMinSize(
-                minWidth = ButtonDefaults.MinWidth,
-                minHeight = ButtonDefaults.MinHeight
-            )
-            .clickable(
-                onClick = onClick,
-                enabled = true,
-                role = Role.Button,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = indication
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColorFor(backgroundColor)) {
-            content()
+    Column(modifier = modifier) {
+        HomeSection(
+            title = "Travel Places",
+            modifier = Modifier.weight(0.65f).takeIf { minHeightAvailable }
+                ?: Modifier.height(264.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxHeight()) {
+                var selectedCategory by remember { mutableStateOf(PlaceCategory.Popular) }
+                PlaceCategoryTabsRow(
+                    modifier = Modifier
+                        .intoVertical()
+                        .fillMaxWidth()
+                        .padding(
+                            top = 20.dp,
+                            bottom = 8.dp
+                        ),
+                    selectedCategory = selectedCategory,
+                    onTabSelect = { selectedCategory = it }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                TravelPlacesRow()
+            }
         }
+        Spacer(modifier = Modifier.height(24.dp))
+        HomeSection(
+            modifier = Modifier.weight(0.35f).takeIf { minHeightAvailable }
+                ?: Modifier.height(150.dp),
+            title = "Travel Groups",
+        ) {
+            TravelGroupsRow(
+                onTravelGroupItemClick = onTravelGroupItemClick
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -402,7 +379,7 @@ fun PlaceCategoryTabsRow(
     onTabSelect: (PlaceCategory) -> Unit,
 ) {
     CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.primaryVariant) {
-        ConstraintLayout(modifier = modifier.animateContentSize()) {
+        ConstraintLayout(modifier = modifier) {
             val (cursor, all, latest, popular) = createRefs()
             createHorizontalChain(all, latest, popular, chainStyle = ChainStyle.Spread)
 
@@ -661,6 +638,7 @@ fun TravelGroupsRow(
             )
         }
     },
+    onTravelGroupItemClick: () -> Unit,
 ) {
     LazyRow(
         modifier = modifier.fillMaxHeight(),
@@ -673,6 +651,7 @@ fun TravelGroupsRow(
                     .fillParentMaxHeight()
                     .wrapContentWidth(),
                 group = group,
+                onClick = onTravelGroupItemClick
             )
         }
     }
@@ -682,6 +661,7 @@ fun TravelGroupsRow(
 fun TravelGroupItem(
     modifier: Modifier = Modifier,
     group: Group,
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -691,7 +671,9 @@ fun TravelGroupItem(
                 radius = 16.dp,
                 dx = 8.dp,
                 dy = 8.dp
-            ),
+            )
+            .clip(shape = MaterialTheme.shapes.medium.copy(CornerSize(28.dp)))
+            .clickable(onClick = onClick),
     ) {
         Row(
             modifier = Modifier
@@ -871,50 +853,6 @@ private fun Modifier.intoVertical() = layout { measurable, constraints ->
     }
 }
 
-fun Modifier.shadow(
-    shape: Shape = RectangleShape,
-    color: Color = Color(0xCCCCCCCC),
-    radius: Dp = 0.dp,
-    dx: Dp = 0.dp,
-    dy: Dp = 0.dp,
-) = drawBehind {
-    val paint = Paint().asFrameworkPaint().apply {
-        this.color = PlatformColor.TRANSPARENT
-        setShadowLayer(
-            radius.toPx(),
-            dx.toPx(),
-            dy.toPx(),
-            color.toArgb()
-        )
-    }
-    drawIntoCanvas {
-        when (val outline = shape.createOutline(size, layoutDirection, this)) {
-            is Outline.Rectangle -> {
-                it.nativeCanvas.drawRect(
-                    outline.rect.toAndroidRectF(),
-                    paint
-                )
-            }
-            is Outline.Rounded -> {
-                val roundRect = outline.roundRect
-                val topLeftCorner = roundRect.topLeftCornerRadius
-                it.nativeCanvas.drawRoundRect(
-                    roundRect.boundingRect.toAndroidRectF(),
-                    topLeftCorner.x,
-                    topLeftCorner.y,
-                    paint
-                )
-            }
-            is Outline.Generic -> {
-                it.nativeCanvas.drawPath(
-                    outline.path.asAndroidPath(),
-                    paint
-                )
-            }
-        }
-    }
-}
-
 @Preview(
     showBackground = true,
     device = Devices.PHONE,
@@ -922,6 +860,8 @@ fun Modifier.shadow(
 @Composable
 fun HomeScreenPreview() {
     TravelTheme {
-        TravelHomeScreen()
+        TravelHomeScreen(
+            onTravelGroupItemClick = { }
+        )
     }
 }

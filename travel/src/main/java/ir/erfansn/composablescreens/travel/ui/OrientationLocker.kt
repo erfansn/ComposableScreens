@@ -19,7 +19,7 @@ fun OrientationLocker(
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        context.findActivity().also { Log.i("Activity", it.toString()) }?.requestedOrientation = if (orientationMode == OrientationMode.Portrait) {
+        context.findActivity()?.requestedOrientation = if (orientationMode == OrientationMode.Portrait) {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         } else {
             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
