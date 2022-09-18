@@ -43,7 +43,8 @@ android {
 dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
