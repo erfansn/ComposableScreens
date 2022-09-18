@@ -19,7 +19,7 @@ dependencyResolutionManagement {
             version("targetSdk", "33")
             version("agp", "7.3.0")
             version("compose-compiler", "1.3.1")
-            version("compose", "1.2.1")
+            version("compose", "1.3.0-beta02")
 
             library("androidx-compose-ui", "androidx.compose.ui", "ui").versionRef("compose")
             library("androidx-compose-material", "androidx.compose.material", "material").versionRef("compose")
