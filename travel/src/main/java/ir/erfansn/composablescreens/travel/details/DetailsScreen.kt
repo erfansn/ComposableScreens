@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.components.TravelButton
+import ir.erfansn.composablescreens.travel.ui.components.TravelIconButton
 import ir.erfansn.composablescreens.travel.ui.components.layout.OverlappingRow
 import ir.erfansn.composablescreens.travel.ui.components.modifier.shadow
 import ir.erfansn.composablescreens.travel.ui.theme.PoppinsFontFamily
@@ -68,6 +69,90 @@ fun TravelDetailsScreen() {
                 .padding(contentPadding)
                 .then(baseModifier)
         )
+    }
+}
+
+@Composable
+fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                top = 16.dp,
+                bottom = 24.dp
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TravelIconButton(
+            onClick = { /*TODO*/ },
+            containerColor = Color.White,
+            shadowColor = Color.Gray,
+            iconTint = Color.Black,
+            iconId = R.drawable.ic_category,
+            contentDescription = "Menu"
+        )
+        Text(
+            text = "Group Travel",
+            style = MaterialTheme.typography.subtitle1.copy(
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = PoppinsFontFamily
+            )
+        )
+        TravelButton(
+            onClick = { /*TODO*/ }
+        ) {
+            Image(
+                modifier = Modifier.matchParentSize(),
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "User profile",
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
+
+@Composable
+fun TravelDetailsBottomNavigationBar(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .padding(vertical = 24.dp)
+            .fillMaxWidth()
+            .height(64.dp)
+    ) {
+        TravelButton(
+            modifier = Modifier
+                .weight(0.30f)
+                .fillMaxHeight(),
+            shape = RoundedCornerShape(20),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(
+                text = "$270",
+                style = MaterialTheme.typography.caption.copy(
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        TravelButton(
+            modifier = Modifier
+                .weight(0.60f)
+                .fillMaxHeight(),
+            containerColor = Color.Black,
+            shape = RoundedCornerShape(20),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(
+                text = "Book Now",
+                color = Color.White,
+                style = MaterialTheme.typography.caption.copy(
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }
     }
 }
 
@@ -134,16 +219,10 @@ fun TravelDetailsContent(modifier: Modifier = Modifier) {
         ) {
             TravelButton(
                 modifier = Modifier
-                    .shadow(
-                        shape = RoundedCornerShape(33),
-                        color = MaterialTheme.colors.primaryVariant.copy(alpha = 0.5f),
-                        radius = 24.dp,
-                        dx = 6.dp,
-                        dy = 6.dp
-                    )
                     .size(104.dp, 42.dp),
                 shape = RoundedCornerShape(33),
-                backgroundColor = MaterialTheme.colors.primaryVariant,
+                shadowColor = MaterialTheme.colors.primaryVariant,
+                containerColor = MaterialTheme.colors.primaryVariant,
                 onClick = { /*TODO*/ }
             ) {
                 Text(
@@ -153,12 +232,10 @@ fun TravelDetailsContent(modifier: Modifier = Modifier) {
                     )
                 )
             }
-            TextButton(
+            TravelButton(
                 modifier = Modifier.size(104.dp, 42.dp),
                 shape = RoundedCornerShape(33),
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colors.onBackground
-                ),
+                containerColor = Color.Transparent,
                 onClick = { /*TODO*/ }
             ) {
                 Text(
@@ -224,7 +301,7 @@ fun TravelDetailsContent(modifier: Modifier = Modifier) {
                 TravelButton(
                     modifier = Modifier
                         .aspectRatio(1.0f),
-                    backgroundColor = MaterialTheme.colors.primaryVariant,
+                    containerColor = MaterialTheme.colors.primaryVariant,
                     shape = RoundedCornerShape(30),
                     onClick = { /*TODO*/ }
                 ) {
@@ -234,101 +311,6 @@ fun TravelDetailsContent(modifier: Modifier = Modifier) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                top = 16.dp,
-                bottom = 24.dp
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TravelButton(
-            modifier = Modifier
-                .shadow(
-                    color = Color(0xFFCCCCCC).copy(alpha = 0.7f),
-                    shape = RoundedCornerShape(18.dp),
-                    radius = 24.dp,
-                    dx = 10.dp,
-                    dy = 10.dp
-                )
-                .size(56.dp),
-            onClick = { /*TODO*/ },
-            backgroundColor = Color.White
-        ) {
-            Icon(
-                tint = Color.Black,
-                painter = painterResource(id = R.drawable.ic_category),
-                contentDescription = "Menu"
-            )
-        }
-        Text(
-            text = "Group Travel",
-            style = MaterialTheme.typography.subtitle1.copy(
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = PoppinsFontFamily
-            )
-        )
-        TravelButton(
-            modifier = Modifier.size(56.dp),
-            onClick = { /*TODO*/ }
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.profile),
-                contentDescription = "User profile",
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-}
-
-@Composable
-fun TravelDetailsBottomNavigationBar(
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .padding(vertical = 24.dp)
-            .fillMaxWidth()
-            .height(64.dp)
-    ) {
-        TravelButton(
-            modifier = Modifier
-                .weight(0.30f)
-                .fillMaxHeight(),
-            shape = RoundedCornerShape(20),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "$270",
-                style = MaterialTheme.typography.caption.copy(
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        TravelButton(
-            modifier = Modifier
-                .weight(0.60f)
-                .fillMaxHeight(),
-            backgroundColor = Color.Black,
-            shape = RoundedCornerShape(20),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "Book Now",
-                color = Color.White,
-                style = MaterialTheme.typography.caption.copy(
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
         }
     }
 }

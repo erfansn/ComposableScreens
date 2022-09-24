@@ -1,25 +1,23 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterialApi::class)
 
 package ir.erfansn.composablescreens.travel.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Preview
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,9 +28,9 @@ import ir.erfansn.composablescreens.travel.ui.theme.TravelTheme
 fun TravelButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Color = MaterialTheme.colors.primary,
     shadowColor: Color? = null,
-    shape: Shape = MaterialTheme.shapes.small,
+    shape: Shape = RoundedCornerShape(36),
     content: @Composable BoxScope.() -> Unit,
 ) {
     Surface(
@@ -49,7 +47,7 @@ fun TravelButton(
         color = containerColor,
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
-            ProvideTextStyle(value = MaterialTheme.typography.labelLarge) {
+            ProvideTextStyle(value = MaterialTheme.typography.button) {
                 Box(
                     Modifier
                         .defaultMinSize(
@@ -71,9 +69,9 @@ fun TravelIconButton(
     @DrawableRes iconId: Int,
     iconTint: Color = LocalContentColor.current,
     contentDescription: String,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Color = MaterialTheme.colors.primary,
     shadowColor: Color? = null,
-    shape: Shape = MaterialTheme.shapes.small,
+    shape: Shape = RoundedCornerShape(36),
 ) {
     TravelButton(
         modifier = modifier,
@@ -123,7 +121,7 @@ fun TravelButtonIconShadow() {
     TravelTheme {
         TravelButton(
             modifier = Modifier.padding(16.dp),
-            shadowColor = MaterialTheme.colorScheme.primary,
+            shadowColor = MaterialTheme.colors.primary,
             onClick = { /*TODO*/ },
         ) {
             Icon(

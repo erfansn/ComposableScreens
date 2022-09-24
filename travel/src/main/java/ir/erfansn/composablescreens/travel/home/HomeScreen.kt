@@ -52,6 +52,7 @@ import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstraintLayout
 import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.components.TravelButton
+import ir.erfansn.composablescreens.travel.ui.components.TravelIconButton
 import ir.erfansn.composablescreens.travel.ui.components.layout.OverlappingRow
 import ir.erfansn.composablescreens.travel.ui.components.modifier.shadow
 import ir.erfansn.composablescreens.travel.ui.theme.AbrilFatfaceFontFamily
@@ -137,7 +138,8 @@ fun TravelHomeScreen(
 fun TravelHomeTopBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .padding(vertical = 16.dp)
+            .padding(vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -164,29 +166,15 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
                     )
                 )
             }
-            TravelButton(
-                modifier = Modifier
-                    .shadow(
-                        color = Color(0xFFCCCCCC).copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(18.dp),
-                        radius = 24.dp,
-                        dx = 10.dp,
-                        dy = 10.dp
-                    )
-                    .size(56.dp),
-                onClick = { /*TODO*/ },
-                backgroundColor = Color.White
-            ) {
-                Icon(
-                    tint = Color.Black,
-                    painter = painterResource(id = R.drawable.ic_category),
-                    contentDescription = "Menu"
-                )
-            }
+            TravelIconButton(
+                iconTint = Color.Black,
+                iconId = R.drawable.ic_category,
+                contentDescription = "Category",
+                shadowColor = Color.DarkGray,
+                containerColor = Color.White,
+                onClick = { /*TODO*/ }
+            )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             text = """
                         Explore the
@@ -194,42 +182,26 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
                     """.trimIndent(),
             style = MaterialTheme.typography.h5,
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            var searchKey by remember { mutableStateOf("") }
+            var queriy by remember { mutableStateOf("") }
             TravelSearchBar(
                 modifier = Modifier.weight(1.0f),
-                value = searchKey,
-                onValueChange = {
-                    searchKey = it
-                }
+                value = queriy,
+                onValueChange = { queriy = it }
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
             TravelButton(
-                modifier = Modifier
-                    .shadow(
-                        color = MaterialTheme.colors.primary.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(18.dp),
-                        radius = 24.dp,
-                        dx = 8.dp,
-                        dy = 8.dp
-                    )
-                    .size(56.dp),
+                containerColor = Color.Transparent,
+                shadowColor = MaterialTheme.colors.primary,
                 onClick = { },
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .matchParentSize()
                         .background(
                             brush = Brush.linearGradient(
                                 0.0f to MaterialTheme.colors.primary,
@@ -241,6 +213,7 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
+                        tint = Color.White,
                         painter = painterResource(id = R.drawable.ic_filter),
                         contentDescription = "Settings"
                     )
@@ -254,47 +227,36 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
 fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
-            .padding(horizontal = 24.dp)
             .padding(bottom = 24.dp)
             .fillMaxWidth()
             .height(64.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        TravelButton(
+        TravelIconButton(
             modifier = Modifier.aspectRatio(1.0f),
-            backgroundColor = Color.Transparent,
-            indication = null,
-            onClick = { /*TODO*/ }
-        ) {
-            Icon(
-                tint = Color.LightGray,
-                painter = painterResource(id = R.drawable.ic_home),
-                contentDescription = "Add"
-            )
-        }
-        TravelButton(
+            containerColor = Color.Transparent,
+            onClick = { /*TODO*/ },
+            iconId = R.drawable.ic_home,
+            iconTint = Color.LightGray,
+            contentDescription = "Home"
+        )
+        TravelIconButton(
             modifier = Modifier.aspectRatio(1.0f),
-            backgroundColor = MaterialTheme.colors.secondaryVariant,
-            indication = rememberRipple(color = Color.White),
-            onClick = { /*TODO*/ }
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = "Add"
-            )
-        }
-        TravelButton(
+            containerColor = MaterialTheme.colors.secondaryVariant,
+            onClick = { /*TODO*/ },
+            iconId = R.drawable.ic_add,
+            iconTint = Color.White,
+            contentDescription = "Add"
+        )
+        TravelIconButton(
             modifier = Modifier.aspectRatio(1.0f),
-            indication = null,
-            backgroundColor = Color.Transparent,
-            onClick = { /*TODO*/ }
-        ) {
-            Icon(
-                tint = Color.LightGray,
-                painter = painterResource(id = R.drawable.ic_chat),
-                contentDescription = "Add"
-            )
-        }
+            containerColor = Color.Transparent,
+            onClick = { /*TODO*/ },
+            iconId = R.drawable.ic_chat,
+            iconTint = Color.LightGray,
+            contentDescription = "Chat"
+        )
     }
 }
 
@@ -306,31 +268,32 @@ fun TravelHomeContent(
 ) {
     Column(modifier = modifier) {
         HomeSection(
-            title = "Travel Places",
-            modifier = Modifier.weight(0.65f).takeIf { minHeightAvailable }
-                ?: Modifier.height(264.dp)
+            modifier = Modifier.run {
+                if (minHeightAvailable) weight(0.65f) else height(264.dp)
+            },
+            title = "Travel Places"
         ) {
-            Row(modifier = Modifier.fillMaxHeight()) {
-                var selectedCategory by remember { mutableStateOf(PlaceCategory.Popular) }
-                PlaceCategoryTabsRow(
-                    modifier = Modifier
-                        .intoVertical()
-                        .fillMaxWidth()
-                        .padding(
-                            top = 20.dp,
-                            bottom = 8.dp
-                        ),
-                    selectedCategory = selectedCategory,
-                    onTabSelect = { selectedCategory = it }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                TravelPlacesRow()
-            }
+            var selectedCategory by remember { mutableStateOf(PlaceCategory.Popular) }
+            PlaceCategoryTabsRow(
+                modifier = Modifier
+                    .intoVertical()
+                    .fillMaxWidth()
+                    .padding(
+                        top = 20.dp,
+                        bottom = 8.dp
+                    ),
+                selectedTab = selectedCategory,
+                onTabSelect = { selectedCategory = it }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            TravelPlacesRow()
         }
         Spacer(modifier = Modifier.height(24.dp))
+
         HomeSection(
-            modifier = Modifier.weight(0.35f).takeIf { minHeightAvailable }
-                ?: Modifier.height(150.dp),
+            modifier = Modifier.run {
+                if (minHeightAvailable) weight(0.35f) else height(150.dp)
+            },
             title = "Travel Groups",
         ) {
             TravelGroupsRow(
@@ -345,7 +308,7 @@ fun TravelHomeContent(
 fun HomeSection(
     modifier: Modifier = Modifier,
     title: String,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable RowScope.() -> Unit,
 ) {
     Column(modifier = modifier) {
         Row(
@@ -366,7 +329,9 @@ fun HomeSection(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        content()
+        Row(
+            content = content
+        )
     }
 }
 
@@ -375,7 +340,7 @@ enum class PlaceCategory { All, Latest, Popular }
 @Composable
 fun PlaceCategoryTabsRow(
     modifier: Modifier,
-    selectedCategory: PlaceCategory,
+    selectedTab: PlaceCategory,
     onTabSelect: (PlaceCategory) -> Unit,
 ) {
     CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.primaryVariant) {
@@ -403,7 +368,7 @@ fun PlaceCategoryTabsRow(
             PlaceCategoryTab(
                 modifier = Modifier.constrainAs(all, constraintBlock),
                 title = "All",
-                selected = selectedCategory == PlaceCategory.All,
+                selected = selectedTab == PlaceCategory.All,
                 onClick = {
                     onTabSelect(PlaceCategory.All)
                     cursorPlacement = all
@@ -412,7 +377,7 @@ fun PlaceCategoryTabsRow(
             PlaceCategoryTab(
                 modifier = Modifier.constrainAs(latest, constraintBlock),
                 title = "Latest",
-                selected = selectedCategory == PlaceCategory.Latest,
+                selected = selectedTab == PlaceCategory.Latest,
                 onClick = {
                     onTabSelect(PlaceCategory.Latest)
                     cursorPlacement = latest
@@ -421,7 +386,7 @@ fun PlaceCategoryTabsRow(
             PlaceCategoryTab(
                 modifier = Modifier.constrainAs(popular, constraintBlock),
                 title = "Popular",
-                selected = selectedCategory == PlaceCategory.Popular,
+                selected = selectedTab == PlaceCategory.Popular,
                 onClick = {
                     onTabSelect(PlaceCategory.Popular)
                     cursorPlacement = popular
@@ -804,9 +769,6 @@ fun TravelSearchBar(
                     singleLine = true,
                     enabled = true,
                     interactionSource = remember { MutableInteractionSource() },
-                    colors = TextFieldDefaults.textFieldColors(
-                        leadingIconColor = MaterialTheme.colors.onSurface,
-                    ),
                     contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
                         start = 28.dp
                     )
