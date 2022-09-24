@@ -1,4 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+extra["packageName"] = "ir.erfansn.composablescreens"
 @Suppress(
     "DSL_SCOPE_VIOLATION",
     "MISSING_DEPENDENCY_CLASS",
