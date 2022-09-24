@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace = "${rootProject.extra["packageName"]}.travel"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
