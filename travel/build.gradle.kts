@@ -46,7 +46,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation("androidx.compose.material3:material3:1.0.0-beta02")
 
     implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
