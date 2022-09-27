@@ -14,7 +14,7 @@ enum class OrientationMode { Portrait, Landscape }
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable
-fun OrientationLocker(
+internal fun OrientationLocker(
     orientationMode: OrientationMode
 ) {
     val context = LocalContext.current

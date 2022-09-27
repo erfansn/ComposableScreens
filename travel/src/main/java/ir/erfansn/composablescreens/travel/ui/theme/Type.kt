@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import ir.erfansn.composablescreens.travel.R
 
-val PoppinsFontFamily = FontFamily(
+internal val PoppinsFontFamily = FontFamily(
     Font(
         resId = R.font.poppins_regular,
         weight = FontWeight.Normal,
@@ -31,14 +31,14 @@ val PoppinsFontFamily = FontFamily(
     )
 )
 
-val AbrilFatfaceFontFamily = FontFamily(
+internal val AbrilFatfaceFontFamily = FontFamily(
     Font(
         resId = R.font.abril_fatface_regular,
         weight = FontWeight.Normal
     )
 )
 
-val Typography = Typography(
+internal val Typography = Typography(
     h5 = TextStyle(
         fontFamily = AbrilFatfaceFontFamily,
         fontWeight = FontWeight.Normal,

@@ -43,7 +43,7 @@ fun TravelDetailsRoute() {
 }
 
 @Composable
-fun TravelDetailsScreen() {
+private fun TravelDetailsScreen() {
     val baseModifier = Modifier.padding(horizontal = 24.dp)
     Scaffold(
         modifier = Modifier
@@ -73,7 +73,7 @@ fun TravelDetailsScreen() {
 }
 
 @Composable
-fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
+private fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -113,7 +113,7 @@ fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelDetailsBottomNavigationBar(
+private fun TravelDetailsBottomNavigationBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -157,7 +157,7 @@ fun TravelDetailsBottomNavigationBar(
 }
 
 @Composable
-fun TravelDetailsContent(modifier: Modifier = Modifier) {
+private fun TravelDetailsContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -316,7 +316,7 @@ fun TravelDetailsContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelDetailLabelsRow(
+private fun TravelDetailLabelsRow(
     modifier: Modifier = Modifier,
     detailLabels: List<DetailLabel> = remember {
         listOf(
@@ -350,7 +350,7 @@ fun TravelDetailLabelsRow(
 }
 
 @Composable
-fun TravelDetailLabel(
+private fun TravelDetailLabel(
     modifier: Modifier = Modifier,
     detailLabel: DetailLabel,
 ) {

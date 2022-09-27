@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OverlappingRow(
+internal fun OverlappingRow(
     modifier: Modifier = Modifier,
     space: Dp = 10.dp,
     content: @Composable () -> Unit

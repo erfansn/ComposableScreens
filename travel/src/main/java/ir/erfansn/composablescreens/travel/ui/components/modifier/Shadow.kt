@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Stable
-fun Modifier.shadow(
+internal fun Modifier.shadow(
     shape: Shape = RectangleShape,
     color: Color = Color(0xCCCCCCCC),
     radius: Dp = 0.dp,

@@ -25,7 +25,7 @@ import ir.erfansn.composablescreens.travel.ui.components.modifier.shadow
 import ir.erfansn.composablescreens.travel.ui.theme.TravelTheme
 
 @Composable
-fun TravelButton(
+internal fun TravelButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     containerColor: Color = MaterialTheme.colors.primary,
@@ -63,7 +63,7 @@ fun TravelButton(
 }
 
 @Composable
-fun TravelIconButton(
+internal fun TravelIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     @DrawableRes iconId: Int,

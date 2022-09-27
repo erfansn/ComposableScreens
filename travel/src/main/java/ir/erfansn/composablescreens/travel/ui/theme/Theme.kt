@@ -24,7 +24,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun TravelTheme(content: @Composable () -> Unit) {
+internal fun TravelTheme(content: @Composable () -> Unit) {
     OrientationLocker(orientationMode = OrientationMode.Portrait)
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {

@@ -61,7 +61,7 @@ import ir.erfansn.composablescreens.travel.ui.theme.TravelTheme
 import kotlin.random.Random
 
 @Composable
-fun TravelHomeRoute(
+internal fun TravelHomeRoute(
     onTravelGroupItemClick: () -> Unit,
 ) {
     TravelTheme {
@@ -70,7 +70,7 @@ fun TravelHomeRoute(
 }
 
 @Composable
-fun TravelHomeScreen(
+private fun TravelHomeScreen(
     onTravelGroupItemClick: () -> Unit,
 ) {
     val baseModifier = Modifier.padding(horizontal = 24.dp)
@@ -135,7 +135,7 @@ fun TravelHomeScreen(
 }
 
 @Composable
-fun TravelHomeTopBar(modifier: Modifier = Modifier) {
+private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(vertical = 16.dp),
@@ -224,7 +224,7 @@ fun TravelHomeTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
+private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(bottom = 24.dp)
@@ -261,7 +261,7 @@ fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TravelHomeContent(
+private fun TravelHomeContent(
     modifier: Modifier = Modifier,
     minHeightAvailable: Boolean = true,
     onTravelGroupItemClick: () -> Unit,
@@ -305,7 +305,7 @@ fun TravelHomeContent(
 }
 
 @Composable
-fun HomeSection(
+private fun HomeSection(
     modifier: Modifier = Modifier,
     title: String,
     content: @Composable RowScope.() -> Unit,
@@ -338,7 +338,7 @@ fun HomeSection(
 enum class PlaceCategory { All, Latest, Popular }
 
 @Composable
-fun PlaceCategoryTabsRow(
+private fun PlaceCategoryTabsRow(
     modifier: Modifier,
     selectedTab: PlaceCategory,
     onTabSelect: (PlaceCategory) -> Unit,
@@ -397,7 +397,7 @@ fun PlaceCategoryTabsRow(
 }
 
 @Composable
-fun PlaceCategoryTab(
+private fun PlaceCategoryTab(
     modifier: Modifier,
     onClick: () -> Unit,
     selected: Boolean,
@@ -425,7 +425,7 @@ fun PlaceCategoryTab(
 }
 
 @Composable
-fun TravelPlacesRow(
+private fun TravelPlacesRow(
     modifier: Modifier = Modifier,
     trips: List<Trip> = remember {
         List(10) {
@@ -473,7 +473,7 @@ fun TravelPlacesRow(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TravelPlaceItem(
+private fun TravelPlaceItem(
     modifier: Modifier = Modifier,
     trip: Trip,
 ) {
@@ -592,7 +592,7 @@ fun TravelPlaceItem(
 }
 
 @Composable
-fun TravelGroupsRow(
+private fun TravelGroupsRow(
     modifier: Modifier = Modifier,
     groups: List<Group> = remember {
         List(10) {
@@ -623,7 +623,7 @@ fun TravelGroupsRow(
 }
 
 @Composable
-fun TravelGroupItem(
+private fun TravelGroupItem(
     modifier: Modifier = Modifier,
     group: Group,
     onClick: () -> Unit,
@@ -724,7 +724,7 @@ fun TravelGroupItem(
 
 @ExperimentalMaterialApi
 @Composable
-fun TravelSearchBar(
+private fun TravelSearchBar(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
