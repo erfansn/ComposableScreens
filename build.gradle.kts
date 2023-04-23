@@ -1,16 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 extra["packageName"] = "ir.erfansn.composablescreens"
-@Suppress(
-    "DSL_SCOPE_VIOLATION",
-    "MISSING_DEPENDENCY_CLASS",
-    "UNRESOLVED_REFERENCE_WRONG_RECEIVER",
-    "FUNCTION_CALL_EXPECTED"
-)
+
 plugins {
-    val agpVersion = libs.versions.agp.get()
-    id("com.android.application") version agpVersion apply false
-    id("com.android.library") version agpVersion apply false
-    kotlin("android") version "1.7.10" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
 
 tasks.register<Delete>("clean") {
