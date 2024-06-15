@@ -1,5 +1,4 @@
 pluginManagement {
-    includeBuild("conventions")
     repositories {
         gradlePluginPortal()
         google()
@@ -16,12 +15,16 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("sdk") {
-            version("compile", "33")
+            version("compile", "34")
             version("min", "21")
-            version("target", "33")
+            version("target", "34")
+        }
+        create("jvm") {
+            version("toolchain", "17")
         }
     }
 }
-rootProject.name = "Composable Screens"
+
+rootProject.name = "ComposableScreens"
 include(":app")
 include(":travel")

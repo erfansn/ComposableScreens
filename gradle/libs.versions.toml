@@ -1,13 +1,12 @@
 [versions]
-androidGradlePlugin = "8.0.0"
-kotlin = "1.8.20"
-androidxComposeCompiler = "1.4.6"
-androidxComposeBom = "2023.04.01"
-androidxActivity = "1.7.1"
-androidxCore = "1.10.0"
-androidxConstraintLayoutCompose = "1.1.0-alpha09"
-androidxNavigation = "2.5.3"
-detekt = "1.22.0"
+androidGradlePlugin = "8.5.0"
+kotlin = "2.0.0"
+androidxComposeBom = "2024.06.00"
+androidxActivity = "1.9.0"
+androidxCore = "1.13.1"
+androidxConstraintLayoutCompose = "1.1.0-alpha13"
+androidxNavigation = "2.7.7"
+detekt = "1.23.6"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -30,4 +29,5 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

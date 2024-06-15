@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun OverlappingRow(
     modifier: Modifier = Modifier,
-    space: Dp = 10.dp,
+    overlapWidth: Dp = 10.dp,
     content: @Composable () -> Unit
 ) {
     Layout(
@@ -28,9 +28,9 @@ internal fun OverlappingRow(
             measurable.measure(constraints)
         }
 
-        val itemWidth = { it: Placeable ->  it.width - space.roundToPx() }
+        val itemWidth = { it: Placeable ->  it.width - overlapWidth.roundToPx() }
 
-        val width = placeables.sumOf(itemWidth) + space.roundToPx()
+        val width = placeables.sumOf(itemWidth) + overlapWidth.roundToPx()
         val maxHeight = placeables.maxOf { it.height }
         layout(width, maxHeight) {
             var xPosition = 0
@@ -52,7 +52,7 @@ internal fun OverlappingRow(
 @Composable
 fun OverlappingRowPreview() {
     OverlappingRow(
-        space = 8.dp
+        overlapWidth = 8.dp
     ) {
         repeat(3) {
             Box(
