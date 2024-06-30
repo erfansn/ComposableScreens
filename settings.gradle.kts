@@ -28,3 +28,4 @@ dependencyResolutionManagement {
 rootProject.name = "ComposableScreens"
 include(":app")
 include(":travel")
+include(":food")
