@@ -5,9 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
@@ -38,7 +39,13 @@ fun CollectionItem(
         modifier = Modifier
             .height(48.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceDim)
+            .background(
+                if (selected) {
+                    MaterialTheme.colorScheme.inverseSurface
+                } else {
+                    MaterialTheme.colorScheme.surfaceDim
+                }
+            )
             .clickable(
                 role = Role.RadioButton,
             ) {
@@ -51,11 +58,21 @@ fun CollectionItem(
         Icon(
             imageVector = collection.icon,
             contentDescription = null,
-            tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            tint = if (selected) {
+                MaterialTheme.colorScheme.inverseOnSurface
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
+            modifier = Modifier.size(20.dp)
         )
         if (selected) {
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = collection.name)
+            Text(
+                text = collection.name,
+                style = MaterialTheme.typography.labelLarge.copy(
+                    color = MaterialTheme.colorScheme.inverseOnSurface
+                )
+            )
         }
     }
 }
