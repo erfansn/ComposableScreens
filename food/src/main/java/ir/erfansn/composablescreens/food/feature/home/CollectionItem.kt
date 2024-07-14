@@ -26,11 +26,11 @@ import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Immutable
-data class Category(val name: String, val icon: ImageVector)
+data class Collection(val name: String, val icon: ImageVector)
 
 @Composable
-fun CategoryItem(
-    category: Category,
+fun CollectionItem(
+    collection: Collection,
     selected: Boolean = false,
     onSelect: () -> Unit = { }
 ) {
@@ -49,13 +49,13 @@ fun CategoryItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = category.icon,
+            imageVector = collection.icon,
             contentDescription = null,
             tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
         )
         if (selected) {
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = category.name)
+            Text(text = collection.name)
         }
     }
 }
@@ -65,8 +65,8 @@ fun CategoryItem(
 private fun CategoryItemPreview() {
     FoodTheme {
         Row {
-            CategoryItem(
-                category = Category(name = "Chocolate", icon = Icons.Default.Face)
+            CollectionItem(
+                collection = Collection(name = "Chocolate", icon = Icons.Default.Face)
             )
         }
     }
@@ -77,8 +77,8 @@ private fun CategoryItemPreview() {
 private fun CategoryItemSelectedPreview() {
     FoodTheme {
         Row {
-            CategoryItem(
-                category = Category(name = "Chocolate", icon = Icons.Default.Face),
+            CollectionItem(
+                collection = Collection(name = "Chocolate", icon = Icons.Default.Face),
                 selected = true,
             )
         }
