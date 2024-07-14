@@ -39,12 +39,12 @@ fun CollectionItem(
             .height(48.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceDim)
-            .padding(horizontal = 16.dp)
             .clickable(
                 role = Role.RadioButton,
             ) {
                 onSelect()
-            },
+            }
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
