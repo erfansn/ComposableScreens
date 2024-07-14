@@ -37,7 +37,6 @@ fun CollectionItem(
 ) {
     Row(
         modifier = Modifier
-            .height(48.dp)
             .clip(CircleShape)
             .background(
                 if (selected) {
@@ -51,7 +50,10 @@ fun CollectionItem(
             ) {
                 onSelect()
             }
-            .padding(horizontal = 16.dp),
+            .padding(
+                horizontal = 16.dp,
+                vertical = 12.dp
+            ),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
