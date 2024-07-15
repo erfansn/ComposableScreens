@@ -32,11 +32,12 @@ data class Collection(val name: String, val icon: ImageVector)
 @Composable
 fun CollectionItem(
     collection: Collection,
-    selected: Boolean = false,
-    onSelect: () -> Unit = { }
+    selected: Boolean,
+    onSelect: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clip(CircleShape)
             .background(
                 if (selected) {
@@ -51,8 +52,8 @@ fun CollectionItem(
                 onSelect()
             }
             .padding(
-                horizontal = 16.dp,
-                vertical = 12.dp
+                horizontal = 24.dp,
+                vertical = 20.dp
             ),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -65,13 +66,13 @@ fun CollectionItem(
             } else {
                 MaterialTheme.colorScheme.onSurface
             },
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(18.dp)
         )
         if (selected) {
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = collection.name,
-                style = MaterialTheme.typography.labelLarge.copy(
+                style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.inverseOnSurface
                 )
             )
@@ -85,6 +86,8 @@ private fun CategoryItemPreview() {
     FoodTheme {
         Row {
             CollectionItem(
+                selected = false,
+                onSelect = { },
                 collection = Collection(name = "Chocolate", icon = Icons.Default.Face)
             )
         }
@@ -99,6 +102,7 @@ private fun CategoryItemSelectedPreview() {
             CollectionItem(
                 collection = Collection(name = "Chocolate", icon = Icons.Default.Face),
                 selected = true,
+                onSelect = { },
             )
         }
     }
