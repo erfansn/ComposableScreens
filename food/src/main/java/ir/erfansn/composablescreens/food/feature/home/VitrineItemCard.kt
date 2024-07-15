@@ -40,7 +40,7 @@ import java.util.Locale
 
 typealias Cent = Int
 
-data class Item(
+data class VitrineItem(
     val title: String,
     val image: Painter,
     val backgroundColor: Color,
@@ -48,15 +48,15 @@ data class Item(
 )
 
 @Composable
-fun VitrineCard(
-    item: Item,
+fun VitrineItemCard(
+    vitrineItem: VitrineItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         onClick = onClick,
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = item.backgroundColor),
+        colors = CardDefaults.cardColors(containerColor = vitrineItem.backgroundColor),
         modifier = modifier,
     ) {
         Box(
@@ -65,14 +65,14 @@ fun VitrineCard(
         ) {
             Column {
                 Text(
-                    text = item.title,
+                    text = vitrineItem.title,
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier.padding(horizontal = 16.dp)
                         .padding(top = 12.dp),
                     fontWeight = FontWeight.Bold
                 )
                 Image(
-                    painter = item.image,
+                    painter = vitrineItem.image,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.TopCenter,
@@ -92,7 +92,7 @@ fun VitrineCard(
                     .padding(4.dp)
             ) {
                 val productPriceByKg = buildAnnotatedString {
-                    append(item.priceInCent.convertToDollars())
+                    append(vitrineItem.priceInCent.convertToDollars())
                     withStyle(
                         style = MaterialTheme.typography.labelMedium.toSpanStyle()
                     ) {
@@ -133,8 +133,8 @@ private fun Int.convertToDollars(): String {
 @Composable
 private fun VitrineCardPreview() {
     FoodTheme {
-        VitrineCard(
-            item = Item(
+        VitrineItemCard(
+            vitrineItem = VitrineItem(
                 title = "Peanut butter chocolate chip cookie",
                 priceInCent = 689,
                 image = painterResource(id = R.drawable.peanut_butter_chocolate_chipcookie),
