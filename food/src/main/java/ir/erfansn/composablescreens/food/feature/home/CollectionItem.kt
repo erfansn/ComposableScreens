@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +28,29 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.ui.FoodTheme
+
+val collections = listOf(
+    Collection(
+        name = "All",
+        icon = Icons.Default.Menu
+    ),
+    Collection(
+        name = "Cookie",
+        icon = Icons.Default.Face
+    ),
+    Collection(
+        name = "Brownie",
+        icon = Icons.Default.Favorite
+    ),
+    Collection(
+        name = "Cookie Cakes",
+        icon = Icons.Default.Share
+    ),
+    Collection(
+        name = "Drinks",
+        icon = Icons.Default.Home
+    )
+)
 
 @Immutable
 data class Collection(val name: String, val icon: ImageVector)
