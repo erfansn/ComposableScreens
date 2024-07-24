@@ -23,6 +23,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +60,7 @@ data class Collection(val name: String, val icon: ImageVector)
 fun CollectionItem(
     collection: Collection,
     selected: Boolean,
-    onSelect: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -75,10 +76,10 @@ fun CollectionItem(
             .clickable(
                 role = Role.RadioButton,
             ) {
-                onSelect()
+                onClick()
             }
             .padding(
-                horizontal = 24.dp,
+                horizontal = 26.dp,
                 vertical = 20.dp
             ),
         horizontalArrangement = Arrangement.Center,
@@ -88,17 +89,17 @@ fun CollectionItem(
             imageVector = collection.icon,
             contentDescription = null,
             tint = if (selected) {
-                MaterialTheme.colorScheme.inverseOnSurface
+                Color.Yellow
             } else {
                 MaterialTheme.colorScheme.onSurface
             },
-            modifier = Modifier.size(18.dp)
+            modifier = Modifier.size(20.dp)
         )
         if (selected) {
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = collection.name,
-                style = MaterialTheme.typography.labelMedium.copy(
+                style = MaterialTheme.typography.labelLarge.copy(
                     color = MaterialTheme.colorScheme.inverseOnSurface
                 )
             )
@@ -108,12 +109,12 @@ fun CollectionItem(
 
 @Preview
 @Composable
-private fun CategoryItemPreview() {
+private fun CollectionItemPreview() {
     FoodTheme {
         Row {
             CollectionItem(
                 selected = false,
-                onSelect = { },
+                onClick = { },
                 collection = Collection(name = "Chocolate", icon = Icons.Default.Face)
             )
         }
@@ -122,13 +123,13 @@ private fun CategoryItemPreview() {
 
 @Preview
 @Composable
-private fun CategoryItemSelectedPreview() {
+private fun CollectionItemSelectedPreview() {
     FoodTheme {
         Row {
             CollectionItem(
                 collection = Collection(name = "Chocolate", icon = Icons.Default.Face),
                 selected = true,
-                onSelect = { },
+                onClick = { },
             )
         }
     }
