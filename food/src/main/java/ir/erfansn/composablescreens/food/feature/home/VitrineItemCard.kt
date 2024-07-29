@@ -11,15 +11,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.rounded.AddShoppingCart
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -45,34 +49,58 @@ import java.util.Locale
 
 val vitrineItems = listOf(
     VitrineItem(
-        title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-        backgroundColor = Color.Yellow,
-        priceInCent = 148
+        title = "Peanut Butter Chocolate Chip Cookie",
+        imageId = R.drawable.peanut_butter_chocolate_chip_cookie,
+        backgroundColor = Color(0xFFFCE798),
+        priceInCent = 600
     ),
     VitrineItem(
         title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-        backgroundColor = Color.Blue,
-        priceInCent = 148
+        imageId = R.drawable.sea_salt_chocolate_chip_cookie,
+        backgroundColor = Color(0xFFE4F9CD),
+        priceInCent = 800
     ),
     VitrineItem(
-        title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-        backgroundColor = Color.Cyan,
-        priceInCent = 148
+        title = "Triple Chocolate Chip Cookie",
+        imageId = R.drawable.triple_chocolate_cookie,
+        backgroundColor = Color(0xFFEBE0FE),
+        priceInCent = 399
     ),
     VitrineItem(
-        title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-        backgroundColor = Color.DarkGray,
-        priceInCent = 148
+        title = "White Chocolate Macadamia Nut Cookie",
+        imageId = R.drawable.white_chocolate_macadamia_nut_cookie,
+        backgroundColor = Color(0xFFDDEAFE),
+        priceInCent = 440
     ),
     VitrineItem(
-        title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-        backgroundColor = Color.Red,
-        priceInCent = 148
+        title = "Snickerchurro Cookie",
+        imageId = R.drawable.snickerchurro_cookie,
+        backgroundColor = Color(0xFFFEEAE3),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        title = "S'mores Cookie",
+        imageId = R.drawable.s_mores_cookie,
+        backgroundColor = Color(0xFFFCE798),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        title = "Chocolate Peanut Butter Stuffed Cookie",
+        imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
+        backgroundColor = Color(0xFFE4F9CD),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        title = "Oatmeal Raisin Cookie",
+        imageId = R.drawable.oatmeal_raisin_cookie,
+        backgroundColor = Color(0xFFDDEAFE),
+        priceInCent = 590
+    ),
+    VitrineItem(
+        title = "Caramel Sea Salt Cookie",
+        imageId = R.drawable.caramel_sea_salt_cookie,
+        backgroundColor = Color(0xFFFEEAE3),
+        priceInCent = 550
     )
 )
 
@@ -93,8 +121,11 @@ fun VitrineItemCard(
 ) {
     Card(
         onClick = onClick,
-        shape = MaterialTheme.shapes.large.copy(CornerSize(34.dp)),
-        colors = CardDefaults.cardColors(containerColor = vitrineItem.backgroundColor),
+        shape = RoundedCornerShape(43.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = vitrineItem.backgroundColor,
+            contentColor = FoodTheme.colors.onBackground
+        ),
         modifier = modifier,
     ) {
         Box(
@@ -105,10 +136,10 @@ fun VitrineItemCard(
             Column(modifier = Modifier.haze(hazeState)) {
                 Text(
                     text = vitrineItem.title,
-                    style = MaterialTheme.typography.displaySmall,
+                    style = FoodTheme.typography.displaySmall,
                     modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .padding(top = 18.dp)
+                        .padding(horizontal = 32.dp)
+                        .padding(top = 26.dp)
                         .weight(2f),
                     fontWeight = FontWeight.Bold,
                     maxLines = 3
@@ -119,7 +150,8 @@ fun VitrineItemCard(
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.TopCenter,
                     modifier = Modifier
-                        .scale(1.2f)
+                        .fillMaxWidth()
+                        .scale(1.1f)
                         .weight(3f),
                 )
             }
@@ -128,45 +160,48 @@ fun VitrineItemCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(10.dp)
                     .fillMaxWidth()
-                    .clip(CircleShape)
-                    .border(1.dp, color = Color.Gray, shape = CircleShape)
+                    .height(86.dp)
+                    .clip(RoundedCornerShape(43.dp))
+                    .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(43.dp))
                     .hazeChild(
-                        hazeState,
-                        CircleShape,
-                        HazeStyle(
+                        state = hazeState,
+                        shape = RoundedCornerShape(43.dp),
+                        style = HazeStyle(
                             tint = Color.White.copy(alpha = 0.3f),
-                            blurRadius = 30.dp)
+                            blurRadius = 30.dp
+                        )
                     )
                     .padding(4.dp)
             ) {
                 val productPriceByKg = buildAnnotatedString {
                     append(vitrineItem.priceInCent.convertToDollars())
                     withStyle(
-                        style = MaterialTheme.typography.labelMedium.toSpanStyle()
+                        style = FoodTheme.typography.titleMedium.toSpanStyle().copy(
+                            color = Color(0xFF5A5350)
+                        )
                     ) {
-                        append("/1kg")
+                        append("/1qty")
                     }
                 }
                 Text(
                     text = productPriceByKg,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = 32.dp),
+                    style = FoodTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
                 )
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(color = MaterialTheme.colorScheme.onSurface)
-                        .padding(
-                            vertical = 16.dp,
-                            horizontal = 28.dp
-                        )
+                        .background(color = FoodTheme.colors.secondary)
+                        .size(116.dp, 81.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ShoppingCart,
+                        imageVector = Icons.Rounded.AddShoppingCart,
                         contentDescription = "Shopping Cart",
-                        tint = Color.White
+                        tint = FoodTheme.colors.onSecondary
                     )
                 }
             }
@@ -184,12 +219,7 @@ private fun Int.convertToDollars(): String {
 private fun VitrineCardPreview() {
     FoodTheme {
         VitrineItemCard(
-            vitrineItem = VitrineItem(
-                title = "Peanut butter chocolate chip cookie",
-                priceInCent = 689,
-                imageId = R.drawable.peanut_butter_chocolate_chipcookie,
-                backgroundColor = Color.Yellow
-            ),
+            vitrineItem = vitrineItems.first(),
             onClick = { }
         )
     }

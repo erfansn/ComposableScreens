@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,22 +29,24 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.CardGiftcard
+import androidx.compose.material.icons.rounded.DesktopWindows
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.PersonOutline
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Window
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +76,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import ir.erfansn.composablescreens.food.ui.FoodTheme
-import kotlin.math.absoluteValue
 
 @Composable
 fun HomeScreen() {
@@ -81,7 +83,9 @@ fun HomeScreen() {
         bottomBar = {
             HomeNavigationBar()
         },
-        contentWindowInsets = WindowInsets.safeDrawing
+        contentWindowInsets = WindowInsets.safeDrawing,
+        containerColor = FoodTheme.colors.background,
+        contentColor = FoodTheme.colors.onBackground
     ) {
         HomeContent(
             modifier = Modifier
@@ -104,7 +108,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            val titleTextStyle = MaterialTheme.typography.displaySmall
+            val titleTextStyle = FoodTheme.typography.displaySmall
             val title = buildAnnotatedString {
                 append("Choose ")
                 withStyle(
@@ -124,44 +128,10 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .intoVertical()
-                    .defaultMinSize(109.dp, 52.dp)
-                    .clip(object : Shape {
-                        override fun createOutline(
-                            size: Size,
-                            layoutDirection: LayoutDirection,
-                            density: Density
-                        ): Outline {
-                            val (width, height) = size
-
-                            val peakPercent = 0.3f
-                            return Outline.Generic(
-                                Path().apply {
-                                    moveTo(
-                                        x = width * 0f,
-                                        y = height * 1f
-                                    )
-                                    cubicTo(
-                                        x1 = width * (peakPercent * 0.5f),
-                                        y1 = height * 0f,
-                                        x2 = width * (peakPercent * 0.5f),
-                                        y2 = height * -0.05f,
-                                        x3 = width * 0.5f,
-                                        y3 = height * 0f
-                                    )
-                                    cubicTo(
-                                        x1 = width * (1f - (peakPercent * 0.5f)),
-                                        y1 = height * 0f,
-                                        x2 = width * (1f - (peakPercent * 0.5f)),
-                                        y2 = height * -0.05f,
-                                        x3 = width * 1f,
-                                        y3 = height * 1f
-                                    )
-                                },
-                            )
-                        }
-                    })
+                    .sizeIn(116.dp, 56.dp)
+                    .clip(HillShape)
                     .clickable { }
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(FoodTheme.colors.primary)
                     .padding(bottom = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -170,31 +140,50 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                     imageVector = Icons.Default.KeyboardArrowUp,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(12.dp)
-                        .offset(y = 2.dp)
+                        .size(16.dp)
+                        .offset(y = 5.dp),
+                    tint = FoodTheme.colors.onPrimary
                 )
                 Text(
                     text = "Cart",
-                    style = MaterialTheme.typography.labelLarge
+                    style = FoodTheme.typography.titleMedium,
+                    color = FoodTheme.colors.onPrimary
                 )
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        var selectedCollection by remember { mutableStateOf(collections.first()) }
+        // TODO: Should file this bug
+        /*var delegatedSelectedCollection by remember {
+            Delegates.observable(0) { property, oldValue, newValue ->
+
+            }
+        }*/
         Row(
             modifier = Modifier
                 .horizontalScroll(state = rememberScrollState())
                 .padding(horizontal = 24.dp),
         ) {
-            for (collection in collections) {
-                CollectionItem(
-                    collection = collection,
-                    selected = selectedCollection == collection,
-                    onClick = {
-                        selectedCollection = collection
-                    }
-                )
+            var selectedCollectionIndex by remember { mutableIntStateOf(0) }
+            var previouslySelectedCollectionIndex by remember { mutableIntStateOf(0) }
+            val animateDirection = if (selectedCollectionIndex > previouslySelectedCollectionIndex) {
+                Direction.Right
+            } else {
+                Direction.Left
+            }
+            for ((index, collection) in collections.withIndex()) {
+                key(index) {
+                    CollectionItem(
+                        selected = selectedCollectionIndex == index,
+                        onClick = {
+                            previouslySelectedCollectionIndex = selectedCollectionIndex
+                            selectedCollectionIndex = index
+                        },
+                        name = collection.name,
+                        icon = collection.icon.toPainterOrNull(),
+                        animateDirection = animateDirection
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -206,8 +195,10 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Account")
+            IconButton(
+                onClick = { /*TODO*/ },
+            ) {
+                Icon(imageVector = Icons.Rounded.DesktopWindows, contentDescription = "Account")
             }
             Box {
                 var openPopup by remember { mutableStateOf(false) }
@@ -220,7 +211,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                         }
                 ) {
                     Text(text = "Popular")
-                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+                    Icon(imageVector = Icons.Rounded.KeyboardArrowDown, contentDescription = null)
                 }
                 if (openPopup) {
                     Popup(
@@ -234,7 +225,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                 }
             }
             IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                Icon(imageVector = Icons.Rounded.Settings, contentDescription = "Settings")
             }
         }
 
@@ -246,21 +237,65 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                 vertical = 16.dp
             ),
             key = { vitrineItems[it].hashCode() },
-            beyondBoundsPageCount = 3,
+            beyondBoundsPageCount = 1
         ) {
             VitrineItemCard(
                 vitrineItem = vitrineItems[it],
                 onClick = { /*TODO*/ },
                 modifier = Modifier
                     .graphicsLayer {
-                        val currentPageOffset = pagerState.getOffsetFractionForPage(it)
+                        val fromCurrentPageOffset = pagerState
+                            .getOffsetFractionForPage(it)
 
-                        rotationZ = 12 * currentPageOffset.coerceIn(-1f, 1f)
-                        translationX = -80 * pagerState.currentPageOffsetFraction.absoluteValue * 2f
+                        rotationZ = 12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
+                        translationX = -50 * fromCurrentPageOffset
                     }
                     .zIndex(vitrineItems.size - it.toFloat()),
             )
         }
+    }
+}
+
+private val HillShape = object : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val (width, height) = size
+
+        return Outline.Generic(
+            Path().apply {
+                moveTo(
+                    x = width * 0f,
+                    y = height * 1f
+                )
+                lineTo(
+                    x = width * 0.125f,
+                    y = height * 0.425f
+                )
+                quadraticBezierTo(
+                    x1 = width * 0.2f,
+                    y1 = height * 0f,
+                    x2 = width * 0.4f,
+                    y2 = height * 0f,
+                )
+                lineTo(
+                    x = width - (width * 0.4f),
+                    y = height * 0f
+                )
+                quadraticBezierTo(
+                    x1 = width - (width * 0.2f),
+                    y1 = height * 0f,
+                    x2 = width - (width * 0.125f),
+                    y2 = height * 0.425f,
+                )
+                lineTo(
+                    x = width * 1f,
+                    y = height * 1f
+                )
+            },
+        )
     }
 }
 
@@ -282,21 +317,27 @@ private fun Modifier.intoVertical() = layout { measurable, constraints ->
     }
 }
 
+private val navItemsIcons = listOf(
+    Icons.Rounded.Window,
+    Icons.Rounded.CardGiftcard,
+    Icons.Rounded.FavoriteBorder,
+    Icons.Rounded.PersonOutline
+)
+
 @Composable
 private fun HomeNavigationBar() {
     var navigationBarItemIndex by remember { mutableIntStateOf(0) }
     FoodNavigationBar(
-        containerColor = Color.Black,
         modifier = Modifier
-            .clip(RoundedCornerShape(topStart = 34.dp, topEnd = 34.dp))
+            .clip(RoundedCornerShape(topStart = 43.dp, topEnd = 43.dp))
     ) {
-        repeat(4) {
+        for ((index, icon) in navItemsIcons.withIndex()) {
             FoodNavigationBarItem(
-                selected = it == navigationBarItemIndex,
+                selected = index == navigationBarItemIndex,
                 onClick = {
-                    navigationBarItemIndex = it
+                    navigationBarItemIndex = index
                 },
-                icon = Icons.Default.Home
+                icon = icon
             )
         }
     }
@@ -305,15 +346,13 @@ private fun HomeNavigationBar() {
 @Composable
 private fun FoodNavigationBar(
     modifier: Modifier = Modifier,
-    containerColor: Color = NavigationBarDefaults.containerColor,
-    contentColor: Color = MaterialTheme.colorScheme.contentColorFor(containerColor),
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
     windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
-        color = containerColor,
-        contentColor = contentColor,
+        color = FoodTheme.colors.secondary,
+        contentColor = FoodTheme.colors.onSecondary,
         tonalElevation = tonalElevation,
         modifier = modifier
     ) {
@@ -321,9 +360,9 @@ private fun FoodNavigationBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(windowInsets)
-                .defaultMinSize(minHeight = 108.dp)
+                .defaultMinSize(minHeight = 118.dp)
                 .selectableGroup()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 32.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
             content = content
@@ -341,11 +380,9 @@ private fun FoodNavigationBarItem(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .clickable(onClick = onClick)
             .clip(CircleShape)
-            .background(
-                if (selected) Color.Yellow else Color.Unspecified
-            )
+            .clickable(onClick = onClick)
+            .background(if (selected) FoodTheme.colors.primary else Color.Unspecified)
             .padding(
                 vertical = 12.dp,
                 horizontal = 2.dp,
@@ -354,7 +391,7 @@ private fun FoodNavigationBarItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (selected) Color.Black else Color.White,
+            tint = if (selected) FoodTheme.colors.onPrimary else FoodTheme.colors.onSecondary,
             modifier = Modifier.minimumInteractiveComponentSize()
         )
     }
