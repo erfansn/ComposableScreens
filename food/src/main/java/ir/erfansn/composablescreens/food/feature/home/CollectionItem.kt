@@ -3,9 +3,11 @@ package ir.erfansn.composablescreens.food.feature.home
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.Transition
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -42,6 +44,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
@@ -97,59 +100,16 @@ fun CollectionItem(
     AnimatedContent(
         targetState = selected,
         label = "content",
-        transitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = {
-                    when (animateDirection) {
-                        Direction.Left -> it
-                        Direction.Right -> -it
-                    }
-                }
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = {
-                    when (animateDirection) {
-                        Direction.Left -> -it
-                        Direction.Right -> it
-                    }
-                }
-            )
-        },
+        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
         modifier = modifier
             .clip(CircleShape)
             .background(FoodTheme.colors.tertiary)
             .clickable(role = Role.RadioButton) { onClick() },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.CenterStart
     ) { extended ->
-        if (extended) {
-            transition.ExpandedCollectionItemContent(
-                name,
-                icon,
-            )
-        } else {
-            transition.CollectionItemContent(
-                icon,
-                name,
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-private fun Transition<EnterExitState>.ExpandedCollectionItemContent(
-    name: String,
-    icon: Painter?,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .clip(CircleShape)
-            .background(FoodTheme.colors.secondary)
-            .common(),
-        contentAlignment = Alignment.Center
-    ) {
-        val extendedContentScale by animateFloat(
-            label = "content_effect",
+        val contentAlpha by transition.animateFloat(
+            label = "content_alpha",
+            transitionSpec = { tween() }
         ) {
             when (it) {
                 EnterExitState.PreEnter -> 0f
@@ -157,16 +117,68 @@ private fun Transition<EnterExitState>.ExpandedCollectionItemContent(
                 EnterExitState.PostExit -> 0f
             }
         }
+        if (extended) {
+            ExpandedCollectionItemContent(
+                name = name,
+                icon = icon,
+                modifier = Modifier
+                    .animateEnterExit(
+                        enter = slideInHorizontally(
+                            initialOffsetX = {
+                                when (animateDirection) {
+                                    Direction.Left -> it
+                                    Direction.Right -> -it
+                                }
+                            }
+                        ),
+                        exit = slideOutHorizontally(
+                            targetOffsetX = {
+                                when (animateDirection) {
+                                    Direction.Left -> -it
+                                    Direction.Right -> it
+                                }
+                            }
+                        )
+                    )
+                    .zIndex(1f),
+                contentAlpha = { contentAlpha }
+            )
+        } else {
+            CollectionItemContent(
+                name = name,
+                icon = icon,
+                modifier = Modifier
+                    .zIndex(0f),
+                contentAlpha = { contentAlpha }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExpandedCollectionItemContent(
+    name: String,
+    icon: Painter?,
+    modifier: Modifier = Modifier,
+    contentAlpha: () -> Float = { 1f },
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(FoodTheme.colors.secondary)
+            .contentPadding(),
+        contentAlignment = Alignment.Center
+    ) {
         Row(
             modifier = Modifier
                 .graphicsLayer {
-                    alpha = extendedContentScale
+                    alpha = contentAlpha()
                 }
         ) {
             if (icon == null) {
                 Text(
                     text = name,
-                    style = FoodTheme.typography.labelLarge.copy(textMotion = TextMotion.Animated),
+                    style = FoodTheme.typography.labelLarge,
                     color = FoodTheme.colors.onSecondary,
                 )
             } else {
@@ -179,7 +191,7 @@ private fun Transition<EnterExitState>.ExpandedCollectionItemContent(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = name,
-                    style = FoodTheme.typography.labelLarge.copy(textMotion = TextMotion.Animated),
+                    style = FoodTheme.typography.labelLarge,
                     color = FoodTheme.colors.onSecondary,
                 )
             }
@@ -187,33 +199,24 @@ private fun Transition<EnterExitState>.ExpandedCollectionItemContent(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun Transition<EnterExitState>.CollectionItemContent(
+private fun CollectionItemContent(
     icon: Painter?,
     name: String,
     modifier: Modifier = Modifier,
+    contentAlpha: () -> Float = { 1f }
 ) {
     Box(
         modifier = modifier
-            .common(),
+            .contentPadding(),
     ) {
-        val contentScale by animateFloat(
-            label = "content_alpha",
-        ) {
-            when (it) {
-                EnterExitState.PreEnter -> 0f
-                EnterExitState.Visible -> 1f
-                EnterExitState.PostExit -> 0f
-            }
-        }
         val contentModifier = Modifier.graphicsLayer {
-            alpha = contentScale
+            alpha = contentAlpha()
         }
         if (icon == null) {
             Text(
                 text = name,
-                style = FoodTheme.typography.labelLarge.copy(textMotion = TextMotion.Animated),
+                style = FoodTheme.typography.labelLarge.copy(textMotion = TextMotion.Static),
                 color = FoodTheme.colors.onTertiary,
                 modifier = contentModifier,
             )
@@ -229,7 +232,7 @@ private fun Transition<EnterExitState>.CollectionItemContent(
     }
 }
 
-private fun Modifier.common(): Modifier =
+private fun Modifier.contentPadding(): Modifier =
     this.padding(
         horizontal = 26.dp,
         vertical = 20.dp
