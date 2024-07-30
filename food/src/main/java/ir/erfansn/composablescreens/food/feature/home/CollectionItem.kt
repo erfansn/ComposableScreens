@@ -6,6 +6,7 @@ import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -44,7 +45,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
@@ -85,7 +86,7 @@ fun Icon.toPainterOrNull(): Painter? {
     }
 }
 
-enum class Direction { Left, Right }
+enum class Direction(val sign: Int) { Left(-1), Right(1) }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -100,7 +101,15 @@ fun CollectionItem(
     AnimatedContent(
         targetState = selected,
         label = "content",
-        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+        transitionSpec = {
+            (EnterTransition.None togetherWith ExitTransition.None).using(
+                SizeTransform(
+                    sizeAnimationSpec = { _, _ ->
+                        animationSpec()
+                    },
+                )
+            )
+        },
         modifier = modifier
             .clip(CircleShape)
             .background(FoodTheme.colors.tertiary)
@@ -109,7 +118,7 @@ fun CollectionItem(
     ) { extended ->
         val contentAlpha by transition.animateFloat(
             label = "content_alpha",
-            transitionSpec = { tween() }
+            transitionSpec = { animationSpec() }
         ) {
             when (it) {
                 EnterExitState.PreEnter -> 0f
@@ -125,35 +134,30 @@ fun CollectionItem(
                     .animateEnterExit(
                         enter = slideInHorizontally(
                             initialOffsetX = {
-                                when (animateDirection) {
-                                    Direction.Left -> it
-                                    Direction.Right -> -it
-                                }
-                            }
+                                -animateDirection.sign * it
+                            },
+                            animationSpec = animationSpec()
                         ),
                         exit = slideOutHorizontally(
                             targetOffsetX = {
-                                when (animateDirection) {
-                                    Direction.Left -> -it
-                                    Direction.Right -> it
-                                }
-                            }
+                                animateDirection.sign * it
+                            },
+                            animationSpec = animationSpec()
                         )
-                    )
-                    .zIndex(1f),
+                    ),
                 contentAlpha = { contentAlpha }
             )
         } else {
             CollectionItemContent(
                 name = name,
                 icon = icon,
-                modifier = Modifier
-                    .zIndex(0f),
                 contentAlpha = { contentAlpha }
             )
         }
     }
 }
+
+private fun <T> animationSpec() = tween<T>(600)
 
 @Composable
 private fun ExpandedCollectionItemContent(
@@ -233,7 +237,7 @@ private fun CollectionItemContent(
 }
 
 private fun Modifier.contentPadding(): Modifier =
-    this.padding(
+    this then padding(
         horizontal = 26.dp,
         vertical = 20.dp
     )
