@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -80,6 +81,9 @@ import ir.erfansn.composablescreens.food.ui.FoodTheme
 @Composable
 fun HomeScreen() {
     Scaffold(
+        topBar = {
+            HomeTopBar()
+        },
         bottomBar = {
             HomeNavigationBar()
         },
@@ -95,13 +99,9 @@ fun HomeScreen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.SpaceAround
-    ) {
+private fun HomeTopBar(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(48.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -166,11 +166,12 @@ private fun HomeContent(modifier: Modifier = Modifier) {
         ) {
             var selectedCollectionIndex by remember { mutableIntStateOf(0) }
             var previouslySelectedCollectionIndex by remember { mutableIntStateOf(0) }
-            val animateDirection = if (selectedCollectionIndex > previouslySelectedCollectionIndex) {
-                Direction.Right
-            } else {
-                Direction.Left
-            }
+            val animateDirection =
+                if (selectedCollectionIndex > previouslySelectedCollectionIndex) {
+                    Direction.Right
+                } else {
+                    Direction.Left
+                }
             for ((index, collection) in collections.withIndex()) {
                 key(index) {
                     CollectionItem(
@@ -228,31 +229,37 @@ private fun HomeContent(modifier: Modifier = Modifier) {
                 Icon(imageVector = Icons.Rounded.Settings, contentDescription = "Settings")
             }
         }
+    }
+}
 
-        val pagerState = rememberPagerState(pageCount = { vitrineItems.size })
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(
-                horizontal = 24.dp,
-                vertical = 16.dp
-            ),
-            key = { vitrineItems[it].hashCode() },
-            beyondBoundsPageCount = 1
-        ) {
-            VitrineItemCard(
-                vitrineItem = vitrineItems[it],
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .graphicsLayer {
-                        val fromCurrentPageOffset = pagerState
-                            .getOffsetFractionForPage(it)
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun HomeContent(modifier: Modifier = Modifier) {
+    val pagerState = rememberPagerState(pageCount = { vitrineItems.size })
+    HorizontalPager(
+        state = pagerState,
+        contentPadding = PaddingValues(
+            horizontal = 24.dp,
+            vertical = 16.dp
+        ),
+        key = { vitrineItems[it].hashCode() },
+        beyondBoundsPageCount = 1,
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        VitrineItemCard(
+            vitrineItem = vitrineItems[it],
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+                .graphicsLayer {
+                    val fromCurrentPageOffset = pagerState
+                        .getOffsetFractionForPage(it)
 
-                        rotationZ = 12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
-                        translationX = -50 * fromCurrentPageOffset
-                    }
-                    .zIndex(vitrineItems.size - it.toFloat()),
-            )
-        }
+                    rotationZ = 12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
+                    translationX = -50 * fromCurrentPageOffset
+                }
+                .zIndex(vitrineItems.size - it.toFloat()),
+        )
     }
 }
 
