@@ -1,6 +1,5 @@
 package ir.erfansn.composablescreens.food.feature.home
 
-import android.icu.text.NumberFormat
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,10 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.rounded.AddShoppingCart
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -34,9 +30,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeState
@@ -45,7 +39,7 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
-import java.util.Locale
+import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 
 val vitrineItems = listOf(
     VitrineItem(
@@ -175,18 +169,8 @@ fun VitrineItemCard(
                     )
                     .padding(4.dp)
             ) {
-                val productPriceByKg = buildAnnotatedString {
-                    append(vitrineItem.priceInCent.convertToDollars())
-                    withStyle(
-                        style = FoodTheme.typography.titleMedium.toSpanStyle().copy(
-                            color = Color(0xFF5A5350)
-                        )
-                    ) {
-                        append("/1qty")
-                    }
-                }
                 Text(
-                    text = productPriceByKg,
+                    text = priceByQuantityText(priceInCent = vitrineItem.priceInCent),
                     modifier = Modifier.padding(start = 32.dp),
                     style = FoodTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
@@ -207,11 +191,6 @@ fun VitrineItemCard(
             }
         }
     }
-}
-
-private fun Int.convertToDollars(): String {
-    val numberFormat = NumberFormat.getCurrencyInstance(Locale.US)
-    return numberFormat.format(this / 100.0)
 }
 
 @Preview
