@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -41,7 +40,6 @@ import androidx.compose.material.icons.rounded.Window
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -77,19 +75,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import ir.erfansn.composablescreens.food.ui.FoodTheme
+import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 
 @Composable
 fun HomeScreen() {
-    Scaffold(
+    FoodScaffold(
         topBar = {
             HomeTopBar()
         },
         bottomBar = {
             HomeNavigationBar()
-        },
-        contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = FoodTheme.colors.background,
-        contentColor = FoodTheme.colors.onBackground
+        }
     ) {
         HomeContent(
             modifier = Modifier
