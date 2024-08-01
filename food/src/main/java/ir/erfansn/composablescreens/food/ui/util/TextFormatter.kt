@@ -26,7 +26,7 @@ fun priceByQuantityText(priceInCent: Cent, style: TextStyle = FoodTheme.typograp
     }
 }
 
-private fun Cent.convertToDollars(): String {
+fun Cent.convertToDollars(): String {
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.US)
     return numberFormat.format(this / 100.0)
 }
