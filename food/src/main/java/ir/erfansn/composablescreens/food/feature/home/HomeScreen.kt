@@ -203,7 +203,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             horizontal = 24.dp,
             vertical = 16.dp
         ),
-        key = { vitrineItems[it].hashCode() },
+        key = { vitrineItems[it].id },
         beyondBoundsPageCount = 1,
         modifier = modifier
             .fillMaxSize()
