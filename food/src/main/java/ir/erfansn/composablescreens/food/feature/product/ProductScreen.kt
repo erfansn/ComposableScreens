@@ -90,12 +90,14 @@ fun ProductScreen(
     FoodFloatingScaffold(
         modifier = modifier,
         topBar = {
-            Box(contentAlignment = Alignment.BottomEnd) {
+            Box(
+                contentAlignment = Alignment.BottomEnd,
+                modifier = Modifier.overlappedBackgroundColor(scrollState.value > 24)
+            ) {
                 val transitionData = updateTransitionData(productQuantity == 0)
                 ProductTopBar(
                     title = product.title,
-                    overlappedWithContent = scrollState.value > 24,
-                    onBackClick = { /*TODO: Navigate to home*/ }
+                    onBackClick = { /*TODO: Navigate to home*/ },
                 ) {
                     var addedAsFavorite by remember { mutableStateOf(false) }
                     Icon(
@@ -182,18 +184,10 @@ private fun ProductTopBar(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    overlappedWithContent: Boolean = false,
     actionContent: @Composable RowScope.() -> Unit
 ) {
-    val backgroundColor by animateColorAsState(
-        label = "background_color",
-        targetValue = if (overlappedWithContent) FoodTheme.colors.tertiary else FoodTheme.colors.background
-    )
     Row(
         modifier = modifier
-            .drawBehind {
-                drawRect(backgroundColor)
-            }
             .fillMaxWidth()
             .padding(top = 48.dp, bottom = 12.dp)
             .padding(start = 24.dp),
