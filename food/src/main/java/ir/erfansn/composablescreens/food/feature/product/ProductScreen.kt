@@ -87,7 +87,7 @@ fun ProductScreen(
 ) {
     val scrollState = rememberScrollState()
     var productQuantity by remember { mutableIntStateOf(0) }
-    FoodScaffold(
+    FoodFloatingScaffold(
         modifier = modifier,
         topBar = {
             Box(contentAlignment = Alignment.BottomEnd) {
@@ -129,35 +129,25 @@ fun ProductScreen(
                 )
             }
         },
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(
-                    top = it.calculateTopPadding(),
-                )
-                .padding(
-                    start = it.calculateStartPadding(LocalLayoutDirection.current),
-                    end = it.calculateEndPadding(LocalLayoutDirection.current)
-                )
-        ) {
-            ProductContent(
-                imageId = product.imageId,
-                backgroundColor = product.backgroundColor,
-                priceInCent = product.priceInCent,
-                ingredients = product.ingredients,
-                description = product.description,
-                scrollState = scrollState,
-                contentPadding = PaddingValues(bottom = it.calculateBottomPadding() + 112.dp)
-            )
+        floatingBottomBar = {
             ProductBottomBar(
                 onChangeQuantity = { qty -> productQuantity = qty },
                 producePriceInCent = product.priceInCent,
                 orderCount = productQuantity,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = it.calculateBottomPadding())
+                    .padding(it)
             )
         }
+    ) {
+        ProductContent(
+            imageId = product.imageId,
+            backgroundColor = product.backgroundColor,
+            priceInCent = product.priceInCent,
+            ingredients = product.ingredients,
+            description = product.description,
+            scrollState = scrollState,
+            contentPadding = PaddingValues(bottom = it.calculateBottomPadding() + 112.dp)
+        )
     }
 }
 
