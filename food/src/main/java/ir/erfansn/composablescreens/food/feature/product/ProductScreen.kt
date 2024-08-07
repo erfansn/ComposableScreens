@@ -1,7 +1,6 @@
 package ir.erfansn.composablescreens.food.feature.product
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
@@ -10,7 +9,6 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,9 +23,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,11 +57,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.buildAnnotatedString
@@ -79,8 +71,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
-import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
+import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
+import ir.erfansn.composablescreens.food.ui.component.ProductImage
+import ir.erfansn.composablescreens.food.ui.component.ProductImageDefault
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
+import ir.erfansn.composablescreens.food.ui.modifier.overlappedBackgroundColor
 import ir.erfansn.composablescreens.food.ui.util.Cent
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
@@ -260,18 +255,11 @@ private fun ProductContent(
             .verticalScroll(scrollState)
             .padding(contentPadding)
     ) {
-        Box(
-            modifier = Modifier
-                .padding(24.dp)
-                .background(color = backgroundColor, shape = RoundedCornerShape(43.dp))
-        ) {
-            Image(
-                painter = painterResource(id = imageId),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .scale(1.1f)
-                    .aspectRatio(1f)
+        Box {
+            ProductImage(
+                image = painterResource(imageId),
+                background = ProductImageDefault.productBackground.copy(color = backgroundColor),
+                modifier = Modifier.padding(16.dp)
             )
             Text(
                 text = priceByQuantityText(
@@ -279,7 +267,7 @@ private fun ProductContent(
                     style = FoodTheme.typography.titleSmall
                 ),
                 modifier = Modifier
-                    .offset(12.dp, 12.dp)
+                    .offset((-12).dp, (-12).dp)
                     .align(Alignment.BottomEnd)
                     .clip(CircleShape)
                     .background(FoodTheme.colors.primary)
