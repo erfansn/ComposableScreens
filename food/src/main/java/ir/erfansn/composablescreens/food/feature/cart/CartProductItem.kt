@@ -85,6 +85,7 @@ fun CartProductItem(
             )
         },
         modifier = modifier
+            .padding(end = 6.dp)
             .height(128.dp)
             .fillMaxWidth(),
         colors = ListItemDefaults.colors(
