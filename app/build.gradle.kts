@@ -10,9 +10,9 @@ android {
 
     defaultConfig {
         applicationId = "ir.erfansn.composablescreens"
-
         targetSdk = sdk.versions.target.get().toInt()
         minSdk = sdk.versions.min.get().toInt()
+
         versionCode = 1
         versionName = "1.0"
 
@@ -43,9 +43,7 @@ kotlin {
 }
 
 dependencies {
-    for (i in 1..2) {
-        implementation(project(":travel"))
-    }
+    implementation(project(":travel"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
