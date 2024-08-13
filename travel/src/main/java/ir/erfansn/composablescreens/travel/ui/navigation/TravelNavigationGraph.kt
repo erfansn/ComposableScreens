@@ -7,19 +7,23 @@ import androidx.navigation.compose.navigation
 import ir.erfansn.composablescreens.travel.details.TravelDetailsRoute
 import ir.erfansn.composablescreens.travel.home.TravelHomeRoute
 
+private const val TRAVEL_ROUTE = "travel"
+private const val TRAVEL_HOME_ROUTE = "home"
+private const val TRAVEL_DETAILS_ROUTE = "details"
+
 fun NavGraphBuilder.travelNavigationGraph(navController: NavController) {
     navigation(
-        route = "travel",
-        startDestination = "home"
+        route = TRAVEL_ROUTE,
+        startDestination = TRAVEL_HOME_ROUTE
     ) {
-        composable("home") {
+        composable(TRAVEL_HOME_ROUTE) {
             TravelHomeRoute(
                 onTravelGroupItemClick = {
-                    navController.navigate("details")
+                    navController.navigate(TRAVEL_DETAILS_ROUTE)
                 }
             )
         }
-        composable("details") {
+        composable(TRAVEL_DETAILS_ROUTE) {
             TravelDetailsRoute()
         }
     }

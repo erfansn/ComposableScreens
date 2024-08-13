@@ -3,11 +3,34 @@
 package ir.erfansn.composablescreens.travel.home
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -17,13 +40,24 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -78,8 +112,7 @@ private fun TravelHomeScreen(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
             .fillMaxSize()
-            .systemGesturesPadding()
-            .systemBarsPadding(),
+            .safeDrawingPadding(),
         topBar = {
             TravelHomeTopBar(
                 modifier = baseModifier
@@ -187,11 +220,11 @@ private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            var queriy by remember { mutableStateOf("") }
+            var query by remember { mutableStateOf("") }
             TravelSearchBar(
                 modifier = Modifier.weight(1.0f),
-                value = queriy,
-                onValueChange = { queriy = it }
+                value = query,
+                onValueChange = { query = it }
             )
 
             TravelButton(
@@ -471,20 +504,20 @@ private fun TravelPlacesRow(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun TravelPlaceItem(
     modifier: Modifier = Modifier,
     trip: Trip,
 ) {
-    Box(modifier = modifier
-        .shadow(
-            color = Color.LightGray.copy(alpha = 0.3f),
-            shape = MaterialTheme.shapes.medium,
-            radius = 16.dp,
-            dx = 8.dp,
-            dy = 8.dp
-        )
+    Box(
+        modifier = modifier
+            .shadow(
+                color = Color.LightGray.copy(alpha = 0.3f),
+                shape = MaterialTheme.shapes.medium,
+                radius = 16.dp,
+                dx = 8.dp,
+                dy = 8.dp
+            )
     ) {
         Icon(
             modifier = Modifier
@@ -506,9 +539,10 @@ private fun TravelPlaceItem(
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colors.surface)
         ) {
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .padding(10.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(10.dp)
             ) {
                 Box {
                     Image(
@@ -577,9 +611,11 @@ private fun TravelPlaceItem(
                                 Text(
                                     modifier = Modifier
                                         .padding(6.dp),
-                                    text = pluralStringResource(R.plurals.n_day,
+                                    text = pluralStringResource(
+                                        R.plurals.n_day,
                                         trip.days,
-                                        trip.days),
+                                        trip.days
+                                    ),
                                     style = MaterialTheme.typography.overline
                                 )
                             }
@@ -722,7 +758,6 @@ private fun TravelGroupItem(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun TravelSearchBar(
     modifier: Modifier = Modifier,

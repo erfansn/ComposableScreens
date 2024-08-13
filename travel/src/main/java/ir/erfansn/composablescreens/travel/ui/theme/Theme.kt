@@ -7,8 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import ir.erfansn.composablescreens.travel.ui.OrientationLocker
-import ir.erfansn.composablescreens.travel.ui.OrientationMode
+import ir.erfansn.composablescreens.travel.ui.PortraitOrientationLockerEffect
 
 private val LightColorPalette = lightColors(
     primary = PastelOrange,
@@ -25,7 +24,7 @@ private val LightColorPalette = lightColors(
 
 @Composable
 internal fun TravelTheme(content: @Composable () -> Unit) {
-    OrientationLocker(orientationMode = OrientationMode.Portrait)
+    PortraitOrientationLockerEffect()
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
         MaterialTheme(

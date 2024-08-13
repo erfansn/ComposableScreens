@@ -2,14 +2,20 @@
 
 package ir.erfansn.composablescreens.travel.ui.components
 
-import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Preview
 import androidx.compose.runtime.Composable
@@ -90,19 +96,7 @@ internal fun TravelIconButton(
 
 private val TravelButtonSize = 56.dp
 
-@Preview(
-    name = "Light theme",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    showBackground = true,
-)
-@Preview(
-    name = "Dark theme",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
-annotation class ThemePreviews
-
-@ThemePreviews
+@Preview
 @Composable
 fun TravelButtonText() {
     TravelTheme {
@@ -115,7 +109,7 @@ fun TravelButtonText() {
     }
 }
 
-@ThemePreviews
+@Preview
 @Composable
 fun TravelButtonIconShadow() {
     TravelTheme {
