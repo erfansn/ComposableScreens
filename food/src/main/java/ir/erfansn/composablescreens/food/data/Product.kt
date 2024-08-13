@@ -1,4 +1,4 @@
-package ir.erfansn.composablescreens.food.feature.product
+package ir.erfansn.composablescreens.food.data
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
