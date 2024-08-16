@@ -15,35 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.food.R
-import ir.erfansn.composablescreens.food.feature.home.vitrineItems
+import ir.erfansn.composablescreens.food.data.Product
+import ir.erfansn.composablescreens.food.feature.home.sampleVitrineItems
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.ProductBackground
 import ir.erfansn.composablescreens.food.ui.component.ProductImage
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import kotlin.random.Random
-
-data class CartProduct(
-    val id: Int,
-    val backgroundColor: Color,
-    @DrawableRes val imageId: Int,
-    val title: String,
-    val quantity: Int,
-    val price: Int,
-) {
-    val totalPrice: Int = quantity * price
-}
-
-val sampleCartProducts = vitrineItems.map {
-    CartProduct(
-        id = it.id,
-        backgroundColor = it.backgroundColor,
-        imageId = it.imageId,
-        title = it.title,
-        quantity = Random.nextInt(1, 10),
-        price = it.priceInCent
-    )
-}
 
 @Composable
 fun CartProductItem(
@@ -97,19 +75,41 @@ fun CartProductItem(
     )
 }
 
-val fakeCartProduct = CartProduct(
-    id = 0,
-    backgroundColor = Color(0xFFE4F9CD),
-    imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
-    title = "Bitter choco & cream",
-    quantity = 2,
-    price = 600
+data class CartProduct(
+    val id: Int,
+    val backgroundColor: Color,
+    @DrawableRes val imageId: Int,
+    val title: String,
+    val quantity: Int,
+    val price: Int,
+) {
+    val totalPrice: Int = quantity * price
+}
+
+fun Product.toCartProduct(quantity: Int) = CartProduct(
+    id = id,
+    backgroundColor = backgroundColor,
+    imageId = imageId,
+    title = title,
+    quantity = quantity,
+    price = priceInCent
 )
+
+val sampleCartProducts = sampleVitrineItems.map {
+    CartProduct(
+        id = it.id,
+        backgroundColor = it.backgroundColor,
+        imageId = it.imageId,
+        title = it.title,
+        quantity = Random.nextInt(1, 10),
+        price = it.priceInCent
+    )
+}
 
 @Preview
 @Composable
 private fun CartProductItemPreview() {
     FoodTheme {
-        CartProductItem(cartProduct = fakeCartProduct)
+        CartProductItem(cartProduct = sampleCartProducts.first())
     }
 }

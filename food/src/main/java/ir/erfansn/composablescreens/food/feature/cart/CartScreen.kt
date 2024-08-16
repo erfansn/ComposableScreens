@@ -1,5 +1,6 @@
 package ir.erfansn.composablescreens.food.feature.cart
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,11 +53,32 @@ import ir.erfansn.composablescreens.food.ui.util.Cent
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 
 @Composable
-fun CartScreen(
+fun CartRoute(
+    viewModel: CartViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToProduct: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    CartScreen(
+        onNavigateToHome = onNavigateToHome,
+        onNavigateToProduct = onNavigateToProduct,
+        modifier = modifier,
+        cartProducts = viewModel.cartProducts
+    )
+}
+
+@Composable
+private fun CartScreen(
+    cartProducts: List<CartProduct>,
+    onNavigateToHome: () -> Unit,
+    onNavigateToProduct: (id: Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // TODO: Change to version that support predictive back gesture
+    BackHandler {
+        onNavigateToHome()
+    }
+
     val lazyListState = rememberLazyListState()
 
     var paymentIsSuccessful by remember { mutableStateOf(false) }
@@ -76,7 +98,7 @@ fun CartScreen(
                 ) {
                     CartTopBar()
                     VerticalHillButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onNavigateToHome,
                         title = "Catalog",
                         modifier = Modifier
                             .offset(y = (-6).dp)
@@ -97,9 +119,10 @@ fun CartScreen(
                 .fillMaxSize()
         ) {
             CartContent(
-                cartProducts = sampleCartProducts,
+                cartProducts = cartProducts,
                 contentPadding = it,
-                state = lazyListState
+                state = lazyListState,
+                onNavigateToProduct = onNavigateToProduct
             )
         }
         if (paymentIsSuccessful) {
@@ -147,6 +170,7 @@ private fun CartTopBar(
 @Composable
 private fun CartContent(
     cartProducts: List<CartProduct>,
+    onNavigateToProduct: (id: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     state: LazyListState = rememberLazyListState()
@@ -159,7 +183,10 @@ private fun CartContent(
         state = state
     ) {
         items(cartProducts) {
-            CartProductItem(cartProduct = it, modifier = Modifier.clickable {  })
+            CartProductItem(
+                cartProduct = it,
+                modifier = Modifier.clickable { onNavigateToProduct(it.id) }
+            )
         }
     }
 }
@@ -246,19 +273,19 @@ private val CurvedShape = object : Shape {
                     x = width * 0f,
                     y = height * 0.35f
                 )
-                quadraticBezierTo(
+                quadraticTo(
                     x1 = width * 0f,
                     y1 = height * 0.103f,
                     x2 = width * 0.08f,
                     y2 = height * 0.08f,
                 )
-                quadraticBezierTo(
+                quadraticTo(
                     x1 = width * 0.5f,
                     y1 = height * -0.07f,
                     x2 = width - (width * 0.08f),
                     y2 = height * 0.08f,
                 )
-                quadraticBezierTo(
+                quadraticTo(
                     x1 = width - (width * 0f),
                     y1 = height * 0.103f,
                     x2 = width - (width * 0f),
@@ -279,7 +306,8 @@ private fun CartScreenPreview() {
     FoodTheme {
         CartScreen(
             onNavigateToHome = { /*TODO*/ },
-            onNavigateToProduct = { }
+            onNavigateToProduct = { },
+            cartProducts = sampleCartProducts
         )
     }
 }

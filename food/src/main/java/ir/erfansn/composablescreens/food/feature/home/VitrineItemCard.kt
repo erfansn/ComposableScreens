@@ -38,84 +38,9 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.food.R
+import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
-
-val vitrineItems = listOf(
-    VitrineItem(
-        id = 0,
-        title = "Peanut Butter Chocolate Chip Cookie",
-        imageId = R.drawable.peanut_butter_chocolate_chip_cookie,
-        backgroundColor = Color(0xFFFCE798),
-        priceInCent = 600
-    ),
-    VitrineItem(
-        id = 1,
-        title = "Sea Salt Chocolate Chip Cookie",
-        imageId = R.drawable.sea_salt_chocolate_chip_cookie,
-        backgroundColor = Color(0xFFE4F9CD),
-        priceInCent = 800
-    ),
-    VitrineItem(
-        id = 2,
-        title = "Triple Chocolate Chip Cookie",
-        imageId = R.drawable.triple_chocolate_cookie,
-        backgroundColor = Color(0xFFEBE0FE),
-        priceInCent = 399
-    ),
-    VitrineItem(
-        id = 3,
-        title = "White Chocolate Macadamia Nut Cookie",
-        imageId = R.drawable.white_chocolate_macadamia_nut_cookie,
-        backgroundColor = Color(0xFFDDEAFE),
-        priceInCent = 440
-    ),
-    VitrineItem(
-        id = 4,
-        title = "Snickerchurro Cookie",
-        imageId = R.drawable.snickerchurro_cookie,
-        backgroundColor = Color(0xFFFEEAE3),
-        priceInCent = 550
-    ),
-    VitrineItem(
-        id = 5,
-        title = "S'mores Cookie",
-        imageId = R.drawable.s_mores_cookie,
-        backgroundColor = Color(0xFFFCE798),
-        priceInCent = 550
-    ),
-    VitrineItem(
-        id = 6,
-        title = "Chocolate Peanut Butter Stuffed Cookie",
-        imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
-        backgroundColor = Color(0xFFE4F9CD),
-        priceInCent = 550
-    ),
-    VitrineItem(
-        id = 7,
-        title = "Oatmeal Raisin Cookie",
-        imageId = R.drawable.oatmeal_raisin_cookie,
-        backgroundColor = Color(0xFFDDEAFE),
-        priceInCent = 590
-    ),
-    VitrineItem(
-        id = 8,
-        title = "Caramel Sea Salt Cookie",
-        imageId = R.drawable.caramel_sea_salt_cookie,
-        backgroundColor = Color(0xFFFEEAE3),
-        priceInCent = 550
-    )
-)
-
-typealias Cent = Int
-
-data class VitrineItem(
-    val id: Int,
-    val title: String,
-    @DrawableRes val imageId: Int,
-    val backgroundColor: Color,
-    val priceInCent: Cent,
-)
 
 @Composable
 fun VitrineItemCard(
@@ -203,12 +128,96 @@ fun VitrineItemCard(
     }
 }
 
+typealias Cent = Int
+
+data class VitrineItem(
+    val id: Int,
+    val title: String,
+    @DrawableRes val imageId: Int,
+    val backgroundColor: Color,
+    val priceInCent: Cent,
+)
+
+fun Product.toVitrineItem() = VitrineItem(
+    id = id,
+    title = title,
+    imageId = imageId,
+    backgroundColor = backgroundColor,
+    priceInCent = priceInCent
+)
+
+val sampleVitrineItems = listOf(
+    VitrineItem(
+        id = 0,
+        title = "Peanut Butter Chocolate Chip Cookie",
+        imageId = R.drawable.peanut_butter_chocolate_chip_cookie,
+        backgroundColor = Color(0xFFFCE798),
+        priceInCent = 600
+    ),
+    VitrineItem(
+        id = 1,
+        title = "Sea Salt Chocolate Chip Cookie",
+        imageId = R.drawable.sea_salt_chocolate_chip_cookie,
+        backgroundColor = Color(0xFFE4F9CD),
+        priceInCent = 800
+    ),
+    VitrineItem(
+        id = 2,
+        title = "Triple Chocolate Chip Cookie",
+        imageId = R.drawable.triple_chocolate_cookie,
+        backgroundColor = Color(0xFFEBE0FE),
+        priceInCent = 399
+    ),
+    VitrineItem(
+        id = 3,
+        title = "White Chocolate Macadamia Nut Cookie",
+        imageId = R.drawable.white_chocolate_macadamia_nut_cookie,
+        backgroundColor = Color(0xFFDDEAFE),
+        priceInCent = 440
+    ),
+    VitrineItem(
+        id = 4,
+        title = "Snickerchurro Cookie",
+        imageId = R.drawable.snickerchurro_cookie,
+        backgroundColor = Color(0xFFFEEAE3),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        id = 5,
+        title = "S'mores Cookie",
+        imageId = R.drawable.s_mores_cookie,
+        backgroundColor = Color(0xFFFCE798),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        id = 6,
+        title = "Chocolate Peanut Butter Stuffed Cookie",
+        imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
+        backgroundColor = Color(0xFFE4F9CD),
+        priceInCent = 550
+    ),
+    VitrineItem(
+        id = 7,
+        title = "Oatmeal Raisin Cookie",
+        imageId = R.drawable.oatmeal_raisin_cookie,
+        backgroundColor = Color(0xFFDDEAFE),
+        priceInCent = 590
+    ),
+    VitrineItem(
+        id = 8,
+        title = "Caramel Sea Salt Cookie",
+        imageId = R.drawable.caramel_sea_salt_cookie,
+        backgroundColor = Color(0xFFFEEAE3),
+        priceInCent = 550
+    )
+)
+
 @Preview
 @Composable
 private fun VitrineCardPreview() {
     FoodTheme {
         VitrineItemCard(
-            vitrineItem = vitrineItems.first(),
+            vitrineItem = sampleVitrineItems.first(),
             onClick = { }
         )
     }

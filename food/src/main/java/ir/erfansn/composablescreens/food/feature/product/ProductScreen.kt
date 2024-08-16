@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -49,6 +50,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +72,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.erfansn.composablescreens.food.R
+import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
 import ir.erfansn.composablescreens.food.ui.component.ProductImage
@@ -81,23 +84,44 @@ import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 
 @Composable
-fun ProductScreen(
+fun ProductRoute(
+    viewModel: ProductViewModel,
+    onNavigateToCart: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ProductScreen(
+        product = viewModel.product,
+        onNavigateToCart = onNavigateToCart,
+        onBackClick = onBackClick,
+        modifier = modifier,
+        quantity = viewModel.quantity,
+        onChangeQuantity = viewModel::changeProductQuantity
+    )
+}
+
+@Composable
+private fun ProductScreen(
     product: Product,
+    quantity: Int,
+    onChangeQuantity: (value: Int) -> Unit,
+    onNavigateToCart: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    var productQuantity by remember { mutableIntStateOf(0) }
     FoodFloatingScaffold(
         modifier = modifier,
         topBar = {
+            val isOverlapped by remember { derivedStateOf { scrollState.value > 24 } }
             Box(
                 contentAlignment = Alignment.BottomEnd,
-                modifier = Modifier.overlappedBackgroundColor(scrollState.value > 24)
+                modifier = Modifier.overlappedBackgroundColor(isOverlapped)
             ) {
-                val transitionData = updateTransitionData(productQuantity == 0)
+                val transitionData = updateTransitionData(quantity == 0)
                 ProductTopBar(
                     title = product.title,
-                    onBackClick = { /*TODO: Navigate to home*/ },
+                    onBackClick = onBackClick,
                 ) {
                     var addedAsFavorite by remember { mutableStateOf(false) }
                     Icon(
@@ -121,7 +145,7 @@ fun ProductScreen(
                     )
                 }
                 VerticalHillButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onNavigateToCart,
                     title = "Cart",
                     modifier = Modifier
                         .graphicsLayer {
@@ -133,9 +157,9 @@ fun ProductScreen(
         },
         floatingBottomBar = {
             ProductBottomBar(
-                onChangeQuantity = { qty -> productQuantity = qty },
+                onChangeQuantity = { qty -> onChangeQuantity(qty) },
                 producePriceInCent = product.priceInCent,
-                orderCount = productQuantity,
+                orderCount = quantity,
                 modifier = Modifier
                     .padding(it)
             )
@@ -273,16 +297,22 @@ private fun ProductContent(
                 .padding(horizontal = 24.dp)
         ) {
             for (ingredient in ingredients) {
-                Text(
-                    text = ingredient,
+                Box(
                     modifier = Modifier
-                        .weight(1f)
                         .clip(CircleShape)
                         .background(FoodTheme.colors.tertiary)
-                        .padding(24.dp),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold
-                )
+                        .fillMaxRowHeight()
+                        .requiredHeightIn(max = 86.dp)
+                        .weight(1f)
+                        .padding(12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = ingredient,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -434,7 +464,13 @@ private val sampleProduct = Product(
     imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
     backgroundColor = Color(0xFFE4F9CD),
     priceInCent = 600,
-    ingredients = List(4) { "Eggs" },
+    ingredients = listOf(
+        "Organic Flour",
+        "Organic Cane Sugar",
+        "Organic Peanut Butter",
+        "Organic Graham Crackers",
+        "Non Gmo Baking Powder",
+    ),
     description = "You can always eat white, even after Labor Day. Our wholesome yet slightly wicked white chocolate macadamia cookie is the perfectly alluring antidote to quell your hunger. Reliably chewy, these soft white chocolate macadamia nut cookies are the  stuff. Made with deceptively sweet white chocolate chips and humungo macadamia nuts, these are the best white chocolate macadamia nut cookie on the scene. Just one bite, and you’ll be licking the crumbs off the plate."
 )
 
@@ -442,6 +478,13 @@ private val sampleProduct = Product(
 @Composable
 private fun ProductScreenPreview() {
     FoodTheme {
-        ProductScreen(product = sampleProduct)
+        var quntity by remember { mutableIntStateOf(0) }
+        ProductScreen(
+            product = sampleProduct,
+            onBackClick = { },
+            onNavigateToCart = { },
+            quantity = quntity,
+            onChangeQuantity = { quntity = it }
+        )
     }
 }

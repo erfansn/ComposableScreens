@@ -1,6 +1,8 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package ir.erfansn.composablescreens.food.feature.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -67,25 +69,53 @@ import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
 
 @Composable
-fun HomeScreen() {
+fun HomeRoute(
+    viewModel: HomeViewModel,
+    onNavigateToProduct: (id: Int) -> Unit,
+    onNavigateToCart: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    HomeScreen(
+        onNavigateToCart = onNavigateToCart,
+        onNavigateToProduct = onNavigateToProduct,
+        modifier = modifier,
+        vitrineItems = viewModel.vitrineItems
+    )
+}
+
+@Composable
+private fun HomeScreen(
+    onNavigateToCart: () -> Unit,
+    onNavigateToProduct: (id: Int) -> Unit,
+    vitrineItems: List<VitrineItem>,
+    modifier: Modifier = Modifier
+) {
     FoodScaffold(
         topBar = {
-            HomeTopBar()
+            HomeTopBar(
+                onNavigateToCart = onNavigateToCart
+            )
         },
         bottomBar = {
             HomeNavigationBar()
-        }
+        },
+        modifier = modifier,
     ) {
         HomeContent(
             modifier = Modifier
                 .padding(it)
-                .consumeWindowInsets(it)
+                .consumeWindowInsets(it),
+            onNavigateToProduct = onNavigateToProduct,
+            vitrineItems = vitrineItems
         )
     }
 }
 
 @Composable
-private fun HomeTopBar(modifier: Modifier = Modifier) {
+private fun HomeTopBar(
+    onNavigateToCart: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(48.dp))
         Row(
@@ -110,16 +140,10 @@ private fun HomeTopBar(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(start = 24.dp)
             )
 
-            VerticalHillButton(title = "Cart", onClick = {  })
+            VerticalHillButton(title = "Cart", onClick = onNavigateToCart)
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        // TODO: Should file this bug
-        /*var delegatedSelectedCollection by remember {
-            Delegates.observable(0) { property, oldValue, newValue ->
-
-            }
-        }*/
         Row(
             modifier = Modifier
                 .horizontalScroll(state = rememberScrollState())
@@ -193,9 +217,12 @@ private fun HomeTopBar(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier) {
+private fun HomeContent(
+    vitrineItems: List<VitrineItem>,
+    onNavigateToProduct: (id: Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val pagerState = rememberPagerState(pageCount = { vitrineItems.size })
     HorizontalPager(
         state = pagerState,
@@ -204,17 +231,19 @@ private fun HomeContent(modifier: Modifier = Modifier) {
             vertical = 16.dp
         ),
         key = { vitrineItems[it].id },
-        beyondBoundsPageCount = 1,
+        beyondViewportPageCount = 1,
         modifier = modifier
             .fillMaxSize()
     ) {
         VitrineItemCard(
             vitrineItem = vitrineItems[it],
-            onClick = { /*TODO*/ },
+            onClick = {
+                onNavigateToProduct(vitrineItems[it].id)
+            },
             modifier = Modifier
                 .graphicsLayer {
                     val fromCurrentPageOffset = pagerState
-                        .getOffsetFractionForPage(it)
+                        .getOffsetDistanceInPages(it)
 
                     rotationZ = 12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
                     translationX = -50 * fromCurrentPageOffset
@@ -308,6 +337,10 @@ private fun FoodNavigationBarItem(
 @Composable
 private fun HomeScreenPreview() {
     FoodTheme {
-        HomeScreen()
+        HomeScreen(
+            onNavigateToCart = { },
+            onNavigateToProduct = { },
+            vitrineItems = sampleVitrineItems
+        )
     }
 }
