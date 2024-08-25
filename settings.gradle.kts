@@ -15,9 +15,9 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("sdk") {
-            version("compile", "34")
-            version("min", "21")
-            version("target", "34")
+            version("compile", "35")
+            version("min", "24")
+            version("target", "35")
         }
         create("jvm") {
             version("toolchain", "17")
