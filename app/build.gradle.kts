@@ -44,6 +44,7 @@ kotlin {
 
 dependencies {
     implementation(project(":travel"))
+    implementation(project(":common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
