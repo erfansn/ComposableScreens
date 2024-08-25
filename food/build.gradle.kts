@@ -6,10 +6,10 @@ plugins {
 
 android {
     namespace = "ir.erfansn.composablescreens.food"
-    compileSdk = 34
+    compileSdk = sdk.versions.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 24
+        minSdk = sdk.versions.min.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
