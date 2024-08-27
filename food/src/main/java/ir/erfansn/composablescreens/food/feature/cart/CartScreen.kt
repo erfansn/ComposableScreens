@@ -1,6 +1,7 @@
 package ir.erfansn.composablescreens.food.feature.cart
 
-import androidx.activity.compose.BackHandler
+import android.util.Log
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,8 @@ import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
 import ir.erfansn.composablescreens.food.ui.modifier.overlappedBackgroundColor
 import ir.erfansn.composablescreens.food.ui.util.Cent
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun CartRoute(
@@ -74,9 +77,14 @@ private fun CartScreen(
     onNavigateToProduct: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO: Change to version that support predictive back gesture
-    BackHandler {
-        onNavigateToHome()
+    // TODO: Sync predictive back gesture animation with custom pop up destination [https://issuetracker.google.com/issues/331809442]
+    PredictiveBackHandler {
+        try {
+            it.collect()
+            onNavigateToHome()
+        } catch (e: CancellationException) {
+            Log.i("CartScreen", "Back gesture cancelled")
+        }
     }
 
     val lazyListState = rememberLazyListState()
