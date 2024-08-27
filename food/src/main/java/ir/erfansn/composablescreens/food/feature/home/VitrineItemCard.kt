@@ -1,14 +1,17 @@
 package ir.erfansn.composablescreens.food.feature.home
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,25 +25,32 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
+import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
+import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 
 @Composable
 fun VitrineItemCard(
@@ -48,6 +58,8 @@ fun VitrineItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val scaleEffectValue by interactionSource.scaleEffectValue()
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(43.dp),
@@ -55,7 +67,12 @@ fun VitrineItemCard(
             containerColor = vitrineItem.backgroundColor,
             contentColor = FoodTheme.colors.onBackground
         ),
-        modifier = modifier,
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = scaleEffectValue
+                scaleY = scaleEffectValue
+            },
+        interactionSource = interactionSource
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter,

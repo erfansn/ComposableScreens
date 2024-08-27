@@ -1,9 +1,10 @@
 package ir.erfansn.composablescreens.food.feature.product
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.slideInVertically
@@ -13,7 +14,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -71,8 +70,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.dropUnlessResumed
+import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
+import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
 import ir.erfansn.composablescreens.food.ui.component.ProductImage
@@ -82,6 +85,7 @@ import ir.erfansn.composablescreens.food.ui.modifier.overlappedBackgroundColor
 import ir.erfansn.composablescreens.food.ui.util.Cent
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
+import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 
 @Composable
 fun ProductRoute(
@@ -345,16 +349,12 @@ private fun ProductBottomBar(
     ) {
         if (it == 0) {
             val interactionSource = remember { MutableInteractionSource() }
-            val isPressed by interactionSource.collectIsPressedAsState()
-            val layoutScale by animateFloatAsState(
-                targetValue = if (isPressed) 0.97f else 1f,
-                label = "scale"
-            )
+            val scaleEffectValue by interactionSource.scaleEffectValue()
             Row(
                 modifier = Modifier
                     .graphicsLayer {
-                        scaleX = layoutScale
-                        scaleY = layoutScale
+                        scaleX = scaleEffectValue
+                        scaleY = scaleEffectValue
                     }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
