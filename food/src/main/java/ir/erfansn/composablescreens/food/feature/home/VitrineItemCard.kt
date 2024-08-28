@@ -76,7 +76,7 @@ fun VitrineItemCard(
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier.aspectRatio(4/4.5f)
+            modifier = Modifier.fillMaxSize()
         ) {
             val hazeState = remember { HazeState() }
             Column(modifier = Modifier.haze(hazeState)) {
@@ -88,7 +88,8 @@ fun VitrineItemCard(
                         .padding(top = 26.dp)
                         .weight(2f),
                     fontWeight = FontWeight.Bold,
-                    maxLines = 3
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Image(
                     painter = painterResource(id = vitrineItem.imageId),
@@ -114,9 +115,9 @@ fun VitrineItemCard(
                     .hazeChild(
                         state = hazeState,
                         shape = RoundedCornerShape(43.dp),
-                        style = HazeStyle(
-                            tint = Color.White.copy(alpha = 0.3f),
-                            blurRadius = 30.dp
+                        style = HazeDefaults.style(
+                            backgroundColor = Color.White.copy(alpha = 0.35f),
+                            blurRadius = 10.dp,
                         )
                     )
                     .padding(4.dp)
@@ -235,7 +236,8 @@ private fun VitrineCardPreview() {
     FoodTheme {
         VitrineItemCard(
             vitrineItem = sampleVitrineItems.first(),
-            onClick = { }
+            onClick = { },
+            modifier = Modifier.aspectRatio(1f)
         )
     }
 }

@@ -257,8 +257,7 @@ private fun HomeContent(
                     val fromCurrentPageOffset = pagerState
                         .getOffsetDistanceInPages(it)
 
-                    rotationZ = 12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
-                    translationX = -50 * fromCurrentPageOffset
+                    rotationZ = -12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
                 }
                 .zIndex(vitrineItems.size - it.toFloat()),
         )

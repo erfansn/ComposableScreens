@@ -180,7 +180,7 @@ private fun ProductScreen(
             ingredients = product.ingredients,
             description = product.description,
             scrollState = scrollState,
-            contentPadding = PaddingValues(bottom = it.calculateBottomPadding() + 112.dp)
+            contentPadding = PaddingValues(bottom = it.calculateBottomPadding()),
         )
     }
 }
@@ -309,8 +309,7 @@ private fun ProductContent(
                     modifier = Modifier
                         .clip(CircleShape)
                         .background(FoodTheme.colors.tertiary)
-                        .fillMaxRowHeight()
-                        .requiredHeightIn(max = 86.dp)
+                        .height(86.dp)
                         .weight(1f)
                         .padding(12.dp),
                     contentAlignment = Alignment.Center
