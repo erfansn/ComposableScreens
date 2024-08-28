@@ -125,7 +125,9 @@ private fun ProductScreen(
                 val transitionData = updateTransitionData(quantity == 0)
                 ProductTopBar(
                     title = product.title,
-                    onBackClick = onBackClick,
+                    onBackClick = dropUnlessResumed {
+                        onBackClick()
+                    },
                 ) {
                     var addedAsFavorite by remember { mutableStateOf(false) }
                     Icon(
@@ -149,7 +151,9 @@ private fun ProductScreen(
                     )
                 }
                 VerticalHillButton(
-                    onClick = onNavigateToCart,
+                    onClick = dropUnlessResumed {
+                        onNavigateToCart()
+                    },
                     title = "Cart",
                     modifier = Modifier
                         .graphicsLayer {

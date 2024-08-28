@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
@@ -193,7 +194,7 @@ private fun CartContent(
         items(cartProducts) {
             CartProductItem(
                 cartProduct = it,
-                modifier = Modifier.clickable { onNavigateToProduct(it.id) }
+                onClick = dropUnlessResumed { onNavigateToProduct(it.id) }
             )
         }
     }

@@ -3,6 +3,9 @@
 package ir.erfansn.composablescreens.food.feature.home
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -64,6 +67,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.dropUnlessResumed
+import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
+import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
@@ -140,7 +147,12 @@ private fun HomeTopBar(
                 modifier = Modifier.padding(start = 24.dp)
             )
 
-            VerticalHillButton(title = "Cart", onClick = onNavigateToCart)
+            VerticalHillButton(
+                title = "Cart",
+                onClick = dropUnlessResumed {
+                    onNavigateToCart()
+                }
+            )
         }
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -237,7 +249,7 @@ private fun HomeContent(
     ) {
         VitrineItemCard(
             vitrineItem = vitrineItems[it],
-            onClick = {
+            onClick = dropUnlessResumed {
                 onNavigateToProduct(vitrineItems[it].id)
             },
             modifier = Modifier
