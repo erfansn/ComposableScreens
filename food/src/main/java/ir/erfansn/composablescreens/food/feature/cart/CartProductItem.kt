@@ -1,6 +1,7 @@
 package ir.erfansn.composablescreens.food.feature.cart
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import kotlin.random.Random
 
 @Composable
 fun CartProductItem(
+    onClick: () -> Unit,
     cartProduct: CartProduct,
     modifier: Modifier = Modifier
 ) {
@@ -63,6 +65,7 @@ fun CartProductItem(
             )
         },
         modifier = modifier
+            .clickable { onClick() }
             .padding(end = 6.dp)
             .height(128.dp)
             .fillMaxWidth(),
@@ -110,6 +113,9 @@ val sampleCartProducts = sampleVitrineItems.map {
 @Composable
 private fun CartProductItemPreview() {
     FoodTheme {
-        CartProductItem(cartProduct = sampleCartProducts.first())
+        CartProductItem(
+            cartProduct = sampleCartProducts.first(),
+            onClick = { }
+        )
     }
 }
