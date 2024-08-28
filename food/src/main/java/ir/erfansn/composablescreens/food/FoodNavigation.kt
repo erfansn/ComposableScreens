@@ -52,7 +52,6 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             val viewModel = viewModel<HomeViewModel>()
             HomeRoute(
                 onNavigateToProduct = {
-                    // TODO: Wrap with safe caller
                     navController.navigate(FoodNavGraph.ProductRoute(it))
                 },
                 onNavigateToCart = {
@@ -77,9 +76,8 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             CartRoute(
                 onNavigateToHome = {
                     navController.navigate(FoodNavGraph.HomeRoute) {
-                        // restoreState = true
                         popUpTo(FoodNavGraph.HomeRoute) {
-                            // saveState = true
+                            inclusive = true
                         }
                     }
                 },
