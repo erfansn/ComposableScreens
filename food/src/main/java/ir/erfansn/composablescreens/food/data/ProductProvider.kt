@@ -9,7 +9,7 @@ object ProductProvider {
         return listOf(
             Product(
                 id = 0,
-                title = "Peanut Butter Chocolate Chip Cookie",
+                title = "Peanut Butter Choco Chip",
                 imageId = R.drawable.peanut_butter_chocolate_chip_cookie,
                 backgroundColor = Color(0xFFFCE798),
                 priceInCent = 600,
@@ -31,7 +31,7 @@ object ProductProvider {
             ),
             Product(
                 id = 1,
-                title = "Sea Salt Chocolate Chip Cookie",
+                title = "Sea Salt Choco Chip",
                 imageId = R.drawable.sea_salt_chocolate_chip_cookie,
                 backgroundColor = Color(0xFFE4F9CD),
                 priceInCent = 800,
@@ -53,7 +53,7 @@ object ProductProvider {
             ),
             Product(
                 id = 2,
-                title = "Triple Chocolate Chip Cookie",
+                title = "Triple Choco Chip",
                 imageId = R.drawable.triple_chocolate_cookie,
                 backgroundColor = Color(0xFFEBE0FE),
                 priceInCent = 399,
@@ -75,7 +75,7 @@ object ProductProvider {
             ),
             Product(
                 id = 3,
-                title = "White Chocolate Macadamia Nut Cookie",
+                title = "White Choco Macadamia Nut",
                 imageId = R.drawable.white_chocolate_macadamia_nut_cookie,
                 backgroundColor = Color(0xFFDDEAFE),
                 priceInCent = 440,
@@ -141,7 +141,7 @@ object ProductProvider {
             ),
             Product(
                 id = 6,
-                title = "Chocolate Peanut Butter Stuffed Cookie",
+                title = "Choco Peanut Butter Stuffed",
                 imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
                 backgroundColor = Color(0xFFE4F9CD),
                 priceInCent = 550,
