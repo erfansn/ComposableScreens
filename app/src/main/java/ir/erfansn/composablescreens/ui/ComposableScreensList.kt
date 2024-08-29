@@ -25,10 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
-typealias NameRoutePair = Pair<String, String>
+private typealias NameRoutePair = Pair<String, String>
 
 val routes: List<NameRoutePair> = listOf(
-    "Travel" to "travel"
+    "Travel" to "travel",
+    "Food" to "food"
 )
 
 @Composable

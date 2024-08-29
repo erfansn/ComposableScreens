@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ir.erfansn.composablescreens.common.LocalSharedTransitionScope
+import ir.erfansn.composablescreens.food.foodNavGraph
 import ir.erfansn.composablescreens.travel.ui.navigation.travelNavigationGraph
 import ir.erfansn.composablescreens.ui.ComposableScreensList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             travelNavigationGraph(navController)
+                            foodNavGraph(navController)
                         }
                     }
                 }

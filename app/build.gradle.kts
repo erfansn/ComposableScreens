@@ -45,6 +45,7 @@ kotlin {
 dependencies {
     implementation(project(":travel"))
     implementation(project(":common"))
+    implementation(project(":food"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
@@ -55,5 +56,5 @@ dependencies {
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling.asProvider())
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
