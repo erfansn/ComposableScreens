@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package ir.erfansn.composablescreens.food.feature.product
 
 import androidx.compose.animation.AnimatedContent
@@ -7,6 +9,8 @@ import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -124,6 +128,7 @@ private fun ProductScreen(
             ) {
                 val transitionData = updateTransitionData(quantity == 0)
                 ProductTopBar(
+                    productId = product.id,
                     title = product.title,
                     onBackClick = dropUnlessResumed {
                         onBackClick()
@@ -174,6 +179,7 @@ private fun ProductScreen(
         }
     ) {
         ProductContent(
+            productId = product.id,
             imageId = product.imageId,
             backgroundColor = product.backgroundColor,
             priceInCent = product.priceInCent,
@@ -213,6 +219,7 @@ private fun updateTransitionData(equalsZero: Boolean): TransitionData {
 
 @Composable
 private fun ProductTopBar(
+    productId: Int,
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -246,16 +253,24 @@ private fun ProductTopBar(
                 style = FoodTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .offset((-16).dp),
+                    .offset((-16).dp)
+                    .withSafeSharedTransitionScope {
+                        Modifier.sharedElement(
+                            state = rememberSharedContentState(key = "title_${productId}"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            zIndexInOverlay = 2f,
+                        )
+                    },
             )
         }
         actionContent()
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ProductContent(
+    productId: Int,
     imageId: Int,
     backgroundColor: Color,
     priceInCent: Cent,
@@ -275,7 +290,15 @@ private fun ProductContent(
             ProductImage(
                 image = painterResource(imageId),
                 background = ProductImageDefault.productBackground.copy(color = backgroundColor),
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .withSafeSharedTransitionScope {
+                        Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "container_${productId}"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                        )
+                    }
             )
             Text(
                 text = priceByQuantityText(
@@ -285,6 +308,16 @@ private fun ProductContent(
                 modifier = Modifier
                     .offset((-12).dp, (-12).dp)
                     .align(Alignment.BottomEnd)
+                    .withSafeSharedTransitionScope {
+                        with(LocalNavAnimatedContentScope.requiredCurrent) {
+                            Modifier.renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 2f
+                            ).animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                            )
+                        }
+                    }
                     .clip(CircleShape)
                     .background(FoodTheme.colors.primary)
                     .padding(vertical = 24.dp, horizontal = 20.dp),

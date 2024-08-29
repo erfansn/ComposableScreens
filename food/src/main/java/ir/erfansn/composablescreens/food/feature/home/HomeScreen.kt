@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -110,8 +109,7 @@ private fun HomeScreen(
     ) {
         HomeContent(
             modifier = Modifier
-                .padding(it)
-                .consumeWindowInsets(it),
+                .padding(it),
             onNavigateToProduct = onNavigateToProduct,
             vitrineItems = vitrineItems
         )
@@ -250,9 +248,32 @@ private fun HomeContent(
         VitrineItemCard(
             vitrineItem = vitrineItems[it],
             onClick = dropUnlessResumed {
+                if (it != pagerState.currentPage) return@dropUnlessResumed
+
                 onNavigateToProduct(vitrineItems[it].id)
             },
             modifier = Modifier
+                .withSafeSharedTransitionScope {
+                    with(LocalNavAnimatedContentScope.requiredCurrent) {
+                        if (pagerState.currentPage == it) {
+                            Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "container_${vitrineItems[it].id}"),
+                                animatedVisibilityScope = this,
+                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                                zIndexInOverlay = 1f,
+                            )
+                        } else {
+                            Modifier
+                                .renderInSharedTransitionScopeOverlay(
+                                    zIndexInOverlay = if (pagerState.currentPage - it < 0) 0f else 2f,
+                                )
+                                .animateEnterExit(
+                                    enter = fadeIn(),
+                                    exit = fadeOut()
+                                )
+                        }
+                    }
+                }
                 .graphicsLayer {
                     val fromCurrentPageOffset = pagerState
                         .getOffsetDistanceInPages(it)

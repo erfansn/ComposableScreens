@@ -45,7 +45,6 @@ private data object FoodNavGraph {
     const val CartRoute = "cart"
 }
 
-// TODO: Animate same content with shared element
 fun NavGraphBuilder.foodNavGraph(navController: NavController) {
     navigation(startDestination = FoodNavGraph.HomeRoute, route = FoodRoute) {
         foodComposable(FoodNavGraph.HomeRoute) {

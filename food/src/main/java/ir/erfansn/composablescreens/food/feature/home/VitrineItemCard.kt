@@ -2,6 +2,7 @@ package ir.erfansn.composablescreens.food.feature.home
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,6 +53,7 @@ import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun VitrineItemCard(
     vitrineItem: VitrineItem,
@@ -86,6 +88,13 @@ fun VitrineItemCard(
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                         .padding(top = 26.dp)
+                        .withSafeSharedTransitionScope {
+                            Modifier.sharedElement(
+                                state = rememberSharedContentState(key = "title_${vitrineItem.id}"),
+                                animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                                zIndexInOverlay = 2f,
+                            )
+                        }
                         .weight(2f),
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
