@@ -168,14 +168,32 @@ private fun ProductScreen(
                 )
             }
         },
-        floatingBottomBar = {
-            ProductBottomBar(
-                onChangeQuantity = { qty -> onChangeQuantity(qty) },
-                producePriceInCent = product.priceInCent,
-                orderCount = quantity,
-                modifier = Modifier
-                    .padding(it)
-            )
+        floatingBottomBar = { contentPadding ->
+            AnimatedContent(
+                targetState = quantity,
+                label = "bottom_bar",
+                modifier = modifier,
+                contentKey = { it == 0 },
+                transitionSpec = {
+                    slideInVertically(
+                        initialOffsetY = { it },
+                        animationSpec = enterAnimationSpec()
+                    ) togetherWith slideOutVertically(
+                        targetOffsetY = { it },
+                        animationSpec = exitAnimationSpec()
+                    )
+                }
+            ) {
+                Column {
+                    ProductBottomBar(
+                        onChangeQuantity = { qty -> onChangeQuantity(qty) },
+                        producePriceInCent = product.priceInCent,
+                        orderCount = it,
+                        modifier = Modifier
+                    )
+                    Spacer(modifier = Modifier.padding(contentPadding))
+                }
+            }
         }
     ) {
         ProductContent(
@@ -310,12 +328,14 @@ private fun ProductContent(
                     .align(Alignment.BottomEnd)
                     .withSafeSharedTransitionScope {
                         with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            Modifier.renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 2f
-                            ).animateEnterExit(
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                            )
+                            Modifier
+                                .renderInSharedTransitionScopeOverlay(
+                                    zIndexInOverlay = 2f
+                                )
+                                .animateEnterExit(
+                                    enter = fadeIn(),
+                                    exit = fadeOut(),
+                                )
                         }
                     }
                     .clip(CircleShape)
@@ -368,22 +388,8 @@ private fun ProductBottomBar(
     onChangeQuantity: (Quantity) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AnimatedContent(
-        targetState = orderCount,
-        label = "bottom_bar",
-        modifier = modifier,
-        contentKey = { it == 0 },
-        transitionSpec = {
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = enterAnimationSpec()
-            ) togetherWith slideOutVertically(
-                targetOffsetY = { it },
-                animationSpec = exitAnimationSpec()
-            )
-        }
-    ) {
-        if (it == 0) {
+    Box(modifier = modifier) {
+        if (orderCount == 0) {
             val interactionSource = remember { MutableInteractionSource() }
             val scaleEffectValue by interactionSource.scaleEffectValue()
             Row(
@@ -427,7 +433,7 @@ private fun ProductBottomBar(
             ) {
                 SquareBox(
                     onClick = {
-                        onChangeQuantity(it - 1)
+                        onChangeQuantity(orderCount - 1)
                     }
                 ) {
                     Text(
@@ -438,13 +444,13 @@ private fun ProductBottomBar(
                 }
 
                 val priceByQuantity = buildAnnotatedString {
-                    append("${it}qty")
+                    append("${orderCount}qty")
                     append("\n")
                     withStyle(
                         style = FoodTheme.typography.titleMedium.toSpanStyle()
                             .copy(color = Color(0xFF5A5350))
                     ) {
-                        append((it * producePriceInCent).convertToDollars())
+                        append((orderCount * producePriceInCent).convertToDollars())
                     }
                 }
                 Text(
@@ -454,7 +460,7 @@ private fun ProductBottomBar(
                 )
                 SquareBox(
                     onClick = {
-                        onChangeQuantity(it + 1)
+                        onChangeQuantity(orderCount + 1)
                     }
                 ) {
                     Text(
@@ -492,7 +498,7 @@ private fun SquareBox(
 }
 
 private fun <T> enterAnimationSpec() = tween<T>(durationMillis = 800)
-private fun <T> exitAnimationSpec() = tween<T>(durationMillis = 600)
+private fun <T> exitAnimationSpec() = tween<T>(durationMillis = 500)
 
 private val sampleProduct = Product(
     id = 0,
