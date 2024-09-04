@@ -20,6 +20,12 @@ class ProductViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         private set
 
     fun changeProductQuantity(value: Int) {
+        if (value == 0) {
+            CartStorage.storage.remove(productId)
+            quantity = 0
+            return
+        }
+
         CartStorage.storage[productId] = value
         quantity = CartStorage.storage[productId]
     }
