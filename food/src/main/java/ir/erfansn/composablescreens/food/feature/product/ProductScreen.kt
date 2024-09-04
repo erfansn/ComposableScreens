@@ -41,10 +41,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddShoppingCart
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -449,10 +451,10 @@ private fun ProductBottomBar(
                         onChangeQuantity(orderCount - 1)
                     }
                 ) {
-                    Text(
-                        text = "−",
-                        color = FoodTheme.colors.onBackground,
-                        fontSize = 45.sp
+                    Icon(
+                        imageVector = Icons.Rounded.Remove,
+                        contentDescription = "Decrease quantity",
+                        modifier = Modifier.size(48.dp)
                     )
                 }
 
@@ -476,10 +478,10 @@ private fun ProductBottomBar(
                         onChangeQuantity(orderCount + 1)
                     }
                 ) {
-                    Text(
-                        text = "+",
-                        color = FoodTheme.colors.onBackground,
-                        fontSize = 45.sp
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Increase quantity",
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }
