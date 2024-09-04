@@ -73,7 +73,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
 import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
@@ -172,7 +171,21 @@ private fun ProductScreen(
             AnimatedContent(
                 targetState = quantity,
                 label = "bottom_bar",
-                modifier = modifier,
+                modifier = modifier
+                    .withSafeSharedTransitionScope {
+                        with(LocalNavAnimatedContentScope.requiredCurrent) {
+                            Modifier
+                                .renderInSharedTransitionScopeOverlay()
+                                .animateEnterExit(
+                                    enter = slideInVertically(
+                                        initialOffsetY = { it },
+                                    ),
+                                    exit = slideOutVertically(
+                                        targetOffsetY = { it },
+                                    )
+                                )
+                        }
+                    },
                 contentKey = { it == 0 },
                 transitionSpec = {
                     slideInVertically(
