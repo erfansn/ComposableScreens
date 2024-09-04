@@ -118,13 +118,15 @@ private fun CartScreen(
                 }
             },
             floatingBottomBar = {
-                CartBottomBar(
-                    totalPrice = 8900,
-                    onPayClick = {
-                        paymentIsSuccessful = true
-                    },
-                    contentPadding = it,
-                )
+                if (cartProducts.isNotEmpty()) {
+                    CartBottomBar(
+                        totalPrice = totalPrice,
+                        onPayClick = {
+                            paymentIsSuccessful = true
+                        },
+                        contentPadding = it,
+                    )
+                }
             },
             modifier = modifier
                 .fillMaxSize()
