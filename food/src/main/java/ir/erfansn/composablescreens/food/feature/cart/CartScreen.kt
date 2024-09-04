@@ -67,7 +67,8 @@ fun CartRoute(
         onNavigateToHome = onNavigateToHome,
         onNavigateToProduct = onNavigateToProduct,
         modifier = modifier,
-        cartProducts = viewModel.cartProducts
+        cartProducts = viewModel.cartProducts,
+        totalPrice = viewModel.productsTotalPrice
     )
 }
 
@@ -76,6 +77,7 @@ private fun CartScreen(
     cartProducts: List<CartProduct>,
     onNavigateToHome: () -> Unit,
     onNavigateToProduct: (id: Int) -> Unit,
+    totalPrice: Int,
     modifier: Modifier = Modifier
 ) {
     // TODO: Sync predictive back gesture animation with custom pop up destination [https://issuetracker.google.com/issues/331809442]
@@ -314,9 +316,10 @@ private val CurvedShape = object : Shape {
 private fun CartScreenPreview() {
     FoodTheme {
         CartScreen(
-            onNavigateToHome = { /*TODO*/ },
+            cartProducts = sampleCartProducts,
+            onNavigateToHome = { },
             onNavigateToProduct = { },
-            cartProducts = sampleCartProducts
+            totalPrice = 8900
         )
     }
 }
