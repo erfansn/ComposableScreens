@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
+import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
 import ir.erfansn.composablescreens.food.ui.modifier.overlappedBackgroundColor
 import ir.erfansn.composablescreens.food.ui.util.Cent
@@ -103,19 +104,10 @@ private fun CartScreen(
                         lazyListState.firstVisibleItemIndex > 0 || lazyListState.firstVisibleItemScrollOffset > 46
                     }
                 }
-                Box(
-                    contentAlignment = Alignment.BottomStart,
+                CartTopBar(
+                    onNavigateToHome = onNavigateToHome,
                     modifier = Modifier.overlappedBackgroundColor(isOverlapped)
-                ) {
-                    CartTopBar()
-                    VerticalHillButton(
-                        onClick = onNavigateToHome,
-                        title = "Catalog",
-                        modifier = Modifier
-                            .offset(y = (-6).dp)
-                            .rotate(180f)
-                    )
-                }
+                )
             },
             floatingBottomBar = {
                 if (cartProducts.isNotEmpty()) {
@@ -148,36 +140,44 @@ private fun CartScreen(
 
 @Composable
 private fun CartTopBar(
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 66.dp, bottom = 36.dp)
-            .padding(horizontal = 24.dp)
-    ) {
-        Text(
-            "Cart",
-            style = FoodTheme.typography.displaySmall,
-            modifier = Modifier.align(Alignment.Center),
-            fontWeight = FontWeight.SemiBold
-        )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .clip(CircleShape)
-                .background(FoodTheme.colors.primary)
-                .size(36.dp)
-        ) {
+    FoodTopBar(
+        modifier = modifier,
+        navigation = {
+            VerticalHillButton(
+                onClick = onNavigateToHome,
+                title = "Catalog",
+                modifier = Modifier
+                    .rotate(180f)
+            )
+        },
+        title = {
             Text(
-                "3",
-                style = FoodTheme.typography.titleLarge,
-                color = FoodTheme.colors.onPrimary,
+                "Cart",
+                style = FoodTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold
             )
+        },
+        action = {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(end = 24.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(FoodTheme.colors.primary)
+            ) {
+                Text(
+                    "3",
+                    style = FoodTheme.typography.titleLarge,
+                    color = FoodTheme.colors.onPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
         }
-    }
+    )
 }
 
 @Composable

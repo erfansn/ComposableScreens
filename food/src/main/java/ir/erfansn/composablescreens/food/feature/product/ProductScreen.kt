@@ -83,6 +83,7 @@ import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
+import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
 import ir.erfansn.composablescreens.food.ui.component.ProductImage
 import ir.erfansn.composablescreens.food.ui.component.ProductImageDefault
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
@@ -151,6 +152,7 @@ private fun ProductScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
                             )
+                            .align(Alignment.Top)
                             .graphicsLayer {
                                 alpha = transitionData.alpha
                             }
@@ -164,7 +166,6 @@ private fun ProductScreen(
                     modifier = Modifier
                         .graphicsLayer {
                             translationX = transitionData.offsetX.toPx()
-                            translationY = -6.dp.toPx()
                         }
                 )
             }
@@ -219,7 +220,7 @@ private fun ProductScreen(
             ingredients = product.ingredients,
             description = product.description,
             scrollState = scrollState,
-            contentPadding = PaddingValues(bottom = it.calculateBottomPadding()),
+            contentPadding = it,
         )
     }
 }
@@ -258,35 +259,17 @@ private fun ProductTopBar(
     modifier: Modifier = Modifier,
     actionContent: @Composable RowScope.() -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 48.dp, bottom = 12.dp)
-            .padding(start = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
-    ) {
-        Row(modifier = Modifier.weight(1f)) {
-            Icon(
-                imageVector = Icons.Rounded.ArrowBackIosNew,
-                contentDescription = "Back button",
-                modifier = Modifier
-                    .minimumInteractiveComponentSize()
-                    .size(32.dp)
-                    .offset((-16).dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        onBackClick()
-                    },
-            )
+    // TODO: 1 Extract a common TopBar with fixed padding value
+    FoodTopBar(
+        modifier = modifier,
+        title = {
             Text(
                 text = title,
                 style = FoodTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .offset((-16).dp)
+                    .weight(1f)
                     .withSafeSharedTransitionScope {
                         Modifier.sharedElement(
                             state = rememberSharedContentState(key = "title_${productId}"),
@@ -295,9 +278,27 @@ private fun ProductTopBar(
                         )
                     },
             )
+        },
+        action = actionContent,
+        navigation = {
+            Icon(
+                imageVector = Icons.Rounded.ArrowBackIosNew,
+                contentDescription = "Back button",
+                modifier = Modifier
+                    .padding(start = 24.dp)
+                    .minimumInteractiveComponentSize()
+                    .size(32.dp)
+                    .offset((-16).dp)
+                    .align(Alignment.Top)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        onBackClick()
+                    },
+            )
         }
-        actionContent()
-    }
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalSharedTransitionApi::class)

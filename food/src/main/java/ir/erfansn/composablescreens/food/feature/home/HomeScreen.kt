@@ -72,6 +72,7 @@ import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
+import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
 
 @Composable
@@ -122,36 +123,34 @@ private fun HomeTopBar(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Spacer(modifier = Modifier.height(48.dp))
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            val titleTextStyle = FoodTheme.typography.displaySmall
-            val title = buildAnnotatedString {
-                append("Choose ")
-                withStyle(
-                    titleTextStyle.copy(fontWeight = FontWeight.Bold).toSpanStyle()
-                ) {
-                    append("cookies\n")
+        FoodTopBar(
+            title = {
+                val titleTextStyle = FoodTheme.typography.displaySmall
+                val title = buildAnnotatedString {
+                    append("Choose ")
+                    withStyle(
+                        titleTextStyle.copy(fontWeight = FontWeight.Bold).toSpanStyle()
+                    ) {
+                        append("cookies\n")
+                    }
+                    append("for your tea party")
                 }
-                append("for your tea party")
+                Text(
+                    text = title,
+                    style = titleTextStyle,
+                    maxLines = 2,
+                    modifier = Modifier.padding(start = 24.dp)
+                )
+            },
+            action = {
+                VerticalHillButton(
+                    title = "Cart",
+                    onClick = dropUnlessResumed {
+                        onNavigateToCart()
+                    }
+                )
             }
-            Text(
-                text = title,
-                style = titleTextStyle,
-                maxLines = 2,
-                modifier = Modifier.padding(start = 24.dp)
-            )
-
-            VerticalHillButton(
-                title = "Cart",
-                onClick = dropUnlessResumed {
-                    onNavigateToCart()
-                }
-            )
-        }
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(
@@ -192,7 +191,7 @@ private fun HomeTopBar(
                 .fillMaxWidth()
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { },
             ) {
                 Icon(imageVector = Icons.Rounded.DesktopWindows, contentDescription = "Account")
             }
@@ -220,7 +219,7 @@ private fun HomeTopBar(
                     }
                 }
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { }) {
                 Icon(imageVector = Icons.Rounded.Settings, contentDescription = "Settings")
             }
         }
