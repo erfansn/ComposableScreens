@@ -8,6 +8,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
 
 val foodColor = FoodColor(
     primary = primary,
@@ -49,7 +52,12 @@ val LocalFoodColor = staticCompositionLocalOf {
 fun FoodTheme(
     content: @Composable () -> Unit
 ) {
-    CompositionLocalProvider(LocalFoodColor provides foodColor) {
+    PortraitOrientationLockerEffect()
+
+    CompositionLocalProvider(
+        LocalFoodColor provides foodColor,
+        LocalLayoutDirection provides LayoutDirection.Ltr
+    ) {
         MaterialTheme(
             typography = AppTypography,
             content = content
@@ -66,6 +74,7 @@ object FoodTheme {
         @Composable
         get() = MaterialTheme.typography
 
+    // TODO: 6 Think about it, custom or not?
     val shapes: Shapes
         @Composable
         get() = MaterialTheme.shapes
