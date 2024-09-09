@@ -38,6 +38,7 @@ fun CartProductItem(
                     cornerSize = 12.dp,
                 ),
                 image = painterResource(id = cartProduct.imageId),
+                modifier = Modifier.padding(8.dp)
             )
         },
         headlineContent = {
@@ -62,11 +63,11 @@ fun CartProductItem(
                 text = cartProduct.totalPrice.convertToDollars(),
                 style = FoodTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(end = 6.dp)
             )
         },
         modifier = modifier
             .clickable { onClick() }
-            .padding(end = 6.dp)
             .height(128.dp)
             .fillMaxWidth(),
         colors = ListItemDefaults.colors(
