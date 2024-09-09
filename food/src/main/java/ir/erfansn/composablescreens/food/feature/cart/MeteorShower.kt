@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
@@ -18,10 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import kotlin.random.Random
 import androidx.compose.ui.unit.IntOffset as PixelOffset
@@ -38,32 +36,24 @@ fun MeteorShower(
     maxDelayInMillis: Int = 2000,
     content: @Composable () -> Unit
 ) {
-    val configuration = LocalConfiguration.current
-    val currentDensity = LocalDensity.current
-    val (screenWidthPx, screenHeightPx) = remember {
-        with(currentDensity) {
-            configuration.let { it.screenWidthDp.dp.roundToPx() to it.screenHeightDp.dp.roundToPx() }
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        var contentSize by remember { mutableStateOf(PixelSize(0, 0)) }
+        val meteors = remember { mutableStateListOf<MeteorState>() }
+
+        LaunchedEffect(contentSize, meteorCount) {
+            val contentWidthHalf = contentSize.width / 2
+
+            meteors.clear()
+            repeat(meteorCount) {
+                meteors += MeteorState(
+                    startX = Random.nextInt(-contentWidthHalf, constraints.maxWidth - contentWidthHalf),
+                    delayInMillis = Random.nextInt(0, maxDelayInMillis)
+                )
+            }
         }
-    }
 
-    val meteors = remember { mutableStateListOf<MeteorState>() }
-    var contentSize by remember { mutableStateOf(PixelSize(0, 0)) }
-
-    LaunchedEffect(contentSize, meteorCount) {
-        val contentWidthHalf = contentSize.width / 2
-
-        meteors.clear()
-        repeat(meteorCount) {
-            meteors += MeteorState(
-                startX = Random.nextInt(-contentWidthHalf, screenWidthPx - contentWidthHalf),
-                delayInMillis = Random.nextInt(0, maxDelayInMillis)
-            )
-        }
-    }
-
-    Box(modifier = modifier.fillMaxSize()) {
         val startLine: Pixel = -contentSize.height
-        val endLine: Pixel = screenHeightPx
+        val endLine: Pixel = constraints.maxHeight
 
         meteors.forEach { meteor ->
             val animatable = remember(startLine) { Animatable(initialValue = startLine.toFloat()) }
@@ -80,10 +70,10 @@ fun MeteorShower(
 
             Box(
                 modifier = Modifier
-                    .offset { PixelOffset(x = meteor.startX, y = animatable.value.toInt()) }
                     .onSizeChanged {
                         contentSize = it
                     }
+                    .offset { PixelOffset(x = meteor.startX, y = animatable.value.toInt()) }
             ) {
                 content()
             }
