@@ -119,7 +119,6 @@ fun VitrineItemCard(
                     .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(43.dp))
                     .hazeChild(
                         state = hazeState,
-                        shape = RoundedCornerShape(43.dp),
                         style = HazeDefaults.style(
                             backgroundColor = Color.White.copy(alpha = 0.35f),
                             blurRadius = 10.dp,

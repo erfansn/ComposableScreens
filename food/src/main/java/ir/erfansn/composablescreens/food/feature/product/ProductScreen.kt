@@ -47,11 +47,11 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.Remove
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -441,7 +441,7 @@ private fun ProductBottomBar(
                     .heightIn(112.dp)
                     .fillMaxWidth()
                     .clickable(
-                        indication = rememberRipple(color = Color.White),
+                        indication = ripple(color = Color.White),
                         interactionSource = interactionSource
                     ) {
                         onChangeQuantity(1)
