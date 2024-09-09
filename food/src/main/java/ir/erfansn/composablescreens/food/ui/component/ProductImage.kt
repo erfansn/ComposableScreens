@@ -36,6 +36,7 @@ object ProductImageDefault {
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProductImage(
     image: Painter,
@@ -53,9 +54,24 @@ fun ProductImage(
             painter = image,
             contentDescription = null,
             modifier = Modifier
+                .withSafeSharedTransitionScope {
+                    Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+                }
                 .align(Alignment.Center)
                 .scale(1.1f)
                 .aspectRatio(1f)
+                .then(
+                    with(LocalNavAnimatedContentScope.current) {
+                        if (this != null) {
+                            Modifier.animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            )
+                        } else {
+                            Modifier
+                        }
+                    }
+                )
         )
     }
 }

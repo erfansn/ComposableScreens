@@ -74,6 +74,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
@@ -126,7 +127,18 @@ private fun ProductScreen(
             val isOverlapped by remember { derivedStateOf { scrollState.value > 24 } }
             Box(
                 contentAlignment = Alignment.BottomEnd,
-                modifier = Modifier.overlappedBackgroundColor(isOverlapped)
+                modifier = Modifier
+                    .withSafeSharedTransitionScope {
+                        with(LocalNavAnimatedContentScope.requiredCurrent) {
+                            Modifier
+                                .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
+                                .animateEnterExit(
+                                    enter = fadeIn(),
+                                    exit = fadeOut()
+                                )
+                        }
+                    }
+                    .overlappedBackgroundColor(isOverlapped)
             ) {
                 val transitionData = updateTransitionData(quantity == 0)
                 ProductTopBar(
@@ -164,8 +176,15 @@ private fun ProductScreen(
                     },
                     title = "Cart",
                     modifier = Modifier
-                        .graphicsLayer {
-                            translationX = transitionData.offsetX.toPx()
+                        .offset {
+                            IntOffset(x = transitionData.offsetX.roundToPx(), y = 0)
+                        }
+                        .withSafeSharedTransitionScope {
+                            Modifier.sharedElement(
+                                state = rememberSharedContentState("cart_button"),
+                                animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                                zIndexInOverlay = 3f
+                            )
                         }
                 )
             }
@@ -259,7 +278,6 @@ private fun ProductTopBar(
     modifier: Modifier = Modifier,
     actionContent: @Composable RowScope.() -> Unit
 ) {
-    // TODO: 1 Extract a common TopBar with fixed padding value
     FoodTopBar(
         modifier = modifier,
         title = {
@@ -274,7 +292,7 @@ private fun ProductTopBar(
                         Modifier.sharedElement(
                             state = rememberSharedContentState(key = "title_${productId}"),
                             animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                            zIndexInOverlay = 2f,
+                            zIndexInOverlay = 3f,
                         )
                     },
             )
@@ -320,19 +338,21 @@ private fun ProductContent(
             .verticalScroll(scrollState)
             .padding(contentPadding)
     ) {
-        Box {
+        Box(
+            modifier = Modifier
+                .padding(24.dp)
+                .withSafeSharedTransitionScope {
+                    Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "container_${productId}"),
+                        animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    )
+                }
+        ) {
             ProductImage(
                 image = painterResource(imageId),
                 background = ProductImageDefault.productBackground.copy(color = backgroundColor),
                 modifier = Modifier
-                    .padding(16.dp)
-                    .withSafeSharedTransitionScope {
-                        Modifier.sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = "container_${productId}"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                        )
-                    }
             )
             Text(
                 text = priceByQuantityText(
@@ -340,13 +360,13 @@ private fun ProductContent(
                     style = FoodTheme.typography.titleSmall
                 ),
                 modifier = Modifier
-                    .offset((-12).dp, (-12).dp)
+                    .offset((12).dp, (12).dp)
                     .align(Alignment.BottomEnd)
                     .withSafeSharedTransitionScope {
                         with(LocalNavAnimatedContentScope.requiredCurrent) {
                             Modifier
                                 .renderInSharedTransitionScopeOverlay(
-                                    zIndexInOverlay = 2f
+                                    zIndexInOverlay = 1f
                                 )
                                 .animateEnterExit(
                                     enter = fadeIn(),

@@ -2,7 +2,6 @@ package ir.erfansn.composablescreens.food.feature.home
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,7 +36,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeDefaults
@@ -88,17 +86,15 @@ fun VitrineItemCard(
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                         .padding(top = 26.dp)
+                        .weight(2f)
                         .withSafeSharedTransitionScope {
                             Modifier.sharedElement(
                                 state = rememberSharedContentState(key = "title_${vitrineItem.id}"),
                                 animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                                zIndexInOverlay = 2f,
+                                zIndexInOverlay = 3f,
                             )
-                        }
-                        .weight(2f),
+                        },
                     fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
                 )
                 Image(
                     painter = painterResource(id = vitrineItem.imageId),

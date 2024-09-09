@@ -147,6 +147,13 @@ private fun HomeTopBar(
                     title = "Cart",
                     onClick = dropUnlessResumed {
                         onNavigateToCart()
+                    },
+                    modifier = Modifier.withSafeSharedTransitionScope {
+                        Modifier.sharedElement(
+                            state = rememberSharedContentState("cart_button"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            zIndexInOverlay = 2f
+                        )
                     }
                 )
             }
