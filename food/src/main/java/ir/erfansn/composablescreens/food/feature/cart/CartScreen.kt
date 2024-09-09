@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -117,6 +118,7 @@ private fun CartScreen(
                             paymentIsSuccessful = true
                         },
                         contentPadding = it,
+                        modifier = Modifier.consumeWindowInsets(it)
                     )
                 }
             },
@@ -127,7 +129,8 @@ private fun CartScreen(
                 cartProducts = cartProducts,
                 contentPadding = it,
                 state = lazyListState,
-                onNavigateToProduct = onNavigateToProduct
+                onNavigateToProduct = onNavigateToProduct,
+                modifier = Modifier.consumeWindowInsets(it)
             )
         }
         if (paymentIsSuccessful) {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -56,16 +57,16 @@ fun FoodFloatingScaffold(
         containerColor = FoodTheme.colors.background,
         contentColor = FoodTheme.colors.onBackground
     ) {
+        val contentPadding = PaddingValues(
+            top = it.calculateTopPadding(),
+            start = it.calculateStartPadding(LocalLayoutDirection.current),
+            end = it.calculateEndPadding(LocalLayoutDirection.current)
+        )
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(
-                    top = it.calculateTopPadding(),
-                )
-                .padding(
-                    start = it.calculateStartPadding(LocalLayoutDirection.current),
-                    end = it.calculateEndPadding(LocalLayoutDirection.current)
-                )
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding)
         ) {
             var bottomBarHeight by remember { mutableIntStateOf(0) }
             content(PaddingValues(bottom = it.calculateBottomPadding() + with(LocalDensity.current) { bottomBarHeight.toDp() }))

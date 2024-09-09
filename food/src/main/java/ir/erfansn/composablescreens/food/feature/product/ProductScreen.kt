@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -219,12 +220,11 @@ private fun ProductScreen(
                     )
                 }
             ) {
-                Column {
+                Column(modifier = Modifier.consumeWindowInsets(contentPadding)) {
                     ProductBottomBar(
                         onChangeQuantity = { qty -> onChangeQuantity(qty) },
                         producePriceInCent = product.priceInCent,
                         orderCount = it,
-                        modifier = Modifier
                     )
                     Spacer(modifier = Modifier.padding(contentPadding))
                 }
@@ -240,6 +240,7 @@ private fun ProductScreen(
             description = product.description,
             scrollState = scrollState,
             contentPadding = it,
+            modifier = Modifier.consumeWindowInsets(it)
         )
     }
 }
