@@ -1,4 +1,4 @@
-package ir.erfansn.composablescreens.travel.ui
+package ir.erfansn.composablescreens.common
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 
 @SuppressLint("SourceLockedOrientationActivity")
 @Composable
-internal fun PortraitOrientationLockerEffect() {
+fun PortraitOrientationLockerEffect() {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         context.findActivity()?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

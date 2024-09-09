@@ -7,7 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import ir.erfansn.composablescreens.travel.ui.PortraitOrientationLockerEffect
+import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
 
 private val LightColorPalette = lightColors(
     primary = PastelOrange,
