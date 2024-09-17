@@ -124,6 +124,9 @@ private fun CartScreen(
             },
             modifier = modifier
                 .fillMaxSize()
+                .then(
+                    if (paymentIsSuccessful) Modifier.pointerInput(Unit) { } else Modifier
+                )
         ) {
             CartContent(
                 cartProducts = cartProducts,
@@ -136,6 +139,7 @@ private fun CartScreen(
         if (paymentIsSuccessful) {
             PaymentSuccessfulPane(
                 modifier = Modifier
+                    .pointerInput(Unit) { }
             )
         }
     }
