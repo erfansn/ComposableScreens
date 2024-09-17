@@ -46,12 +46,66 @@ fun FoodTopBar(
 
 @Preview
 @Composable
-private fun FoodTopBarPreview() {
+private fun FoodTopBarSingleLineTitlePreview() {
+    FoodTheme {
+        FoodTopBar(
+            title = {
+                Text(
+                    "Food",
+                    modifier = Modifier.weight(1f),
+                    style = FoodTheme.typography.headlineMedium
+                )
+            },
+            action = {
+                IconButton(onClick = { }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = null)
+                }
+            },
+            navigation = {
+                IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
+                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
+                }
+            },
+            modifier = Modifier.background(color = Color.White)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun FoodTopBarTwoLineTitlePreview() {
     FoodTheme {
         FoodTopBar(
             title = {
                 Text(
                     "Food\nModule",
+                    modifier = Modifier.weight(1f),
+                    style = FoodTheme.typography.headlineMedium
+                )
+            },
+            action = {
+                IconButton(onClick = { }) {
+                    Icon(Icons.Rounded.MoreVert, contentDescription = null)
+                }
+            },
+            navigation = {
+                IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
+                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
+                }
+            },
+            modifier = Modifier.background(color = Color.White)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun FoodTopBarThreeLinePreview() {
+    FoodTheme {
+        FoodTopBar(
+            title = {
+                Text(
+                    "Food\nModule\nTopBar",
                     modifier = Modifier.weight(1f),
                     style = FoodTheme.typography.headlineMedium
                 )
