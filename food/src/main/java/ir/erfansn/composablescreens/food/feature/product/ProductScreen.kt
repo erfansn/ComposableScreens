@@ -112,6 +112,7 @@ fun ProductRoute(
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ProductScreen(
     product: Product,
@@ -127,7 +128,6 @@ private fun ProductScreen(
         topBar = {
             val isOverlapped by remember { derivedStateOf { scrollState.value > 24 } }
             Box(
-                contentAlignment = Alignment.BottomEnd,
                 modifier = Modifier
                     .withSafeSharedTransitionScope {
                         with(LocalNavAnimatedContentScope.requiredCurrent) {
@@ -180,6 +180,8 @@ private fun ProductScreen(
                         .offset {
                             IntOffset(x = transitionData.offsetX.roundToPx(), y = 0)
                         }
+                        .padding(top = 48.dp)
+                        .align(Alignment.TopEnd)
                         .withSafeSharedTransitionScope {
                             Modifier.sharedElement(
                                 state = rememberSharedContentState("cart_button"),
@@ -279,8 +281,10 @@ private fun ProductTopBar(
     modifier: Modifier = Modifier,
     actionContent: @Composable RowScope.() -> Unit
 ) {
+    var topPadding by remember { mutableStateOf(0.dp) }
     FoodTopBar(
-        modifier = modifier,
+        modifier = modifier
+            .padding(top = topPadding),
         title = {
             Text(
                 text = title,
@@ -296,6 +300,11 @@ private fun ProductTopBar(
                             zIndexInOverlay = 3f,
                         )
                     },
+                onTextLayout = {
+                    if (it.lineCount > 2) {
+                        topPadding = 13.5.dp
+                    }
+                }
             )
         },
         action = actionContent,
@@ -539,7 +548,7 @@ private fun <T> exitAnimationSpec() = tween<T>(durationMillis = 500)
 
 private val sampleProduct = Product(
     id = 0,
-    title = "Bitter choco & cream",
+    title = "Bitter choco & cream\n1",
     imageId = R.drawable.chocolate_peanut_butter_stuffed_cookie,
     backgroundColor = Color(0xFFE4F9CD),
     priceInCent = 600,
