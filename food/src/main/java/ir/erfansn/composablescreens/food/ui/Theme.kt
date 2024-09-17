@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import ir.erfansn.composablescreens.common.BarStyle
-import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 val foodColor = FoodColor(
@@ -54,8 +53,6 @@ val LocalFoodColor = staticCompositionLocalOf {
 fun FoodTheme(
     content: @Composable () -> Unit
 ) {
-    PortraitOrientationLockerEffect()
-
     ProvideSystemBarStyle(BarStyle.Light) {
         CompositionLocalProvider(
             LocalFoodColor provides foodColor,

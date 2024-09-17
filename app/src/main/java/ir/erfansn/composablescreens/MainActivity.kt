@@ -1,5 +1,7 @@
 package ir.erfansn.composablescreens
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,6 +28,7 @@ import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
 class MainActivity : ComponentActivity() {
 
+    @SuppressLint("RestrictedApi", "SourceLockedOrientationActivity")
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -70,6 +76,19 @@ class MainActivity : ComponentActivity() {
                             }
                             travelNavigationGraph(navController)
                             foodNavGraph(navController)
+                        }
+
+                        val currentBackStack by navController.currentBackStack.collectAsState()
+                        LaunchedEffect(currentBackStack) {
+                            requestedOrientation = when {
+                                currentBackStack.any { it.destination.route in listOf("food", "travel") } -> {
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                }
+
+                                else -> {
+                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                                }
+                            }
                         }
                     }
                 }

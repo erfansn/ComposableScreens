@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import ir.erfansn.composablescreens.common.BarStyle
-import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 private val LightColorPalette = lightColors(
@@ -26,8 +25,6 @@ private val LightColorPalette = lightColors(
 
 @Composable
 internal fun TravelTheme(content: @Composable () -> Unit) {
-    PortraitOrientationLockerEffect()
-
     ProvideSystemBarStyle(BarStyle.Light) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             MaterialTheme(
