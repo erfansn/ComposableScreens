@@ -66,7 +66,11 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             val viewModel = viewModel<ProductViewModel>()
             ProductRoute(
                 viewModel = viewModel,
-                onNavigateToCart = { navController.navigate(FoodNavGraph.CartRoute) },
+                onNavigateToCart = {
+                    navController.navigate(FoodNavGraph.CartRoute) {
+                        popUpTo(FoodNavGraph.HomeRoute)
+                    }
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }
