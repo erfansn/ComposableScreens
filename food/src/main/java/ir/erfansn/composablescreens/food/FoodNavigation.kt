@@ -79,9 +79,8 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             CartRoute(
                 onNavigateToHome = {
                     navController.navigate(FoodNavGraph.HomeRoute) {
-                        popUpTo(FoodNavGraph.HomeRoute) {
-                            inclusive = true
-                        }
+                        launchSingleTop = true
+                        popUpTo(FoodNavGraph.HomeRoute)
                     }
                 },
                 onNavigateToProduct = {
