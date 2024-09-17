@@ -5,6 +5,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import ir.erfansn.composablescreens.common.BarStyle
+import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -38,10 +40,12 @@ fun ComposableScreensTheme(
         LightColorPalette
     }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    ProvideSystemBarStyle(BarStyle.Auto) {
+        MaterialTheme(
+            colors = colors,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 }

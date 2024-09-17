@@ -10,7 +10,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
+import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 val foodColor = FoodColor(
     primary = primary,
@@ -54,14 +56,16 @@ fun FoodTheme(
 ) {
     PortraitOrientationLockerEffect()
 
-    CompositionLocalProvider(
-        LocalFoodColor provides foodColor,
-        LocalLayoutDirection provides LayoutDirection.Ltr
-    ) {
-        MaterialTheme(
-            typography = AppTypography,
-            content = content
-        )
+    ProvideSystemBarStyle(BarStyle.Light) {
+        CompositionLocalProvider(
+            LocalFoodColor provides foodColor,
+            LocalLayoutDirection provides LayoutDirection.Ltr,
+        ) {
+            MaterialTheme(
+                typography = AppTypography,
+                content = content
+            )
+        }
     }
 }
 
@@ -74,7 +78,7 @@ object FoodTheme {
         @Composable
         get() = MaterialTheme.typography
 
-    // TODO: 6 Think about it, custom or not?
+    // TODO: think about it, custom or not after implementing micro-animations
     val shapes: Shapes
         @Composable
         get() = MaterialTheme.shapes

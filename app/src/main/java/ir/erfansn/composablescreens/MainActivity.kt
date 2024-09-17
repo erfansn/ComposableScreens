@@ -13,7 +13,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.LocalSharedTransitionScope
+import ir.erfansn.composablescreens.common.ProvideSystemBarStyleChanger
 import ir.erfansn.composablescreens.food.foodNavGraph
 import ir.erfansn.composablescreens.travel.ui.navigation.travelNavigationGraph
 import ir.erfansn.composablescreens.ui.ComposableScreensList
@@ -23,10 +25,35 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableTransparentEdgeToEdge()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            ComposableScreensTheme {
+            ProvideSystemBarStyleChanger(
+                onStyleChange = {
+                    when (it) {
+                        BarStyle.Light -> {
+                            enableEdgeToEdge(
+                                style = SystemBarStyle.light(
+                                    Color.TRANSPARENT,
+                                    Color.TRANSPARENT
+                                )
+                            )
+                        }
+
+                        BarStyle.Dark -> {
+                            enableEdgeToEdge(
+                                style = SystemBarStyle.dark(
+                                    Color.TRANSPARENT
+                                )
+                            )
+                        }
+
+                        BarStyle.Auto -> {
+                            enableEdgeToEdge()
+                        }
+                    }
+                }
+            ) {
                 SharedTransitionLayout {
                     CompositionLocalProvider(LocalSharedTransitionScope provides this) {
                         val navController = rememberNavController()
@@ -35,9 +62,11 @@ class MainActivity : ComponentActivity() {
                             startDestination = "screens_list"
                         ) {
                             composable("screens_list") {
-                                ComposableScreensList(
-                                    onRouteClick = navController::navigate
-                                )
+                                ComposableScreensTheme {
+                                    ComposableScreensList(
+                                        onRouteClick = navController::navigate
+                                    )
+                                }
                             }
                             travelNavigationGraph(navController)
                             foodNavGraph(navController)
@@ -48,14 +77,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun enableTransparentEdgeToEdge() {
-        val transparentBarStyle = SystemBarStyle.auto(
+    private fun enableEdgeToEdge(
+        style: SystemBarStyle = SystemBarStyle.auto(
             lightScrim = Color.TRANSPARENT,
             darkScrim = Color.TRANSPARENT,
         )
+    ) {
         enableEdgeToEdge(
-            statusBarStyle = transparentBarStyle,
-            navigationBarStyle = transparentBarStyle,
+            statusBarStyle = style,
+            navigationBarStyle = style,
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false

@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,22 +38,25 @@ val routes: List<NameRoutePair> = listOf(
 fun ComposableScreensList(
     onRouteClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        contentPadding = WindowInsets.safeDrawing.add(WindowInsets(top = 16.dp)).asPaddingValues()
-    ) {
-        items(routes) { (name, route) ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                onClick = { onRouteClick(route) },
-                border = BorderStroke(2.dp, Color.LightGray)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(text = name)
+    Surface(color = MaterialTheme.colors.background) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            contentPadding = WindowInsets.safeDrawing.add(WindowInsets(top = 16.dp))
+                .asPaddingValues()
+        ) {
+            items(routes) { (name, route) ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    onClick = { onRouteClick(route) },
+                    border = BorderStroke(2.dp, Color.LightGray)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(text = name)
+                    }
                 }
             }
         }

@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import ir.erfansn.composablescreens.common.BarStyle
+import ir.erfansn.composablescreens.common.TemporarySystemBarStyleEffect
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import kotlinx.coroutines.launch
 import kotlin.math.hypot
@@ -66,6 +68,10 @@ fun PaymentSuccessfulPane(
         launch {
             circleRadiusAnimatable.animateTo(1f, animationSpec)
         }
+    }
+
+    if (circleRadiusAnimatable.value >= 0.9f) {
+        TemporarySystemBarStyleEffect(BarStyle.Dark)
     }
 
     Box(
