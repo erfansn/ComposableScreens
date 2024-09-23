@@ -772,7 +772,6 @@ private fun TravelSearchBar(
         BasicTextField(
             value = value,
             modifier = modifier
-                .background(MaterialTheme.colors.surface, MaterialTheme.shapes.small)
                 .defaultMinSize(
                     minWidth = TextFieldDefaults.MinWidth,
                     minHeight = TextFieldDefaults.MinHeight
@@ -806,6 +805,10 @@ private fun TravelSearchBar(
                     interactionSource = remember { MutableInteractionSource() },
                     contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
                         start = 28.dp
+                    ),
+                    shape = MaterialTheme.shapes.small,
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colors.surface
                     )
                 )
             }
