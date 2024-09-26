@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -97,6 +98,19 @@ val LocalNavAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope
 val CompositionLocal<AnimatedContentScope?>.requiredCurrent
     @Composable
     get() = current ?: error("LocalNavAnimatedContentScope not provided from navigation route")
+
+@Composable
+fun Modifier.withSafeNavAnimatedContentScope(block: AnimatedContentScope.() -> Modifier): Modifier {
+    return then(
+        with(LocalNavAnimatedContentScope.current) {
+            if (this != null) {
+                block()
+            } else {
+                Modifier
+            }
+        }
+    )
+}
 
 private fun NavGraphBuilder.foodComposable(
     route: String,
