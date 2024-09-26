@@ -5,6 +5,7 @@ package ir.erfansn.composablescreens.travel.home
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -78,12 +79,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstraintLayout
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.components.TravelButton
 import ir.erfansn.composablescreens.travel.ui.components.TravelIconButton
@@ -498,7 +504,7 @@ private fun TravelPlacesRow(
                 modifier = Modifier
                     .fillParentMaxHeight()
                     .aspectRatio(4 / 5f),
-                trip = trip
+                trip = trip,
             )
         }
     }
@@ -545,10 +551,12 @@ private fun TravelPlaceItem(
                     .padding(10.dp)
             ) {
                 Box {
+                    val hazeState = remember { HazeState() }
                     Image(
                         modifier = Modifier
                             .aspectRatio(10 / 9f)
-                            .clip(MaterialTheme.shapes.medium.copy(CornerSize(22.dp))),
+                            .clip(MaterialTheme.shapes.medium.copy(CornerSize(22.dp)))
+                            .haze(hazeState),
                         painter = painterResource(id = trip.destination.imageId),
                         contentDescription = "Place",
                         contentScale = ContentScale.Crop
@@ -559,13 +567,31 @@ private fun TravelPlaceItem(
                             .padding(end = 10.dp, bottom = 12.dp)
                             .size(64.dp, 32.dp)
                             .clip(RoundedCornerShape(33))
-                            .background(MaterialTheme.colors.background),
+                            .border(
+                                Dp.Hairline,
+                                color = Color(0x50FFFFFF),
+                                shape = RoundedCornerShape(33)
+                            )
+                            .hazeChild(
+                                state = hazeState,
+                                style = HazeDefaults.style(
+                                    backgroundColor = Color.Transparent,
+                                    blurRadius = 4.dp,
+                                ),
+                            )
+                            .background(
+                                Brush.horizontalGradient(
+                                    0.0f to Color.Transparent,
+                                    1.0f to Color.White.copy(alpha = 0.25f),
+                                )
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             modifier = Modifier,
                             text = stringResource(R.string.price, trip.price),
-                            style = MaterialTheme.typography.overline
+                            style = MaterialTheme.typography.overline,
+                            color = MaterialTheme.colors.surface
                         )
                     }
                 }

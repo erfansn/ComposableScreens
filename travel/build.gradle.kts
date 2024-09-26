@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.haze)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material)

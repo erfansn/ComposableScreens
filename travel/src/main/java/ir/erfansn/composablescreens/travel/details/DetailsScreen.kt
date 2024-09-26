@@ -3,6 +3,7 @@ package ir.erfansn.composablescreens.travel.details
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +25,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,8 +49,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.travel.R
 import ir.erfansn.composablescreens.travel.ui.components.TravelButton
 import ir.erfansn.composablescreens.travel.ui.components.TravelIconButton
@@ -182,11 +190,13 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Box(modifier = Modifier.wrapContentWidth()) {
+            val hazeState = remember { HazeState() }
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(10 / 9f)
-                    .clip(MaterialTheme.shapes.medium),
+                    .clip(MaterialTheme.shapes.medium)
+                    .haze(hazeState),
                 painter = painterResource(id = R.drawable.the_wave),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
@@ -209,25 +219,40 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
                 )
                 Box(
                     modifier = Modifier
-                        .size(86.dp, 42.dp)
+                        .size(96.dp, 48.dp)
                         .clip(RoundedCornerShape(33))
-                        .background(MaterialTheme.colors.background),
+                        .border(Dp.Hairline, color = Color(0x50FFFFFF), shape = RoundedCornerShape(33))
+                        .hazeChild(
+                            state = hazeState,
+                            style = HazeDefaults.style(
+                                backgroundColor = Color.Transparent,
+                                blurRadius = 6.dp,
+                            ),
+                        )
+                        .background(
+                            Brush.horizontalGradient(
+                                0.0f to Color.Transparent,
+                                1.0f to Color.White.copy(alpha = 0.25f),
+                            )
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Row {
-                        val height = with(LocalDensity.current) { 14.sp.toDp() }
-                        Icon(
-                            modifier = Modifier
-                                .height(height)
-                                .align(Alignment.CenterVertically),
-                            painter = painterResource(id = R.drawable.ic_location),
-                            contentDescription = "Location"
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = "USA",
-                            style = MaterialTheme.typography.caption
-                        )
+                        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.surface) {
+                            val height = with(LocalDensity.current) { 14.sp.toDp() }
+                            Icon(
+                                modifier = Modifier
+                                    .height(height)
+                                    .align(Alignment.CenterVertically),
+                                painter = painterResource(id = R.drawable.ic_location),
+                                contentDescription = "Location"
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Text(
+                                text = "USA",
+                                style = MaterialTheme.typography.caption,
+                            )
+                        }
                     }
                 }
             }
