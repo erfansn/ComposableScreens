@@ -9,6 +9,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.feature.home.sampleVitrineItems
 import ir.erfansn.composablescreens.food.ui.FoodTheme
@@ -32,14 +34,16 @@ fun CartProductItem(
 ) {
     ListItem(
         leadingContent = {
-            ProductImage(
-                background = ProductBackground(
-                    color = cartProduct.backgroundColor,
-                    cornerSize = 12.dp,
-                ),
-                image = painterResource(id = cartProduct.imageId),
-                modifier = Modifier.padding(8.dp)
-            )
+            CompositionLocalProvider(LocalNavAnimatedContentScope provides null) {
+                ProductImage(
+                    background = ProductBackground(
+                        color = cartProduct.backgroundColor,
+                        cornerSize = 12.dp,
+                    ),
+                    image = painterResource(id = cartProduct.imageId),
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         },
         headlineContent = {
             Text(
