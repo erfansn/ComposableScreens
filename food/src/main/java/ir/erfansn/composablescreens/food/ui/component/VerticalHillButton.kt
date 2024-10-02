@@ -96,7 +96,7 @@ private val HillShape = object : Shape {
                     x = width * 0.125f,
                     y = height * 0.425f
                 )
-                quadraticBezierTo(
+                quadraticTo(
                     x1 = width * 0.2f,
                     y1 = height * 0f,
                     x2 = width * 0.4f,
@@ -106,7 +106,7 @@ private val HillShape = object : Shape {
                     x = width - (width * 0.4f),
                     y = height * 0f
                 )
-                quadraticBezierTo(
+                quadraticTo(
                     x1 = width - (width * 0.2f),
                     y1 = height * 0f,
                     x2 = width - (width * 0.125f),
