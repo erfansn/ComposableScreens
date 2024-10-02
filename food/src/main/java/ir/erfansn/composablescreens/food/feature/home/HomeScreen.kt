@@ -2,10 +2,20 @@
 
 package ir.erfansn.composablescreens.food.feature.home
 
+import android.util.Log
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -45,11 +55,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +71,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -67,6 +83,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
 import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
@@ -75,6 +93,9 @@ import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
+import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
+import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
+import kotlin.math.sign
 
 @Composable
 fun HomeRoute(
@@ -98,10 +119,24 @@ private fun HomeScreen(
     vitrineItems: List<VitrineItem>,
     modifier: Modifier = Modifier
 ) {
+    var shouldApplyFullWidthAnimationToCartButton by rememberSaveable {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(shouldApplyFullWidthAnimationToCartButton) {
+        Log.d("HomeScreen", "Should animate full width offset to cart button: $shouldApplyFullWidthAnimationToCartButton")
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        shouldApplyFullWidthAnimationToCartButton = false
+    }
+
     FoodScaffold(
         topBar = {
             HomeTopBar(
-                onNavigateToCart = onNavigateToCart
+                onNavigateToCart = {
+                    shouldApplyFullWidthAnimationToCartButton = true
+                    onNavigateToCart()
+                },
+                shouldApplyOffScreenAnimationToCartButton = shouldApplyFullWidthAnimationToCartButton
             )
         },
         bottomBar = {
@@ -113,7 +148,10 @@ private fun HomeScreen(
             modifier = Modifier
                 .padding(it)
                 .consumeWindowInsets(it),
-            onNavigateToProduct = onNavigateToProduct,
+            onNavigateToProduct = { id ->
+                shouldApplyFullWidthAnimationToCartButton = true
+                onNavigateToProduct(id)
+            },
             vitrineItems = vitrineItems
         )
     }
@@ -122,6 +160,7 @@ private fun HomeScreen(
 @Composable
 private fun HomeTopBar(
     onNavigateToCart: () -> Unit,
+    shouldApplyOffScreenAnimationToCartButton: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -141,7 +180,14 @@ private fun HomeTopBar(
                     text = title,
                     style = titleTextStyle,
                     maxLines = 2,
-                    modifier = Modifier.padding(start = 24.dp)
+                    modifier = Modifier
+                        .padding(start = 24.dp)
+                        .withSafeNavAnimatedContentScope {
+                            Modifier.animateEnterExit(
+                                enter = fadeIn(animationSpec = sharedElementAnimSpec()),
+                                exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                            )
+                        }
                 )
             },
             action = {
@@ -151,11 +197,43 @@ private fun HomeTopBar(
                         onNavigateToCart()
                     },
                     modifier = Modifier.withSafeSharedTransitionScope {
-                        Modifier.sharedElement(
-                            state = rememberSharedContentState("cart_button"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                            zIndexInOverlay = 2f
-                        )
+                        Modifier.withSafeNavAnimatedContentScope {
+                            Modifier
+                                .then(if (shouldApplyOffScreenAnimationToCartButton) {
+                                    val screenWidth =
+                                        with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+
+                                    Modifier
+                                        .animateEnterExit(
+                                            enter = slideInHorizontally(
+                                                initialOffsetX = { -screenWidth },
+                                                animationSpec = sharedElementAnimSpec()
+                                            ),
+                                            exit = slideOutHorizontally(
+                                                targetOffsetX = { -screenWidth },
+                                                animationSpec = sharedElementAnimSpec()
+                                            )
+                                        )
+                                } else {
+                                    Modifier
+                                        .animateEnterExit(
+                                            enter = slideInHorizontally(
+                                                initialOffsetX = { it },
+                                                animationSpec = sharedElementAnimSpec()
+                                            ),
+                                            exit = slideOutHorizontally(
+                                                targetOffsetX = { it },
+                                                animationSpec = sharedElementAnimSpec()
+                                            )
+                                        )
+                                })
+                                .sharedElement(
+                                    state = rememberSharedContentState("cart_button"),
+                                    animatedVisibilityScope = this,
+                                    zIndexInOverlay = 2f,
+                                    boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                                )
+                        }
                     }
                 )
             }
@@ -164,7 +242,20 @@ private fun HomeTopBar(
 
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .horizontalScroll(state = rememberScrollState())
+                .withSafeNavAnimatedContentScope {
+                    Modifier.animateEnterExit(
+                        enter = slideInHorizontally(
+                            initialOffsetX = { it },
+                            animationSpec = sharedElementAnimSpec()
+                        ),
+                        exit = slideOutHorizontally(
+                            targetOffsetX = { it },
+                            animationSpec = sharedElementAnimSpec()
+                        )
+                    )
+                }
                 .padding(horizontal = 24.dp),
         ) {
             var selectedCollectionIndex by remember { mutableIntStateOf(0) }
@@ -198,6 +289,12 @@ private fun HomeTopBar(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
+                .withSafeNavAnimatedContentScope {
+                    Modifier.animateEnterExit(
+                        enter = fadeIn(animationSpec = sharedElementAnimSpec()),
+                        exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                    )
+                }
         ) {
             IconButton(
                 onClick = { },
@@ -242,6 +339,22 @@ private fun HomeContent(
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { vitrineItems.size })
+
+    val initOffset = rememberSaveable(
+        saver = Saver(
+            save = { it.value },
+            restore = { Animatable(initialValue = it, typeConverter = Float.VectorConverter) }
+        )
+    ) {
+        Animatable(2f)
+    }
+    LaunchedEffect(initOffset) {
+        Log.d("HomeScreen", "InitOffset: ${initOffset.value}")
+    }
+    LaunchedEffect(Unit) {
+        initOffset.animateTo(0f, animationSpec = sharedElementAnimSpec())
+    }
+
     HorizontalPager(
         state = pagerState,
         contentPadding = PaddingValues(
@@ -252,43 +365,69 @@ private fun HomeContent(
         beyondViewportPageCount = 1,
         modifier = modifier
             .fillMaxSize()
-    ) {
+    ) { page ->
         VitrineItemCard(
-            vitrineItem = vitrineItems[it],
+            vitrineItem = vitrineItems[page],
             onClick = dropUnlessResumed {
-                if (it != pagerState.currentPage) return@dropUnlessResumed
+                if (page != pagerState.currentPage) return@dropUnlessResumed
 
-                onNavigateToProduct(vitrineItems[it].id)
+                onNavigateToProduct(vitrineItems[page].id)
             },
             modifier = Modifier
                 .withSafeSharedTransitionScope {
-                    with(LocalNavAnimatedContentScope.requiredCurrent) {
-                        if (pagerState.currentPage == it) {
-                            Modifier.sharedBounds(
-                                sharedContentState = rememberSharedContentState(key = "container_${vitrineItems[it].id}"),
-                                animatedVisibilityScope = this,
-                                resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                                zIndexInOverlay = 1f,
-                            )
-                        } else {
-                            Modifier
-                                .renderInSharedTransitionScopeOverlay(
-                                    zIndexInOverlay = if (pagerState.currentPage - it < 0) 0f else 2f,
-                                )
-                                .animateEnterExit(
-                                    enter = fadeIn(),
-                                    exit = fadeOut()
-                                )
-                        }
+                    if (pagerState.currentPage == page) {
+                        Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "container_${vitrineItems[page].id}"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                            zIndexInOverlay = 1f,
+                            enter = fadeIn(animationSpec = sharedElementAnimSpec()),
+                            exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                        )
+                    } else {
+                        Modifier.renderInSharedTransitionScopeOverlay(
+                            zIndexInOverlay = if (page - pagerState.currentPage > 0) 0f else 2f
+                        )
                     }
                 }
                 .graphicsLayer {
                     val fromCurrentPageOffset = pagerState
-                        .getOffsetDistanceInPages(it)
+                        .getOffsetDistanceInPages(page)
 
                     rotationZ = -12 * fromCurrentPageOffset.coerceIn(-1f, 1f)
                 }
-                .zIndex(vitrineItems.size - it.toFloat()),
+                .zIndex(vitrineItems.size - page.toFloat())
+                .then(
+                    if (LocalInspectionMode.current) {
+                        Modifier
+                    } else {
+                        Modifier.graphicsLayer {
+                            rotationZ = -12 * initOffset.value.coerceIn(0f, 1f)
+                            translationX = initOffset.value * pagerState.layoutInfo.pageSize
+                        }
+                    }
+                )
+                .withSafeNavAnimatedContentScope {
+                    if (pagerState.currentPage == page) {
+                        Modifier.animateEnterExit(
+                            enter = EnterTransition.None,
+                            exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                        )
+                    } else {
+                        val offsetX: (fullWidth: Int) -> Int =
+                            { (page - pagerState.currentPage).sign * (it / 4) }
+                        Modifier.animateEnterExit(
+                            enter = slideInHorizontally(
+                                initialOffsetX = offsetX,
+                                animationSpec = sharedElementAnimSpec()
+                            ),
+                            exit = slideOutHorizontally(
+                                targetOffsetX = offsetX,
+                                animationSpec = sharedElementAnimSpec()
+                            ),
+                        )
+                    }
+                },
         )
     }
 }
@@ -305,6 +444,28 @@ private fun HomeNavigationBar() {
     var navigationBarItemIndex by remember { mutableIntStateOf(0) }
     FoodNavigationBar(
         modifier = Modifier
+            .withSafeNavAnimatedContentScope {
+                Modifier.animateEnterExit(
+                    enter = slideInVertically(
+                        initialOffsetY = { it },
+                        animationSpec = sharedElementAnimSpec()
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { it },
+                        animationSpec = sharedElementAnimSpec()
+                    )
+                )
+            }
+            .withSafeSharedTransitionScope {
+                Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(key = "bottom_bar"),
+                    animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    // Changes: Add transition effect
+                    enter = fadeIn(animationSpec = sharedElementAnimSpec()),
+                    exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                )
+            }
             .clip(RoundedCornerShape(topStart = 43.dp, topEnd = 43.dp))
     ) {
         for ((index, icon) in navItemsIcons.withIndex()) {
@@ -313,7 +474,13 @@ private fun HomeNavigationBar() {
                 onClick = {
                     navigationBarItemIndex = index
                 },
-                icon = icon
+                icon = icon,
+                modifier = Modifier.withSafeNavAnimatedContentScope {
+                    Modifier.animateEnterExit(
+                        enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                        exit = scaleOut(animationSpec = sharedElementAnimSpec())
+                    )
+                }
             )
         }
     }

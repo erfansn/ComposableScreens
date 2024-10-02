@@ -20,9 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
-import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
+import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
+import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
 
 data class ProductBackground(
     val color: Color,
@@ -60,18 +61,12 @@ fun ProductImage(
                 .align(Alignment.Center)
                 .scale(1.1f)
                 .aspectRatio(1f)
-                .then(
-                    with(LocalNavAnimatedContentScope.current) {
-                        if (this != null) {
-                            Modifier.animateEnterExit(
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            )
-                        } else {
-                            Modifier
-                        }
-                    }
-                )
+                .withSafeNavAnimatedContentScope {
+                    Modifier.animateEnterExit(
+                        enter = fadeIn(animationSpec = sharedElementAnimSpec()),
+                        exit = fadeOut(animationSpec = sharedElementAnimSpec())
+                    )
+                }
         )
     }
 }

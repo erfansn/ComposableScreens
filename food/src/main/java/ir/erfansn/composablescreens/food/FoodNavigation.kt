@@ -2,14 +2,19 @@ package ir.erfansn.composablescreens.food
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -27,6 +32,7 @@ import ir.erfansn.composablescreens.food.feature.home.HomeViewModel
 import ir.erfansn.composablescreens.food.feature.product.ProductRoute
 import ir.erfansn.composablescreens.food.feature.product.ProductViewModel
 import ir.erfansn.composablescreens.food.ui.FoodTheme
+import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
 
 const val FoodRoute = "food"
 
@@ -48,7 +54,15 @@ private data object FoodNavGraph {
 
 fun NavGraphBuilder.foodNavGraph(navController: NavController) {
     navigation(startDestination = FoodNavGraph.HomeRoute, route = FoodRoute) {
-        foodComposable(FoodNavGraph.HomeRoute) {
+        foodComposable(
+            FoodNavGraph.HomeRoute,
+            enterTransition = {
+                fadeIn(animationSpec = sharedElementAnimSpec())
+            },
+            exitTransition = {
+                fadeOut(animationSpec = sharedElementAnimSpec())
+            },
+        ) {
             val viewModel = viewModel<HomeViewModel>()
             HomeRoute(
                 onNavigateToProduct = {
@@ -62,30 +76,56 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
         }
         foodComposable(
             FoodNavGraph.ProductRoute.toString(),
-            arguments = FoodNavGraph.ProductRoute.Args
+            arguments = FoodNavGraph.ProductRoute.Args,
+            enterTransition = {
+                fadeIn(animationSpec = sharedElementAnimSpec())
+            },
+            exitTransition = {
+                fadeOut(animationSpec = sharedElementAnimSpec())
+            }
         ) {
             val viewModel = viewModel<ProductViewModel>()
             ProductRoute(
                 viewModel = viewModel,
                 onNavigateToCart = {
-                    navController.navigate(FoodNavGraph.CartRoute) {
-                        popUpTo(FoodNavGraph.HomeRoute)
+                    if (navController.previousBackStackEntry?.destination?.route == FoodNavGraph.CartRoute) {
+                        // TODO: Should report this, this worked to restore state (rememberSaveable) but also saving argument passed to route
+                        // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
+                        navController.popBackStack()
+                    } else {
+                        navController.navigate(FoodNavGraph.CartRoute) {
+                            popUpTo(FoodNavGraph.HomeRoute) {
+                                saveState = true
+                            }
+                        }
                     }
                 },
                 onBackClick = { navController.popBackStack() }
             )
         }
-        foodComposable(FoodNavGraph.CartRoute) {
+        foodComposable(
+            FoodNavGraph.CartRoute,
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = sharedElementAnimSpec())
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End, animationSpec = sharedElementAnimSpec())
+            },
+        ) {
             val viewModel = viewModel<CartViewModel>()
             CartRoute(
                 onNavigateToHome = {
-                    navController.navigate(FoodNavGraph.HomeRoute) {
+                    // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
+                    /*navController.navigate(FoodNavGraph.HomeRoute) {
                         launchSingleTop = true
                         popUpTo(FoodNavGraph.HomeRoute)
-                    }
+                    }*/
+                    navController.popBackStack(route = FoodNavGraph.HomeRoute, inclusive = false)
                 },
                 onNavigateToProduct = {
-                    navController.navigate(FoodNavGraph.ProductRoute(it))
+                    navController.navigate(FoodNavGraph.ProductRoute(it)) {
+                        restoreState = true
+                    }
                 },
                 viewModel = viewModel
             )
@@ -100,7 +140,7 @@ val CompositionLocal<AnimatedContentScope?>.requiredCurrent
     get() = current ?: error("LocalNavAnimatedContentScope not provided from navigation route")
 
 @Composable
-fun Modifier.withSafeNavAnimatedContentScope(block: AnimatedContentScope.() -> Modifier): Modifier {
+fun Modifier.withSafeNavAnimatedContentScope(block: @Composable AnimatedContentScope.() -> Modifier): Modifier {
     return then(
         with(LocalNavAnimatedContentScope.current) {
             if (this != null) {

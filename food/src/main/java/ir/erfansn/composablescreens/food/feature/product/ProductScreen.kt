@@ -3,6 +3,7 @@
 package ir.erfansn.composablescreens.food.feature.product
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDp
@@ -11,7 +12,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ScrollState
@@ -61,12 +66,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.buildAnnotatedString
@@ -94,6 +102,8 @@ import ir.erfansn.composablescreens.food.ui.util.Cent
 import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
+import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
+import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
 
 @Composable
 fun ProductRoute(
@@ -123,6 +133,7 @@ private fun ProductScreen(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    var shouldRunNavAnimations by rememberSaveable { mutableStateOf(true) }
     FoodFloatingScaffold(
         modifier = modifier,
         topBar = {
@@ -169,10 +180,18 @@ private fun ProductScreen(
                             .graphicsLayer {
                                 alpha = transitionData.alpha
                             }
+                            .withSafeNavAnimatedContentScope {
+                                Modifier.animateEnterExit(
+                                    enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                                    exit = scaleOut(animationSpec = sharedElementAnimSpec())
+                                )
+                            }
                     )
                 }
+
                 VerticalHillButton(
                     onClick = dropUnlessResumed {
+                        shouldRunNavAnimations = false
                         onNavigateToCart()
                     },
                     title = "Cart",
@@ -183,11 +202,32 @@ private fun ProductScreen(
                         .padding(top = 48.dp)
                         .align(Alignment.TopEnd)
                         .withSafeSharedTransitionScope {
-                            Modifier.sharedElement(
-                                state = rememberSharedContentState("cart_button"),
-                                animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                                zIndexInOverlay = 3f
-                            )
+                            Modifier.withSafeNavAnimatedContentScope {
+                                val screenWidth =
+                                    with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+
+                                Modifier
+                                    .then(if (quantity != 0) {
+                                        Modifier.animateEnterExit(
+                                            enter = slideInHorizontally(
+                                                initialOffsetX = { -screenWidth },
+                                                animationSpec = sharedElementAnimSpec()
+                                            ),
+                                            exit = slideOutHorizontally(
+                                                targetOffsetX = { -screenWidth },
+                                                animationSpec = sharedElementAnimSpec()
+                                            )
+                                        )
+                                    } else {
+                                        Modifier
+                                    })
+                                    .sharedElement(
+                                        state = rememberSharedContentState("cart_button"),
+                                        animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                                        zIndexInOverlay = 3f,
+                                        boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                                    )
+                            }
                         }
                 )
             }
@@ -196,21 +236,6 @@ private fun ProductScreen(
             AnimatedContent(
                 targetState = quantity,
                 label = "bottom_bar",
-                modifier = modifier
-                    .withSafeSharedTransitionScope {
-                        with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            Modifier
-                                .renderInSharedTransitionScopeOverlay()
-                                .animateEnterExit(
-                                    enter = slideInVertically(
-                                        initialOffsetY = { it },
-                                    ),
-                                    exit = slideOutVertically(
-                                        targetOffsetY = { it },
-                                    )
-                                )
-                        }
-                    },
                 contentKey = { it == 0 },
                 transitionSpec = {
                     slideInVertically(
@@ -220,13 +245,17 @@ private fun ProductScreen(
                         targetOffsetY = { it },
                         animationSpec = exitAnimationSpec()
                     )
-                }
+                },
             ) {
-                Column(modifier = Modifier.consumeWindowInsets(contentPadding)) {
+                Column(
+                    modifier = Modifier.consumeWindowInsets(contentPadding)
+                ) {
                     ProductBottomBar(
                         onChangeQuantity = { qty -> onChangeQuantity(qty) },
                         producePriceInCent = product.priceInCent,
                         orderCount = it,
+                        modifier = Modifier,
+                        shouldRunNavAnimations = shouldRunNavAnimations
                     )
                     Spacer(modifier = Modifier.padding(contentPadding))
                 }
@@ -242,7 +271,8 @@ private fun ProductScreen(
             description = product.description,
             scrollState = scrollState,
             contentPadding = it,
-            modifier = Modifier.consumeWindowInsets(it)
+            modifier = Modifier.consumeWindowInsets(it),
+            shouldRunNavAnimations = shouldRunNavAnimations
         )
     }
 }
@@ -338,6 +368,7 @@ private fun ProductContent(
     priceInCent: Cent,
     ingredients: List<String>,
     description: String,
+    shouldRunNavAnimations: Boolean,
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -351,18 +382,18 @@ private fun ProductContent(
         Box(
             modifier = Modifier
                 .padding(24.dp)
-                .withSafeSharedTransitionScope {
-                    Modifier.sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "container_${productId}"),
-                        animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                    )
-                }
         ) {
             ProductImage(
                 image = painterResource(imageId),
                 background = ProductImageDefault.productBackground.copy(color = backgroundColor),
                 modifier = Modifier
+                    .withSafeSharedTransitionScope {
+                        Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "container_${productId}"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                        )
+                    }
             )
             Text(
                 text = priceByQuantityText(
@@ -378,9 +409,15 @@ private fun ProductContent(
                                 .renderInSharedTransitionScopeOverlay(
                                     zIndexInOverlay = 1f
                                 )
-                                .animateEnterExit(
-                                    enter = fadeIn(),
-                                    exit = fadeOut(),
+                                .then(
+                                    if (shouldRunNavAnimations) {
+                                        Modifier.animateEnterExit(
+                                            enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                                            exit = scaleOut(animationSpec = sharedElementAnimSpec()),
+                                        )
+                                    } else {
+                                        Modifier
+                                    }
                                 )
                         }
                     }
@@ -403,9 +440,19 @@ private fun ProductContent(
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
         ) {
-            for (ingredient in ingredients) {
+            for ((index, ingredient) in ingredients.withIndex()) {
                 Box(
                     modifier = Modifier
+                        .withSafeNavAnimatedContentScope {
+                            if (shouldRunNavAnimations) {
+                                Modifier.animateEnterExit(
+                                    enter = slideInVertically(initialOffsetY = { 40 * index }, animationSpec = sharedElementAnimSpec()),
+                                    exit = ExitTransition.None
+                                )
+                            } else {
+                                Modifier
+                            }
+                        }
                         .clip(CircleShape)
                         .background(FoodTheme.colors.tertiary)
                         .height(86.dp)
@@ -432,12 +479,14 @@ private fun ProductBottomBar(
     producePriceInCent: Cent,
     orderCount: Quantity,
     onChangeQuantity: (Quantity) -> Unit,
+    shouldRunNavAnimations: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         if (orderCount == 0) {
             val interactionSource = remember { MutableInteractionSource() }
             val scaleEffectValue by interactionSource.scaleEffectValue()
+
             Row(
                 modifier = Modifier
                     .graphicsLayer {
@@ -446,6 +495,15 @@ private fun ProductBottomBar(
                     }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
+                    .withSafeSharedTransitionScope {
+                        Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "bottom_bar"),
+                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                            enter = fadeIn(sharedElementAnimSpec()),
+                            exit = fadeOut(sharedElementAnimSpec())
+                        )
+                    }
                     .clip(RoundedCornerShape(43.dp))
                     .background(FoodTheme.colors.secondary)
                     .heightIn(112.dp)
@@ -455,6 +513,16 @@ private fun ProductBottomBar(
                         interactionSource = interactionSource
                     ) {
                         onChangeQuantity(1)
+                    }
+                    .withSafeNavAnimatedContentScope {
+                        if (shouldRunNavAnimations) {
+                            Modifier.animateEnterExit(
+                                enter = scaleIn(),
+                                exit = scaleOut()
+                            )
+                        } else {
+                            Modifier
+                        }
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -470,6 +538,22 @@ private fun ProductBottomBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
+                    .withSafeNavAnimatedContentScope {
+                        if (shouldRunNavAnimations) {
+                            Modifier.animateEnterExit(
+                                enter = slideInVertically(
+                                    initialOffsetY = { it },
+                                    animationSpec = sharedElementAnimSpec()
+                                ),
+                                exit = slideOutVertically(
+                                    targetOffsetY = { it },
+                                    animationSpec = sharedElementAnimSpec()
+                                )
+                            )
+                        } else {
+                            Modifier
+                        }
+                    }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
                     .clip(RoundedCornerShape(43.dp))
