@@ -198,41 +198,38 @@ private fun HomeTopBar(
                     },
                     modifier = Modifier.withSafeSharedTransitionScope {
                         Modifier.withSafeNavAnimatedContentScope {
-                            Modifier
-                                .then(if (shouldApplyOffScreenAnimationToCartButton) {
-                                    val screenWidth =
-                                        with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+                            if (shouldApplyOffScreenAnimationToCartButton) {
+                                val screenWidth =
+                                    with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
 
-                                    Modifier
-                                        .animateEnterExit(
-                                            enter = slideInHorizontally(
-                                                initialOffsetX = { -screenWidth },
-                                                animationSpec = sharedElementAnimSpec()
-                                            ),
-                                            exit = slideOutHorizontally(
-                                                targetOffsetX = { -screenWidth },
-                                                animationSpec = sharedElementAnimSpec()
-                                            )
-                                        )
-                                } else {
-                                    Modifier
-                                        .animateEnterExit(
-                                            enter = slideInHorizontally(
-                                                initialOffsetX = { it },
-                                                animationSpec = sharedElementAnimSpec()
-                                            ),
-                                            exit = slideOutHorizontally(
-                                                targetOffsetX = { it },
-                                                animationSpec = sharedElementAnimSpec()
-                                            )
-                                        )
-                                })
-                                .sharedElement(
-                                    state = rememberSharedContentState("cart_button"),
-                                    animatedVisibilityScope = this,
-                                    zIndexInOverlay = 2f,
-                                    boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                                animateEnterExit(
+                                    enter = slideInHorizontally(
+                                        initialOffsetX = { -screenWidth },
+                                        animationSpec = sharedElementAnimSpec()
+                                    ),
+                                    exit = slideOutHorizontally(
+                                        targetOffsetX = { -screenWidth },
+                                        animationSpec = sharedElementAnimSpec()
+                                    )
                                 )
+                            } else {
+                                animateEnterExit(
+                                    enter = slideInHorizontally(
+                                        initialOffsetX = { it },
+                                        animationSpec = sharedElementAnimSpec()
+                                    ),
+                                    exit = slideOutHorizontally(
+                                        targetOffsetX = { it },
+                                        animationSpec = sharedElementAnimSpec()
+                                    )
+                                )
+                            }
+                            .sharedElement(
+                                state = rememberSharedContentState("cart_button"),
+                                animatedVisibilityScope = this,
+                                zIndexInOverlay = 2f,
+                                boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                            )
                         }
                     }
                 )
@@ -245,7 +242,7 @@ private fun HomeTopBar(
                 .fillMaxWidth()
                 .horizontalScroll(state = rememberScrollState())
                 .withSafeNavAnimatedContentScope {
-                    Modifier.animateEnterExit(
+                    animateEnterExit(
                         enter = slideInHorizontally(
                             initialOffsetX = { it },
                             animationSpec = sharedElementAnimSpec()
@@ -290,7 +287,7 @@ private fun HomeTopBar(
                 .padding(horizontal = 24.dp)
                 .fillMaxWidth()
                 .withSafeNavAnimatedContentScope {
-                    Modifier.animateEnterExit(
+                    animateEnterExit(
                         enter = fadeIn(animationSpec = sharedElementAnimSpec()),
                         exit = fadeOut(animationSpec = sharedElementAnimSpec())
                     )
@@ -409,14 +406,15 @@ private fun HomeContent(
                 )
                 .withSafeNavAnimatedContentScope {
                     if (pagerState.currentPage == page) {
-                        Modifier.animateEnterExit(
+                        animateEnterExit(
                             enter = EnterTransition.None,
                             exit = fadeOut(animationSpec = sharedElementAnimSpec())
                         )
                     } else {
-                        val offsetX: (fullWidth: Int) -> Int =
-                            { (page - pagerState.currentPage).sign * (it / 4) }
-                        Modifier.animateEnterExit(
+                        val offsetX: (fullWidth: Int) -> Int = {
+                            (page - pagerState.currentPage).sign * (it / 4)
+                        }
+                        animateEnterExit(
                             enter = slideInHorizontally(
                                 initialOffsetX = offsetX,
                                 animationSpec = sharedElementAnimSpec()
@@ -445,7 +443,7 @@ private fun HomeNavigationBar() {
     FoodNavigationBar(
         modifier = Modifier
             .withSafeNavAnimatedContentScope {
-                Modifier.animateEnterExit(
+                animateEnterExit(
                     enter = slideInVertically(
                         initialOffsetY = { it },
                         animationSpec = sharedElementAnimSpec()
@@ -476,7 +474,7 @@ private fun HomeNavigationBar() {
                 },
                 icon = icon,
                 modifier = Modifier.withSafeNavAnimatedContentScope {
-                    Modifier.animateEnterExit(
+                    animateEnterExit(
                         enter = scaleIn(animationSpec = sharedElementAnimSpec()),
                         exit = scaleOut(animationSpec = sharedElementAnimSpec())
                     )

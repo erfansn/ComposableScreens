@@ -62,7 +62,7 @@ fun ProductImage(
                 .scale(1.1f)
                 .aspectRatio(1f)
                 .withSafeNavAnimatedContentScope {
-                    Modifier.animateEnterExit(
+                    animateEnterExit(
                         enter = fadeIn(animationSpec = sharedElementAnimSpec()),
                         exit = fadeOut(animationSpec = sharedElementAnimSpec())
                     )

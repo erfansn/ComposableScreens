@@ -181,7 +181,7 @@ private fun ProductScreen(
                                 alpha = transitionData.alpha
                             }
                             .withSafeNavAnimatedContentScope {
-                                Modifier.animateEnterExit(
+                                animateEnterExit(
                                     enter = scaleIn(animationSpec = sharedElementAnimSpec()),
                                     exit = scaleOut(animationSpec = sharedElementAnimSpec())
                                 )
@@ -206,27 +206,26 @@ private fun ProductScreen(
                                 val screenWidth =
                                     with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
 
-                                Modifier
-                                    .then(if (quantity != 0) {
-                                        Modifier.animateEnterExit(
-                                            enter = slideInHorizontally(
-                                                initialOffsetX = { -screenWidth },
-                                                animationSpec = sharedElementAnimSpec()
-                                            ),
-                                            exit = slideOutHorizontally(
-                                                targetOffsetX = { -screenWidth },
-                                                animationSpec = sharedElementAnimSpec()
-                                            )
+                                if (quantity != 0) {
+                                    animateEnterExit(
+                                        enter = slideInHorizontally(
+                                            initialOffsetX = { -screenWidth },
+                                            animationSpec = sharedElementAnimSpec()
+                                        ),
+                                        exit = slideOutHorizontally(
+                                            targetOffsetX = { -screenWidth },
+                                            animationSpec = sharedElementAnimSpec()
                                         )
-                                    } else {
-                                        Modifier
-                                    })
-                                    .sharedElement(
-                                        state = rememberSharedContentState("cart_button"),
-                                        animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                                        zIndexInOverlay = 3f,
-                                        boundsTransform = { _, _ -> sharedElementAnimSpec() }
                                     )
+                                } else {
+                                    this
+                                }
+                                .sharedElement(
+                                    state = rememberSharedContentState("cart_button"),
+                                    animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                                    zIndexInOverlay = 3f,
+                                    boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                                )
                             }
                         }
                 )
@@ -445,12 +444,12 @@ private fun ProductContent(
                     modifier = Modifier
                         .withSafeNavAnimatedContentScope {
                             if (shouldRunNavAnimations) {
-                                Modifier.animateEnterExit(
+                                animateEnterExit(
                                     enter = slideInVertically(initialOffsetY = { 40 * index }, animationSpec = sharedElementAnimSpec()),
                                     exit = ExitTransition.None
                                 )
                             } else {
-                                Modifier
+                                this
                             }
                         }
                         .clip(CircleShape)
@@ -516,12 +515,12 @@ private fun ProductBottomBar(
                     }
                     .withSafeNavAnimatedContentScope {
                         if (shouldRunNavAnimations) {
-                            Modifier.animateEnterExit(
+                            animateEnterExit(
                                 enter = scaleIn(),
                                 exit = scaleOut()
                             )
                         } else {
-                            Modifier
+                            this
                         }
                     },
                 verticalAlignment = Alignment.CenterVertically,
@@ -540,7 +539,7 @@ private fun ProductBottomBar(
                 modifier = Modifier
                     .withSafeNavAnimatedContentScope {
                         if (shouldRunNavAnimations) {
-                            Modifier.animateEnterExit(
+                            animateEnterExit(
                                 enter = slideInVertically(
                                     initialOffsetY = { it },
                                     animationSpec = sharedElementAnimSpec()
@@ -551,7 +550,7 @@ private fun ProductBottomBar(
                                 )
                             )
                         } else {
-                            Modifier
+                            this
                         }
                     }
                     .padding(horizontal = 8.dp)
