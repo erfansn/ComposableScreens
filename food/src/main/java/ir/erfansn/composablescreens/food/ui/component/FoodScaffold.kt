@@ -3,8 +3,6 @@ package ir.erfansn.composablescreens.food.ui.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,15 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Composable
 fun FoodScaffold(
+    bottomBar: @Composable () -> Unit,
+    topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = { },
-    bottomBar: @Composable () -> Unit = { },
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -45,31 +42,29 @@ fun FoodScaffold(
 
 @Composable
 fun FoodFloatingScaffold(
+    topBar: @Composable () -> Unit,
+    floatingBottomBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = { },
-    floatingBottomBar: @Composable (PaddingValues) -> Unit = { },
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
         topBar = topBar,
-        contentWindowInsets = WindowInsets.safeDrawing,
+        bottomBar = {
+            // To prevent applying insets padding to bottom side
+            Box(Modifier)
+        },
         containerColor = FoodTheme.colors.background,
         contentColor = FoodTheme.colors.onBackground
-    ) {
-        val contentPadding = PaddingValues(
-            top = it.calculateTopPadding(),
-            start = it.calculateStartPadding(LocalLayoutDirection.current),
-            end = it.calculateEndPadding(LocalLayoutDirection.current)
-        )
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(contentPadding)
-                .consumeWindowInsets(contentPadding)
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
         ) {
             var bottomBarHeight by remember { mutableIntStateOf(0) }
-            content(PaddingValues(bottom = it.calculateBottomPadding() + with(LocalDensity.current) { bottomBarHeight.toDp() }))
+            content(PaddingValues(bottom = with(LocalDensity.current) { bottomBarHeight.toDp() }))
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -77,7 +72,7 @@ fun FoodFloatingScaffold(
                         bottomBarHeight = it.height
                     }
             ) {
-                floatingBottomBar(PaddingValues(bottom = it.calculateBottomPadding()))
+                floatingBottomBar()
             }
         }
     }

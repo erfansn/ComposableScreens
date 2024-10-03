@@ -32,15 +32,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
@@ -194,7 +200,8 @@ private fun ProductScreen(
                         .offset {
                             IntOffset(x = transitionData.offsetX.roundToPx(), y = 0)
                         }
-                        .padding(top = 48.dp)
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                        .padding(top = 28.dp)
                         .align(Alignment.TopEnd)
                         .withSafeSharedElementAnimationScopes {
                             val screenWidth =
@@ -224,7 +231,7 @@ private fun ProductScreen(
                 )
             }
         },
-        floatingBottomBar = { contentPadding ->
+        floatingBottomBar = {
             AnimatedContent(
                 targetState = quantity,
                 label = "bottom_bar",
@@ -239,18 +246,15 @@ private fun ProductScreen(
                     )
                 },
             ) {
-                Column(
-                    modifier = Modifier.consumeWindowInsets(contentPadding)
-                ) {
-                    ProductBottomBar(
-                        onChangeQuantity = { qty -> onChangeQuantity(qty) },
-                        producePriceInCent = product.priceInCent,
-                        orderCount = it,
-                        modifier = Modifier,
-                        shouldRunNavAnimations = shouldRunNavAnimations
-                    )
-                    Spacer(modifier = Modifier.padding(contentPadding))
-                }
+                ProductBottomBar(
+                    onChangeQuantity = { qty -> onChangeQuantity(qty) },
+                    producePriceInCent = product.priceInCent,
+                    orderCount = it,
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .navigationBarsPadding(),
+                    shouldRunNavAnimations = shouldRunNavAnimations
+                )
             }
         }
     ) {
@@ -263,7 +267,6 @@ private fun ProductScreen(
             description = product.description,
             scrollState = scrollState,
             contentPadding = it,
-            modifier = Modifier.consumeWindowInsets(it),
             shouldRunNavAnimations = shouldRunNavAnimations
         )
     }

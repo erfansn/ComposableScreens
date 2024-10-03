@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -56,7 +54,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
@@ -139,9 +136,7 @@ private fun CartScreen(
                         onPayClick = {
                             paymentIsSuccessful = true
                         },
-                        contentPadding = it,
                         modifier = Modifier
-                            .consumeWindowInsets(it)
                             .onSizeChanged {
                                 bottomBarHeight = it.height
                             }
@@ -157,9 +152,6 @@ private fun CartScreen(
                     if (paymentIsSuccessful) Modifier.pointerInput(Unit) { } else Modifier
                 )
         ) {
-            val density = LocalDensity.current
-            val navigationBarHeightPx = WindowInsets.navigationBars.getBottom(density)
-
             var bottomOffsetY by rememberSaveable {
                 mutableIntStateOf(0)
             }
@@ -172,10 +164,7 @@ private fun CartScreen(
             LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
                 scope.launch {
                     if (bottomOffsetY > 0) {
-                        lazyListState.animateScrollBy(
-                            (bottomOffsetY.toFloat() - navigationBarHeightPx).coerceAtLeast(0f),
-                            animationSpec = sharedElementAnimSpec()
-                        )
+                        lazyListState.animateScrollBy(bottomOffsetY.toFloat(), animationSpec = sharedElementAnimSpec())
                         bottomOffsetY = 0
                     }
                 }
@@ -186,7 +175,6 @@ private fun CartScreen(
                 contentPadding = it,
                 state = lazyListState,
                 onNavigateToProduct = onNavigateToProduct,
-                modifier = Modifier.consumeWindowInsets(it)
             )
         }
         if (paymentIsSuccessful) {
@@ -213,7 +201,7 @@ private fun CartTopBar(
         label = "catalog",
         transitionSpec = { sharedElementAnimSpec() }) {
         if (!it) {
-            -56.dp
+            (-56).dp
         } else {
             0.dp
         }
@@ -318,7 +306,6 @@ private fun CartBottomBar(
     totalPrice: Cent,
     onPayClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -328,7 +315,7 @@ private fun CartBottomBar(
             .clip(CurvedShape)
             .background(FoodTheme.colors.primary)
             .padding(bottom = 8.dp, top = 24.dp)
-            .padding(contentPadding)
+            .navigationBarsPadding()
             .fillMaxWidth()
     ) {
         Column(

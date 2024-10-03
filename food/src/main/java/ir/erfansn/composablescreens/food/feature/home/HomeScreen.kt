@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -143,9 +142,9 @@ private fun HomeScreen(
         modifier = modifier,
     ) {
         HomeContent(
+            // There is no need to consumeWindowInsets because top/bottom Bar do itself
             modifier = Modifier
-                .padding(it)
-                .consumeWindowInsets(it),
+                .padding(it),
             onNavigateToProduct = { id ->
                 shouldApplyFullWidthAnimationToCartButton = true
                 onNavigateToProduct(id)
