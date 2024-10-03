@@ -1,7 +1,6 @@
 package ir.erfansn.composablescreens.food.ui
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,20 +8,10 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
-
-val foodColor = FoodColor(
-    primary = primary,
-    onPrimary = onPrimary,
-    secondary = secondary,
-    onSecondary = onSecondary,
-    tertiary = tertiary,
-    onTertiary = onTertiary,
-    background = background,
-    onBackground = onBackground
-)
 
 @Immutable
 data class FoodColor(
@@ -34,6 +23,17 @@ data class FoodColor(
     val onTertiary: Color,
     val background: Color,
     val onBackground: Color
+)
+
+val foodColor = FoodColor(
+    primary = primary,
+    onPrimary = onPrimary,
+    secondary = secondary,
+    onSecondary = onSecondary,
+    tertiary = tertiary,
+    onTertiary = onTertiary,
+    background = background,
+    onBackground = onBackground
 )
 
 val LocalFoodColor = staticCompositionLocalOf {
@@ -49,6 +49,17 @@ val LocalFoodColor = staticCompositionLocalOf {
     )
 }
 
+@Immutable
+data class FoodCornerSize(
+    val large: Dp
+)
+
+val LocalFoodCornerSize = staticCompositionLocalOf {
+    FoodCornerSize(
+        large = Dp.Unspecified
+    )
+}
+
 @Composable
 fun FoodTheme(
     content: @Composable () -> Unit
@@ -57,6 +68,7 @@ fun FoodTheme(
         CompositionLocalProvider(
             LocalFoodColor provides foodColor,
             LocalLayoutDirection provides LayoutDirection.Ltr,
+            LocalFoodCornerSize provides foodCornerSize
         ) {
             MaterialTheme(
                 typography = AppTypography,
@@ -75,8 +87,7 @@ object FoodTheme {
         @Composable
         get() = MaterialTheme.typography
 
-    // TODO: think about it, custom or not after implementing micro-animations
-    val shapes: Shapes
+    val cornerSize: FoodCornerSize
         @Composable
-        get() = MaterialTheme.shapes
+        get() = LocalFoodCornerSize.current
 }

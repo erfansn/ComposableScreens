@@ -496,7 +496,7 @@ private fun ProductBottomBar(
                             exit = fadeOut(sharedElementAnimSpec())
                         )
                     }
-                    .clip(RoundedCornerShape(43.dp))
+                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
                     .background(FoodTheme.colors.secondary)
                     .heightIn(112.dp)
                     .fillMaxWidth()
@@ -548,7 +548,7 @@ private fun ProductBottomBar(
                     }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
-                    .clip(RoundedCornerShape(43.dp))
+                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
                     .background(FoodTheme.colors.primary)
                     .heightIn(112.dp)
                     .fillMaxWidth()
@@ -607,7 +607,7 @@ private fun SquareBox(
         modifier = modifier
             .size(112.dp)
             .padding(4.dp)
-            .clip(RoundedCornerShape((43 - 4).dp))
+            .clip(RoundedCornerShape(FoodTheme.cornerSize.large - 4.dp))
             .background(FoodTheme.colors.background)
             .clickable {
                 onClick()

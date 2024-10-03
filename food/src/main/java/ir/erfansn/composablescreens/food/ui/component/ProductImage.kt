@@ -30,9 +30,9 @@ data class ProductBackground(
 )
 
 object ProductImageDefault {
-    val productBackground = ProductBackground(
+    val productBackground @Composable get() = ProductBackground(
         color = Color(0xFFE4F9CD),
-        cornerSize = 43.dp,
+        cornerSize = FoodTheme.cornerSize.large,
     )
 }
 

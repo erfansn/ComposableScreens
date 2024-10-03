@@ -454,12 +454,11 @@ private fun HomeNavigationBar() {
                     sharedContentState = rememberSharedContentState(key = "bottom_bar"),
                     animatedVisibilityScope = this,
                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                    // Changes: Add transition effect
                     enter = fadeIn(animationSpec = sharedElementAnimSpec()),
                     exit = fadeOut(animationSpec = sharedElementAnimSpec())
                 )
             }
-            .clip(RoundedCornerShape(topStart = 43.dp, topEnd = 43.dp))
+            .clip(RoundedCornerShape(topStart = FoodTheme.cornerSize.large, topEnd = FoodTheme.cornerSize.large))
     ) {
         for ((index, icon) in navItemsIcons.withIndex()) {
             FoodNavigationBarItem(

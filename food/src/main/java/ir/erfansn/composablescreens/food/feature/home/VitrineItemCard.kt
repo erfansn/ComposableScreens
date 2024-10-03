@@ -60,7 +60,7 @@ fun VitrineItemCard(
     val scaleEffectValue by interactionSource.scaleEffectValue()
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(43.dp),
+        shape = RoundedCornerShape(FoodTheme.cornerSize.large),
         colors = CardDefaults.cardColors(
             containerColor = vitrineItem.backgroundColor,
             contentColor = FoodTheme.colors.onBackground
@@ -113,8 +113,8 @@ fun VitrineItemCard(
                     .padding(10.dp)
                     .fillMaxWidth()
                     .height(86.dp)
-                    .clip(RoundedCornerShape(43.dp))
-                    .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(43.dp))
+                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
+                    .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(FoodTheme.cornerSize.large))
                     .hazeChild(
                         state = hazeState,
                         style = HazeDefaults.style(

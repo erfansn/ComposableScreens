@@ -344,7 +344,7 @@ private fun CartBottomBar(
                     scaleY = scaleEffectValue
                 }
                 .padding(end = 8.dp)
-                .clip(RoundedCornerShape(43.dp))
+                .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
                 .clickable(
                     interactionSource = interactionSource,
                     indication = ripple()
