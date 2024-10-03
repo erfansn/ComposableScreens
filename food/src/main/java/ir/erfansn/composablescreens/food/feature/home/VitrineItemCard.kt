@@ -42,9 +42,7 @@ import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
-import ir.erfansn.composablescreens.common.requiredCurrent
-import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.ui.FoodTheme
@@ -87,10 +85,10 @@ fun VitrineItemCard(
                         .padding(horizontal = 32.dp)
                         .padding(top = 26.dp)
                         .weight(2f)
-                        .withSafeSharedTransitionScope {
+                        .withSafeSharedElementAnimationScopes {
                             sharedElement(
                                 state = rememberSharedContentState(key = "title_${vitrineItem.id}"),
-                                animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                                animatedVisibilityScope = this,
                                 zIndexInOverlay = 3f,
                             )
                         },

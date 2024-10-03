@@ -86,10 +86,8 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.dropUnlessResumed
-import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
-import ir.erfansn.composablescreens.common.requiredCurrent
 import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
-import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
@@ -196,41 +194,39 @@ private fun HomeTopBar(
                     onClick = dropUnlessResumed {
                         onNavigateToCart()
                     },
-                    modifier = Modifier.withSafeSharedTransitionScope {
-                        withSafeNavAnimatedContentScope {
-                            if (shouldApplyOffScreenAnimationToCartButton) {
-                                val screenWidth =
-                                    with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+                    modifier = Modifier.withSafeSharedElementAnimationScopes {
+                        if (shouldApplyOffScreenAnimationToCartButton) {
+                            val screenWidth =
+                                with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
 
-                                animateEnterExit(
-                                    enter = slideInHorizontally(
-                                        initialOffsetX = { -screenWidth },
-                                        animationSpec = sharedElementAnimSpec()
-                                    ),
-                                    exit = slideOutHorizontally(
-                                        targetOffsetX = { -screenWidth },
-                                        animationSpec = sharedElementAnimSpec()
-                                    )
+                            animateEnterExit(
+                                enter = slideInHorizontally(
+                                    initialOffsetX = { -screenWidth },
+                                    animationSpec = sharedElementAnimSpec()
+                                ),
+                                exit = slideOutHorizontally(
+                                    targetOffsetX = { -screenWidth },
+                                    animationSpec = sharedElementAnimSpec()
                                 )
-                            } else {
-                                animateEnterExit(
-                                    enter = slideInHorizontally(
-                                        initialOffsetX = { it },
-                                        animationSpec = sharedElementAnimSpec()
-                                    ),
-                                    exit = slideOutHorizontally(
-                                        targetOffsetX = { it },
-                                        animationSpec = sharedElementAnimSpec()
-                                    )
+                            )
+                        } else {
+                            animateEnterExit(
+                                enter = slideInHorizontally(
+                                    initialOffsetX = { it },
+                                    animationSpec = sharedElementAnimSpec()
+                                ),
+                                exit = slideOutHorizontally(
+                                    targetOffsetX = { it },
+                                    animationSpec = sharedElementAnimSpec()
                                 )
-                            }
-                            .sharedElement(
-                                state = rememberSharedContentState("cart_button"),
-                                animatedVisibilityScope = this,
-                                zIndexInOverlay = 2f,
-                                boundsTransform = { _, _ -> sharedElementAnimSpec() }
                             )
                         }
+                        .sharedElement(
+                            state = rememberSharedContentState("cart_button"),
+                            animatedVisibilityScope = this,
+                            zIndexInOverlay = 2f,
+                            boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                        )
                     }
                 )
             }
@@ -371,11 +367,11 @@ private fun HomeContent(
                 onNavigateToProduct(vitrineItems[page].id)
             },
             modifier = Modifier
-                .withSafeSharedTransitionScope {
+                .withSafeSharedElementAnimationScopes {
                     if (pagerState.currentPage == page) {
                         sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "container_${vitrineItems[page].id}"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            animatedVisibilityScope = this,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                             zIndexInOverlay = 1f,
                             enter = fadeIn(animationSpec = sharedElementAnimSpec()),
@@ -454,10 +450,10 @@ private fun HomeNavigationBar() {
                     )
                 )
             }
-            .withSafeSharedTransitionScope {
+            .withSafeSharedElementAnimationScopes {
                 sharedBounds(
                     sharedContentState = rememberSharedContentState(key = "bottom_bar"),
-                    animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                    animatedVisibilityScope = this,
                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                     // Changes: Add transition effect
                     enter = fadeIn(animationSpec = sharedElementAnimSpec()),

@@ -86,10 +86,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
-import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
-import ir.erfansn.composablescreens.common.requiredCurrent
 import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
-import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
+import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.ui.FoodTheme
@@ -140,14 +138,12 @@ private fun ProductScreen(
             val isOverlapped by remember { derivedStateOf { scrollState.value > 24 } }
             Box(
                 modifier = Modifier
-                    .withSafeSharedTransitionScope {
-                        with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
-                            .animateEnterExit(
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            )
-                        }
+                    .withSafeSharedElementAnimationScopes {
+                        renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
+                        .animateEnterExit(
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        )
                     }
                     .overlappedBackgroundColor(isOverlapped)
             ) {
@@ -200,32 +196,30 @@ private fun ProductScreen(
                         }
                         .padding(top = 48.dp)
                         .align(Alignment.TopEnd)
-                        .withSafeSharedTransitionScope {
-                            withSafeNavAnimatedContentScope {
-                                val screenWidth =
-                                    with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+                        .withSafeSharedElementAnimationScopes {
+                            val screenWidth =
+                                with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
 
-                                if (quantity != 0) {
-                                    animateEnterExit(
-                                        enter = slideInHorizontally(
-                                            initialOffsetX = { -screenWidth },
-                                            animationSpec = sharedElementAnimSpec()
-                                        ),
-                                        exit = slideOutHorizontally(
-                                            targetOffsetX = { -screenWidth },
-                                            animationSpec = sharedElementAnimSpec()
-                                        )
+                            if (quantity != 0) {
+                                animateEnterExit(
+                                    enter = slideInHorizontally(
+                                        initialOffsetX = { -screenWidth },
+                                        animationSpec = sharedElementAnimSpec()
+                                    ),
+                                    exit = slideOutHorizontally(
+                                        targetOffsetX = { -screenWidth },
+                                        animationSpec = sharedElementAnimSpec()
                                     )
-                                } else {
-                                    this
-                                }
-                                .sharedElement(
-                                    state = rememberSharedContentState("cart_button"),
-                                    animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
-                                    zIndexInOverlay = 3f,
-                                    boundsTransform = { _, _ -> sharedElementAnimSpec() }
                                 )
+                            } else {
+                                this
                             }
+                            .sharedElement(
+                                state = rememberSharedContentState("cart_button"),
+                                animatedVisibilityScope = this,
+                                zIndexInOverlay = 3f,
+                                boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                            )
                         }
                 )
             }
@@ -321,10 +315,10 @@ private fun ProductTopBar(
                 modifier = Modifier
                     .offset((-16).dp)
                     .weight(1f)
-                    .withSafeSharedTransitionScope {
+                    .withSafeSharedElementAnimationScopes {
                         sharedElement(
                             state = rememberSharedContentState(key = "title_${productId}"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            animatedVisibilityScope = this,
                             zIndexInOverlay = 3f,
                         )
                     },
@@ -385,10 +379,10 @@ private fun ProductContent(
                 image = painterResource(imageId),
                 background = ProductImageDefault.productBackground.copy(color = backgroundColor),
                 modifier = Modifier
-                    .withSafeSharedTransitionScope {
+                    .withSafeSharedElementAnimationScopes {
                         sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "container_${productId}"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            animatedVisibilityScope = this,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                         )
                     }
@@ -401,22 +395,20 @@ private fun ProductContent(
                 modifier = Modifier
                     .offset((12).dp, (12).dp)
                     .align(Alignment.BottomEnd)
-                    .withSafeSharedTransitionScope {
-                        with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f
-                            )
-                            .then(
-                                if (shouldRunNavAnimations) {
-                                    Modifier.animateEnterExit(
-                                        enter = scaleIn(animationSpec = sharedElementAnimSpec()),
-                                        exit = scaleOut(animationSpec = sharedElementAnimSpec()),
-                                    )
-                                } else {
-                                    Modifier
-                                }
-                            )
-                        }
+                    .withSafeSharedElementAnimationScopes {
+                        renderInSharedTransitionScopeOverlay(
+                            zIndexInOverlay = 1f
+                        )
+                        .then(
+                            if (shouldRunNavAnimations) {
+                                Modifier.animateEnterExit(
+                                    enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                                    exit = scaleOut(animationSpec = sharedElementAnimSpec()),
+                                )
+                            } else {
+                                Modifier
+                            }
+                        )
                     }
                     .clip(CircleShape)
                     .background(FoodTheme.colors.primary)
@@ -492,10 +484,10 @@ private fun ProductBottomBar(
                     }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
-                    .withSafeSharedTransitionScope {
+                    .withSafeSharedElementAnimationScopes {
                         sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "bottom_bar"),
-                            animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
+                            animatedVisibilityScope = this,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
                             enter = fadeIn(sharedElementAnimSpec()),
                             exit = fadeOut(sharedElementAnimSpec())
