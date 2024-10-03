@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Composable
-fun VerticalHillButton(
+internal fun VerticalHillButton(
     onClick: () -> Unit,
     title: String,
     modifier: Modifier = Modifier,

@@ -14,7 +14,7 @@ import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 @Immutable
-data class FoodColor(
+internal data class FoodColor(
     val primary: Color,
     val onPrimary: Color,
     val secondary: Color,
@@ -25,7 +25,7 @@ data class FoodColor(
     val onBackground: Color
 )
 
-val foodColor = FoodColor(
+private val foodColor = FoodColor(
     primary = primary,
     onPrimary = onPrimary,
     secondary = secondary,
@@ -36,7 +36,7 @@ val foodColor = FoodColor(
     onBackground = onBackground
 )
 
-val LocalFoodColor = staticCompositionLocalOf {
+private val LocalFoodColor = staticCompositionLocalOf {
     FoodColor(
         primary = Color.Unspecified,
         onPrimary = Color.Unspecified,
@@ -50,18 +50,18 @@ val LocalFoodColor = staticCompositionLocalOf {
 }
 
 @Immutable
-data class FoodCornerSize(
+internal data class FoodCornerSize(
     val large: Dp
 )
 
-val LocalFoodCornerSize = staticCompositionLocalOf {
+private val LocalFoodCornerSize = staticCompositionLocalOf {
     FoodCornerSize(
         large = Dp.Unspecified
     )
 }
 
 @Composable
-fun FoodTheme(
+internal fun FoodTheme(
     content: @Composable () -> Unit
 ) {
     ProvideSystemBarStyle(BarStyle.Light) {
@@ -78,7 +78,7 @@ fun FoodTheme(
     }
 }
 
-object FoodTheme {
+internal object FoodTheme {
     val colors: FoodColor
         @Composable
         get() = LocalFoodColor.current

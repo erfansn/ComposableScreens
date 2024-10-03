@@ -79,7 +79,7 @@ import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
 import kotlinx.coroutines.launch
 
 @Composable
-fun CartRoute(
+internal fun CartRoute(
     viewModel: CartViewModel,
     onNavigateToHome: () -> Unit,
     onNavigateToProduct: (id: Int) -> Unit,

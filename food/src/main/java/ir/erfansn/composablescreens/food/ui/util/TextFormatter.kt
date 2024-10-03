@@ -10,10 +10,10 @@ import androidx.compose.ui.text.withStyle
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import java.util.Locale
 
-typealias Cent = Int
+internal typealias Cent = Int
 
 @Composable
-fun priceByQuantityText(priceInCent: Cent, style: TextStyle = FoodTheme.typography.titleMedium): AnnotatedString {
+internal fun priceByQuantityText(priceInCent: Cent, style: TextStyle = FoodTheme.typography.titleMedium): AnnotatedString {
     return buildAnnotatedString {
         append(priceInCent.convertToDollars())
         withStyle(
@@ -26,7 +26,7 @@ fun priceByQuantityText(priceInCent: Cent, style: TextStyle = FoodTheme.typograp
     }
 }
 
-fun Cent.convertToDollars(): String {
+internal fun Cent.convertToDollars(): String {
     val numberFormat = NumberFormat.getCurrencyInstance(Locale.US)
     return numberFormat.format(this / 100.0)
 }

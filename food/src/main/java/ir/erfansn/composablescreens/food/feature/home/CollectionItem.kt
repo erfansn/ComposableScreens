@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
@@ -45,11 +44,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
-val collections = listOf(
+internal val collections = listOf(
     Collection(
         name = "All",
         icon = Icon.None
@@ -69,16 +67,16 @@ val collections = listOf(
 )
 
 @Immutable
-data class Collection(val name: String, val icon: Icon)
+internal data class Collection(val name: String, val icon: Icon)
 
-sealed interface Icon {
+internal sealed interface Icon {
     data class Vector(val vector: ImageVector) : Icon
     data class Resource(@DrawableRes val id: Int) : Icon
     data object None : Icon
 }
 
 @Composable
-fun Icon.toPainterOrNull(): Painter? {
+internal fun Icon.toPainterOrNull(): Painter? {
     return when (this) {
         is Icon.Resource -> painterResource(id = id)
         is Icon.Vector -> rememberVectorPainter(image = vector)
@@ -86,11 +84,10 @@ fun Icon.toPainterOrNull(): Painter? {
     }
 }
 
-enum class Direction(val sign: Int) { Left(-1), Right(1) }
+internal enum class Direction(val sign: Int) { Left(-1), Right(1) }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CollectionItem(
+internal fun CollectionItem(
     name: String,
     selected: Boolean,
     onClick: () -> Unit,
@@ -237,7 +234,7 @@ private fun CollectionItemContent(
 }
 
 private fun Modifier.contentPadding(): Modifier =
-    this then padding(
+    padding(
         horizontal = 26.dp,
         vertical = 20.dp
     )

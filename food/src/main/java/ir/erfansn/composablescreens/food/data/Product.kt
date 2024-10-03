@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import ir.erfansn.composablescreens.food.ui.util.Cent
 
 @Immutable
-data class Product(
+internal data class Product(
     val id: Int,
     val title: String,
     @DrawableRes val imageId: Int,

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.data.ProductProvider
 
-class HomeViewModel : ViewModel() {
+internal class HomeViewModel : ViewModel() {
 
     val vitrineItems = ProductProvider.getProductList()
         .map(Product::toVitrineItem)

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Composable
-fun FoodScaffold(
+internal fun FoodScaffold(
     bottomBar: @Composable () -> Unit,
     topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -41,7 +41,7 @@ fun FoodScaffold(
 }
 
 @Composable
-fun FoodFloatingScaffold(
+internal fun FoodFloatingScaffold(
     topBar: @Composable () -> Unit,
     floatingBottomBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,

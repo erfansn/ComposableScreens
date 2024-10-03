@@ -27,7 +27,7 @@ import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import kotlin.random.Random
 
 @Composable
-fun CartProductItem(
+internal fun CartProductItem(
     onClick: () -> Unit,
     cartProduct: CartProduct,
     modifier: Modifier = Modifier
@@ -83,7 +83,7 @@ fun CartProductItem(
     )
 }
 
-data class CartProduct(
+internal data class CartProduct(
     val id: Int,
     val backgroundColor: Color,
     @DrawableRes val imageId: Int,
@@ -94,7 +94,7 @@ data class CartProduct(
     val totalPrice: Int = quantity * price
 }
 
-fun Product.toCartProduct(quantity: Int) = CartProduct(
+internal fun Product.toCartProduct(quantity: Int) = CartProduct(
     id = id,
     backgroundColor = backgroundColor,
     imageId = imageId,
@@ -103,7 +103,7 @@ fun Product.toCartProduct(quantity: Int) = CartProduct(
     price = priceInCent
 )
 
-val sampleCartProducts = sampleVitrineItems.map {
+internal val sampleCartProducts = sampleVitrineItems.map {
     CartProduct(
         id = it.id,
         backgroundColor = it.backgroundColor,

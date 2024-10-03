@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import ir.erfansn.composablescreens.food.data.CartStorage
 import ir.erfansn.composablescreens.food.data.ProductProvider
 
-class CartViewModel : ViewModel() {
+internal class CartViewModel : ViewModel() {
 
     val cartProducts get() = buildList {
         val productsList = ProductProvider.getProductList()

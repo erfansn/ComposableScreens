@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Composable
-fun FoodTopBar(
+internal fun FoodTopBar(
     title: @Composable RowScope.() -> Unit,
     action: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,

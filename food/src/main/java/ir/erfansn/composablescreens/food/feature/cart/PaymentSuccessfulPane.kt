@@ -42,16 +42,8 @@ import kotlinx.coroutines.launch
 import kotlin.math.hypot
 import kotlin.random.Random
 
-private val colors = listOf(
-    Color(0xFFFCE798),
-    Color(0xFFE4F9CD),
-    Color(0xFFEBE0FE),
-    Color(0xFFDDEAFE),
-    Color(0xFFFEEAE3)
-)
-
 @Composable
-fun PaymentSuccessfulPane(
+internal fun PaymentSuccessfulPane(
     modifier: Modifier = Modifier
 ) {
     val alphaAnimatable = remember { Animatable(0f) }
@@ -149,6 +141,14 @@ private class CircularRevealShape(
         }.asComposePath())
     }
 }
+
+private val colors = listOf(
+    Color(0xFFFCE798),
+    Color(0xFFE4F9CD),
+    Color(0xFFEBE0FE),
+    Color(0xFFDDEAFE),
+    Color(0xFFFEEAE3)
+)
 
 @Preview
 @Composable

@@ -8,7 +8,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 
 @Composable
-fun MutableInteractionSource.scaleEffectValue(): State<Float> {
+internal fun MutableInteractionSource.scaleEffectValue(): State<Float> {
     val isPressed by collectIsPressedAsState()
     return animateFloatAsState(
         targetValue = if (isPressed) 0.97f else 1f,

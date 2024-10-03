@@ -3,7 +3,7 @@ package ir.erfansn.composablescreens.food.data
 import androidx.compose.ui.graphics.Color
 import ir.erfansn.composablescreens.food.R
 
-object ProductProvider {
+internal object ProductProvider {
 
     fun getProductList(): List<Product> {
         return listOf(

@@ -95,7 +95,7 @@ import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
 import kotlin.math.sign
 
 @Composable
-fun HomeRoute(
+internal fun HomeRoute(
     viewModel: HomeViewModel,
     onNavigateToProduct: (id: Int) -> Unit,
     onNavigateToCart: () -> Unit,

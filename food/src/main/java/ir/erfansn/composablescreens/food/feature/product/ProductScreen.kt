@@ -110,7 +110,7 @@ import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
 
 @Composable
-fun ProductRoute(
+internal fun ProductRoute(
     viewModel: ProductViewModel,
     onNavigateToCart: () -> Unit,
     onBackClick: () -> Unit,
@@ -464,7 +464,7 @@ private fun ProductContent(
     }
 }
 
-typealias Quantity = Int
+private typealias Quantity = Int
 
 @Composable
 private fun ProductBottomBar(

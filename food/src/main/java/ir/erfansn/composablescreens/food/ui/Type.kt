@@ -2,25 +2,24 @@ package ir.erfansn.composablescreens.food.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
-
-import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import ir.erfansn.composablescreens.food.R
 
-val provider = GoogleFont.Provider(
+private val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
     certificates = R.array.com_google_android_gms_fonts_certs
 )
 
-val bodyFontFamily = FontFamily(
+private val bodyFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Plus Jakarta Sans"),
         fontProvider = provider,
     )
 )
 
-val displayFontFamily = FontFamily(
+private val displayFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Plus Jakarta Sans"),
         fontProvider = provider,
@@ -30,7 +29,7 @@ val displayFontFamily = FontFamily(
 // Default Material 3 typography values
 private val baseline = Typography()
 
-val AppTypography = Typography(
+internal val AppTypography = Typography(
     displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
     displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),

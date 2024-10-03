@@ -51,7 +51,7 @@ import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun VitrineItemCard(
+internal fun VitrineItemCard(
     vitrineItem: VitrineItem,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -148,9 +148,9 @@ fun VitrineItemCard(
     }
 }
 
-typealias Cent = Int
+private typealias Cent = Int
 
-data class VitrineItem(
+internal data class VitrineItem(
     val id: Int,
     val title: String,
     @DrawableRes val imageId: Int,
@@ -158,7 +158,7 @@ data class VitrineItem(
     val priceInCent: Cent,
 )
 
-fun Product.toVitrineItem() = VitrineItem(
+internal fun Product.toVitrineItem() = VitrineItem(
     id = id,
     title = title,
     imageId = imageId,
@@ -166,7 +166,7 @@ fun Product.toVitrineItem() = VitrineItem(
     priceInCent = priceInCent
 )
 
-val sampleVitrineItems = listOf(
+internal val sampleVitrineItems = listOf(
     VitrineItem(
         id = 0,
         title = "Peanut Butter Chocolate Chip Cookie",

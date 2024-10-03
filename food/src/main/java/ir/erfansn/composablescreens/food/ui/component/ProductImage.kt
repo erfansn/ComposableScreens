@@ -24,12 +24,12 @@ import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
 
-data class ProductBackground(
+internal data class ProductBackground(
     val color: Color,
     val cornerSize: Dp,
 )
 
-object ProductImageDefault {
+internal object ProductImageDefault {
     val productBackground @Composable get() = ProductBackground(
         color = Color(0xFFE4F9CD),
         cornerSize = FoodTheme.cornerSize.large,
@@ -37,7 +37,7 @@ object ProductImageDefault {
 }
 
 @Composable
-fun ProductImage(
+internal fun ProductImage(
     image: Painter,
     modifier: Modifier = Modifier,
     background: ProductBackground = ProductImageDefault.productBackground

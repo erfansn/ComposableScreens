@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import ir.erfansn.composablescreens.food.data.CartStorage
 import ir.erfansn.composablescreens.food.data.ProductProvider
 
-class ProductViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
+internal class ProductViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val productId = requireNotNull(savedStateHandle.get<Int>("id"))
 

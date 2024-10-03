@@ -8,7 +8,7 @@ import androidx.compose.ui.draw.drawBehind
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 
 @Composable
-fun Modifier.overlappedBackgroundColor(isOverlapped: Boolean): Modifier {
+internal fun Modifier.overlappedBackgroundColor(isOverlapped: Boolean): Modifier {
     val backgroundColor by animateColorAsState(
         label = "background_color",
         targetValue = if (isOverlapped) FoodTheme.colors.tertiary else FoodTheme.colors.background

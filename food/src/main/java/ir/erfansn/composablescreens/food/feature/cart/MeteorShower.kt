@@ -29,7 +29,7 @@ typealias PixelPerSec = Int
 typealias Pixel = Int
 
 @Composable
-fun MeteorShower(
+internal fun MeteorShower(
     meteorCount: Int,
     modifier: Modifier = Modifier,
     speed: PixelPerSec = 800,
@@ -81,7 +81,7 @@ fun MeteorShower(
     }
 }
 
-data class MeteorState(val startX: Int, val delayInMillis: Int)
+internal data class MeteorState(val startX: Int, val delayInMillis: Int)
 
 @Preview
 @Composable
