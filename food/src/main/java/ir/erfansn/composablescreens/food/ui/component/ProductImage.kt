@@ -19,11 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
-import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
 
 data class ProductBackground(
     val color: Color,

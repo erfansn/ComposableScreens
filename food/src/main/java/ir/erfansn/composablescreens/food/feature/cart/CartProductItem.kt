@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
+import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.data.Product
 import ir.erfansn.composablescreens.food.feature.home.sampleVitrineItems
 import ir.erfansn.composablescreens.food.ui.FoodTheme

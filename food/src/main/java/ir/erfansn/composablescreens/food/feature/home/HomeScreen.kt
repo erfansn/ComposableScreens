@@ -86,15 +86,15 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.dropUnlessResumed
+import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
+import ir.erfansn.composablescreens.common.requiredCurrent
+import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
-import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
-import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodScaffold
 import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
 import ir.erfansn.composablescreens.food.ui.component.VerticalHillButton
 import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
-import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
 import kotlin.math.sign
 
 @Composable

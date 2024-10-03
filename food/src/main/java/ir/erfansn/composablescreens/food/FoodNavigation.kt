@@ -2,19 +2,13 @@ package ir.erfansn.composablescreens.food
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -25,6 +19,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.feature.cart.CartRoute
 import ir.erfansn.composablescreens.food.feature.cart.CartViewModel
 import ir.erfansn.composablescreens.food.feature.home.HomeRoute
@@ -131,25 +126,6 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             )
         }
     }
-}
-
-val LocalNavAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> { null }
-
-val CompositionLocal<AnimatedContentScope?>.requiredCurrent
-    @Composable
-    get() = current ?: error("LocalNavAnimatedContentScope not provided from navigation route")
-
-@Composable
-fun Modifier.withSafeNavAnimatedContentScope(block: @Composable AnimatedContentScope.() -> Modifier): Modifier {
-    return then(
-        with(LocalNavAnimatedContentScope.current) {
-            if (this != null) {
-                block()
-            } else {
-                Modifier
-            }
-        }
-    )
 }
 
 private fun NavGraphBuilder.foodComposable(

@@ -86,11 +86,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
+import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
+import ir.erfansn.composablescreens.common.requiredCurrent
+import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
-import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
-import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.component.FoodFloatingScaffold
 import ir.erfansn.composablescreens.food.ui.component.FoodTopBar
@@ -103,7 +104,6 @@ import ir.erfansn.composablescreens.food.ui.util.convertToDollars
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
 import ir.erfansn.composablescreens.food.ui.util.sharedElementAnimSpec
-import ir.erfansn.composablescreens.food.withSafeNavAnimatedContentScope
 
 @Composable
 fun ProductRoute(

@@ -42,11 +42,11 @@ import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
+import ir.erfansn.composablescreens.common.requiredCurrent
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
-import ir.erfansn.composablescreens.food.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.R
 import ir.erfansn.composablescreens.food.data.Product
-import ir.erfansn.composablescreens.food.requiredCurrent
 import ir.erfansn.composablescreens.food.ui.FoodTheme
 import ir.erfansn.composablescreens.food.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.ui.util.scaleEffectValue
