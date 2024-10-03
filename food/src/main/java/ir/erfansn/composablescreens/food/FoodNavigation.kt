@@ -95,7 +95,7 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
                     } else {
                         navController.navigate(FoodNavGraph.CartRoute) {
                             popUpTo(FoodNavGraph.HomeRoute) {
-                                saveState = true
+                                // saveState = true
                             }
                         }
                     }
@@ -124,7 +124,7 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
                 },
                 onNavigateToProduct = {
                     navController.navigate(FoodNavGraph.ProductRoute(it)) {
-                        restoreState = true
+                        // restoreState = true
                     }
                 },
                 viewModel = viewModel
