@@ -88,7 +88,7 @@ fun VitrineItemCard(
                         .padding(top = 26.dp)
                         .weight(2f)
                         .withSafeSharedTransitionScope {
-                            Modifier.sharedElement(
+                            sharedElement(
                                 state = rememberSharedContentState(key = "title_${vitrineItem.id}"),
                                 animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                                 zIndexInOverlay = 3f,

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package ir.erfansn.composablescreens.common
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -6,16 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
 
+class Modifier_SharedTransitionScope(modifier: Modifier, sharedTransitionScope: SharedTransitionScope) : Modifier by modifier, SharedTransitionScope by sharedTransitionScope
+
 @Composable
-@OptIn(ExperimentalSharedTransitionApi::class)
-fun Modifier.withSafeSharedTransitionScope(block: @Composable SharedTransitionScope.() -> Modifier): Modifier {
+fun Modifier.withSafeSharedTransitionScope(block: @Composable Modifier_SharedTransitionScope.() -> Modifier): Modifier {
     return then(
         with(LocalSharedTransitionScope.current) {
             if (this != null) {
-                block()
+                Modifier_SharedTransitionScope(Modifier, this).block()
             } else {
                 Modifier
             }

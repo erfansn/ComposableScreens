@@ -142,12 +142,11 @@ private fun ProductScreen(
                 modifier = Modifier
                     .withSafeSharedTransitionScope {
                         with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            Modifier
-                                .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
-                                .animateEnterExit(
-                                    enter = fadeIn(),
-                                    exit = fadeOut()
-                                )
+                            renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
+                            .animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            )
                         }
                     }
                     .overlappedBackgroundColor(isOverlapped)
@@ -202,7 +201,7 @@ private fun ProductScreen(
                         .padding(top = 48.dp)
                         .align(Alignment.TopEnd)
                         .withSafeSharedTransitionScope {
-                            Modifier.withSafeNavAnimatedContentScope {
+                            withSafeNavAnimatedContentScope {
                                 val screenWidth =
                                     with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
 
@@ -323,7 +322,7 @@ private fun ProductTopBar(
                     .offset((-16).dp)
                     .weight(1f)
                     .withSafeSharedTransitionScope {
-                        Modifier.sharedElement(
+                        sharedElement(
                             state = rememberSharedContentState(key = "title_${productId}"),
                             animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                             zIndexInOverlay = 3f,
@@ -387,7 +386,7 @@ private fun ProductContent(
                 background = ProductImageDefault.productBackground.copy(color = backgroundColor),
                 modifier = Modifier
                     .withSafeSharedTransitionScope {
-                        Modifier.sharedBounds(
+                        sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "container_${productId}"),
                             animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
@@ -404,20 +403,19 @@ private fun ProductContent(
                     .align(Alignment.BottomEnd)
                     .withSafeSharedTransitionScope {
                         with(LocalNavAnimatedContentScope.requiredCurrent) {
-                            Modifier
-                                .renderInSharedTransitionScopeOverlay(
-                                    zIndexInOverlay = 1f
-                                )
-                                .then(
-                                    if (shouldRunNavAnimations) {
-                                        Modifier.animateEnterExit(
-                                            enter = scaleIn(animationSpec = sharedElementAnimSpec()),
-                                            exit = scaleOut(animationSpec = sharedElementAnimSpec()),
-                                        )
-                                    } else {
-                                        Modifier
-                                    }
-                                )
+                            renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 1f
+                            )
+                            .then(
+                                if (shouldRunNavAnimations) {
+                                    Modifier.animateEnterExit(
+                                        enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                                        exit = scaleOut(animationSpec = sharedElementAnimSpec()),
+                                    )
+                                } else {
+                                    Modifier
+                                }
+                            )
                         }
                     }
                     .clip(CircleShape)
@@ -495,7 +493,7 @@ private fun ProductBottomBar(
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
                     .withSafeSharedTransitionScope {
-                        Modifier.sharedBounds(
+                        sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "bottom_bar"),
                             animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,

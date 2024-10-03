@@ -1,6 +1,5 @@
 package ir.erfansn.composablescreens.food.ui.component
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
@@ -37,7 +36,6 @@ object ProductImageDefault {
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProductImage(
     image: Painter,
@@ -56,7 +54,7 @@ fun ProductImage(
             contentDescription = null,
             modifier = Modifier
                 .withSafeSharedTransitionScope {
-                    Modifier.renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+                    renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
                 }
                 .align(Alignment.Center)
                 .scale(1.1f)

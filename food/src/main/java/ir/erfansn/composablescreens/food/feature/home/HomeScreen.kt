@@ -197,7 +197,7 @@ private fun HomeTopBar(
                         onNavigateToCart()
                     },
                     modifier = Modifier.withSafeSharedTransitionScope {
-                        Modifier.withSafeNavAnimatedContentScope {
+                        withSafeNavAnimatedContentScope {
                             if (shouldApplyOffScreenAnimationToCartButton) {
                                 val screenWidth =
                                     with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
@@ -373,7 +373,7 @@ private fun HomeContent(
             modifier = Modifier
                 .withSafeSharedTransitionScope {
                     if (pagerState.currentPage == page) {
-                        Modifier.sharedBounds(
+                        sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "container_${vitrineItems[page].id}"),
                             animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                             resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
@@ -382,7 +382,7 @@ private fun HomeContent(
                             exit = fadeOut(animationSpec = sharedElementAnimSpec())
                         )
                     } else {
-                        Modifier.renderInSharedTransitionScopeOverlay(
+                        renderInSharedTransitionScopeOverlay(
                             zIndexInOverlay = if (page - pagerState.currentPage > 0) 0f else 2f
                         )
                     }
@@ -455,7 +455,7 @@ private fun HomeNavigationBar() {
                 )
             }
             .withSafeSharedTransitionScope {
-                Modifier.sharedBounds(
+                sharedBounds(
                     sharedContentState = rememberSharedContentState(key = "bottom_bar"),
                     animatedVisibilityScope = LocalNavAnimatedContentScope.requiredCurrent,
                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
