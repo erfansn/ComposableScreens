@@ -25,8 +25,18 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "ComposableScreens"
 include(":app")
-include(":travel")
-include(":food")
 include(":common")
+
+private fun subprojects(path: String) =
+    file(path).listFiles()?.filter {
+        it.isDirectory && it.listFiles()?.any { file -> file.name == "build.gradle.kts" } ?: false
+    }?.map {
+        ":$path:${it.name}"
+    }.orEmpty()
+
+include(subprojects("travel"))
+include(subprojects("food"))

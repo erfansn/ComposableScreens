@@ -1,29 +1,22 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.plugin.compose)
 }
 
 android {
-    namespace = "ir.erfansn.composablescreens"
+    namespace = "ir.erfansn.composablescreens.travel.qclay_trip"
     compileSdk = sdk.versions.compile.get().toInt()
 
     defaultConfig {
-        applicationId = "ir.erfansn.composablescreens"
-        targetSdk = sdk.versions.target.get().toInt()
         minSdk = sdk.versions.min.get().toInt()
 
-        versionCode = 1
-        versionName = "1.0"
-
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
     buildTypes {
         release {
-            isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -45,12 +38,12 @@ kotlin {
 
 dependencies {
     implementation(projects.common)
-    for (module in projects.travel) implementation(module)
-    for (module in projects.food) implementation(module)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.haze)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material)
@@ -58,17 +51,8 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)
-}
 
-private operator fun ProjectDependency.iterator() = object : Iterator<ProjectDependency> {
-
-    var moduleCount = this@iterator::class.java.declaredMethods.size
-
-    override fun hasNext(): Boolean {
-        return moduleCount-- != 0
-    }
-
-    override fun next(): ProjectDependency {
-        return this@iterator::class.java.declaredMethods[moduleCount].invoke(this@iterator) as ProjectDependency
-    }
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

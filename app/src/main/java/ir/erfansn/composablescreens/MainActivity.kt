@@ -21,8 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.LocalSharedTransitionScope
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyleChanger
-import ir.erfansn.composablescreens.food.foodNavGraph
-import ir.erfansn.composablescreens.travel.ui.navigation.travelNavigationGraph
+import ir.erfansn.composablescreens.food.kristina_cookie.foodNavGraph
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.navigation.travelNavigationGraph
 import ir.erfansn.composablescreens.ui.ComposableScreensList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
