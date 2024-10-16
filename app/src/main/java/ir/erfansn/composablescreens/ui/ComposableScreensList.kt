@@ -25,18 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ir.erfansn.composablescreens.food.kristina_cookie.KristinaCookieRoute
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.navigation.QclayTripRoute
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
-private typealias NameRoutePair = Pair<String, String>
+private typealias NameRoutePair = Pair<String, Any>
 
+// TODO: Obtain from generated codes
 val routes: List<NameRoutePair> = listOf(
-    "Travel" to "travel",
-    "Food" to "food"
+    "Travel" to QclayTripRoute,
+    "Food" to KristinaCookieRoute
 )
 
 @Composable
 fun ComposableScreensList(
-    onRouteClick: (String) -> Unit
+    onRouteClick: (Any) -> Unit
 ) {
     Surface(color = MaterialTheme.colors.background) {
         LazyColumn(

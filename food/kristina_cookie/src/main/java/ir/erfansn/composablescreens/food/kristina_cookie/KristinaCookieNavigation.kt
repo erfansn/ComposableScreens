@@ -10,14 +10,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLink
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.cart.CartRoute
@@ -28,29 +27,22 @@ import ir.erfansn.composablescreens.food.kristina_cookie.feature.product.Product
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.product.ProductViewModel
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.sharedElementAnimSpec
+import kotlinx.serialization.Serializable
+import kotlin.reflect.KType
 
-const val FoodRoute = "food"
+@Serializable
+data object KristinaCookieRoute
 
-private data object FoodNavGraph {
-    const val HomeRoute = "home"
+@Serializable
+private data object HomeRoute
+@Serializable
+private data class ProductRoute(val id: Int)
+@Serializable
+private data object CartRoute
 
-    data object ProductRoute {
-        private const val IdKey = "id"
-
-        val Args = listOf(navArgument(IdKey) { type = NavType.IntType })
-
-        operator fun invoke(id: Int) = "product/$id"
-
-        override fun toString() = "product/{$IdKey}"
-    }
-
-    const val CartRoute = "cart"
-}
-
-fun NavGraphBuilder.foodNavGraph(navController: NavController) {
-    navigation(startDestination = FoodNavGraph.HomeRoute, route = FoodRoute) {
-        foodComposable(
-            FoodNavGraph.HomeRoute,
+fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController) {
+    navigation<KristinaCookieRoute>(startDestination = HomeRoute) {
+        foodComposable<HomeRoute>(
             enterTransition = {
                 fadeIn(animationSpec = sharedElementAnimSpec())
             },
@@ -61,17 +53,15 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             val viewModel = viewModel<HomeViewModel>()
             HomeRoute(
                 onNavigateToProduct = {
-                    navController.navigate(FoodNavGraph.ProductRoute(it))
+                    navController.navigate(ProductRoute(it))
                 },
                 onNavigateToCart = {
-                    navController.navigate(FoodNavGraph.CartRoute)
+                    navController.navigate(CartRoute)
                 },
                 viewModel = viewModel
             )
         }
-        foodComposable(
-            FoodNavGraph.ProductRoute.toString(),
-            arguments = FoodNavGraph.ProductRoute.Args,
+        foodComposable<ProductRoute>(
             enterTransition = {
                 fadeIn(animationSpec = sharedElementAnimSpec())
             },
@@ -83,13 +73,13 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             ProductRoute(
                 viewModel = viewModel,
                 onNavigateToCart = {
-                    if (navController.previousBackStackEntry?.destination?.route == FoodNavGraph.CartRoute) {
+                    if (navController.previousBackStackEntry?.destination?.hasRoute<CartRoute>() == true) {
                         // TODO: Should report this, this worked to restore state (rememberSaveable) but also saving argument passed to route
                         // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
                         navController.popBackStack()
                     } else {
-                        navController.navigate(FoodNavGraph.CartRoute) {
-                            popUpTo(FoodNavGraph.HomeRoute) {
+                        navController.navigate(CartRoute) {
+                            popUpTo(HomeRoute) {
                                 // saveState = true
                             }
                         }
@@ -98,8 +88,7 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        foodComposable(
-            FoodNavGraph.CartRoute,
+        foodComposable<CartRoute>(
             enterTransition = {
                 slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = sharedElementAnimSpec())
             },
@@ -111,14 +100,14 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
             CartRoute(
                 onNavigateToHome = {
                     // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
-                    /*navController.navigate(FoodNavGraph.HomeRoute) {
+                    /*navController.navigate(HomeRoute) {
                         launchSingleTop = true
-                        popUpTo(FoodNavGraph.HomeRoute)
+                        popUpTo(HomeRoute)
                     }*/
-                    navController.popBackStack(route = FoodNavGraph.HomeRoute, inclusive = false)
+                    navController.popBackStack(route = HomeRoute, inclusive = false)
                 },
                 onNavigateToProduct = {
-                    navController.navigate(FoodNavGraph.ProductRoute(it)) {
+                    navController.navigate(ProductRoute(it)) {
                         // restoreState = true
                     }
                 },
@@ -128,35 +117,33 @@ fun NavGraphBuilder.foodNavGraph(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.foodComposable(
-    route: String,
-    arguments: List<NamedNavArgument> = emptyList(),
+private inline fun <reified T : Any> NavGraphBuilder.foodComposable(
+    typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    enterTransition:
+    noinline enterTransition:
     (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
         null,
-    exitTransition:
+    noinline exitTransition:
     (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
         null,
-    popEnterTransition:
+    noinline popEnterTransition:
     (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)? =
         enterTransition,
-    popExitTransition:
+    noinline popExitTransition:
     (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)? =
         exitTransition,
-    sizeTransform:
+    noinline sizeTransform:
     (@JvmSuppressWildcards
     AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)? =
         null,
-    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+    crossinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
 ) {
-    composable(
-        route = route,
-        arguments = arguments,
+    composable<T>(
+        typeMap = typeMap,
         deepLinks = deepLinks,
         enterTransition = enterTransition,
         exitTransition = exitTransition,

@@ -6,24 +6,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ir.erfansn.composablescreens.travel.qclay_trip.details.TravelDetailsRoute
 import ir.erfansn.composablescreens.travel.qclay_trip.home.TravelHomeRoute
+import kotlinx.serialization.Serializable
 
-private const val TRAVEL_ROUTE = "travel"
-private const val TRAVEL_HOME_ROUTE = "home"
-private const val TRAVEL_DETAILS_ROUTE = "details"
+@Serializable
+data object QclayTripRoute
 
-fun NavGraphBuilder.travelNavigationGraph(navController: NavController) {
-    navigation(
-        route = TRAVEL_ROUTE,
-        startDestination = TRAVEL_HOME_ROUTE
+@Serializable
+private data object HomeRoute
+@Serializable
+private data object DetailsRoute
+
+// TODO: Introduce ext fun to provide theme
+fun NavGraphBuilder.qclayTripNavGraph(navController: NavController) {
+    navigation<QclayTripRoute>(
+        startDestination = HomeRoute
     ) {
-        composable(TRAVEL_HOME_ROUTE) {
+        composable<HomeRoute> {
             TravelHomeRoute(
                 onTravelGroupItemClick = {
-                    navController.navigate(TRAVEL_DETAILS_ROUTE)
+                    navController.navigate(DetailsRoute)
                 }
             )
         }
-        composable(TRAVEL_DETAILS_ROUTE) {
+        composable<DetailsRoute> {
             TravelDetailsRoute()
         }
     }
