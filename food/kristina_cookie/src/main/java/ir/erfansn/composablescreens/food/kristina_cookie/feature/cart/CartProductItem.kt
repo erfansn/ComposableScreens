@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.kristina_cookie.data.Product
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.home.sampleVitrineItems
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.ProductBackground
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.ProductImage
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.convertToDollars
@@ -48,7 +48,7 @@ internal fun CartProductItem(
         headlineContent = {
             Text(
                 text = cartProduct.title,
-                style = FoodTheme.typography.titleLarge,
+                style = KristinaCookieTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -57,7 +57,7 @@ internal fun CartProductItem(
         supportingContent = {
             Text(
                 text = "Qty: ${cartProduct.quantity}",
-                style = FoodTheme.typography.bodyLarge,
+                style = KristinaCookieTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 8.dp),
                 fontWeight = FontWeight.SemiBold
             )
@@ -65,7 +65,7 @@ internal fun CartProductItem(
         trailingContent = {
             Text(
                 text = cartProduct.totalPrice.convertToDollars(),
-                style = FoodTheme.typography.titleLarge,
+                style = KristinaCookieTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(end = 6.dp)
             )
@@ -75,9 +75,9 @@ internal fun CartProductItem(
             .height(128.dp)
             .fillMaxWidth(),
         colors = ListItemDefaults.colors(
-            containerColor = FoodTheme.colors.background,
-            headlineColor = FoodTheme.colors.onBackground,
-            trailingIconColor = FoodTheme.colors.onBackground,
+            containerColor = KristinaCookieTheme.colors.background,
+            headlineColor = KristinaCookieTheme.colors.onBackground,
+            trailingIconColor = KristinaCookieTheme.colors.onBackground,
             supportingColor = Color(0xFF5A5350)
         )
     )
@@ -117,7 +117,7 @@ internal val sampleCartProducts = sampleVitrineItems.map {
 @Preview
 @Composable
 private fun CartProductItemPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CartProductItem(
             cartProduct = sampleCartProducts.first(),
             onClick = { }

@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 
 @Composable
-internal fun FoodTopBar(
+internal fun KristinaCookieTopBar(
     title: @Composable RowScope.() -> Unit,
     action: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
@@ -52,14 +52,14 @@ internal fun FoodTopBar(
 
 @Preview
 @Composable
-private fun FoodTopBarSingleLineTitlePreview() {
-    FoodTheme {
-        FoodTopBar(
+private fun KristinaCookieTopBarSingleLineTitlePreview() {
+    KristinaCookieTheme {
+        KristinaCookieTopBar(
             title = {
                 Text(
                     "Food",
                     modifier = Modifier.weight(1f),
-                    style = FoodTheme.typography.headlineMedium
+                    style = KristinaCookieTheme.typography.headlineMedium
                 )
             },
             action = {
@@ -79,14 +79,14 @@ private fun FoodTopBarSingleLineTitlePreview() {
 
 @Preview
 @Composable
-private fun FoodTopBarTwoLineTitlePreview() {
-    FoodTheme {
-        FoodTopBar(
+private fun KristinaCookieTopBarTwoLineTitlePreview() {
+    KristinaCookieTheme {
+        KristinaCookieTopBar(
             title = {
                 Text(
                     "Food\nModule",
                     modifier = Modifier.weight(1f),
-                    style = FoodTheme.typography.headlineMedium
+                    style = KristinaCookieTheme.typography.headlineMedium
                 )
             },
             action = {
@@ -106,14 +106,14 @@ private fun FoodTopBarTwoLineTitlePreview() {
 
 @Preview
 @Composable
-private fun FoodTopBarThreeLinePreview() {
-    FoodTheme {
-        FoodTopBar(
+private fun KristinaCookieTopBarThreeLinePreview() {
+    KristinaCookieTheme {
+        KristinaCookieTopBar(
             title = {
                 Text(
                     "Food\nModule\nTopBar",
                     modifier = Modifier.weight(1f),
-                    style = FoodTheme.typography.headlineMedium
+                    style = KristinaCookieTheme.typography.headlineMedium
                 )
             },
             action = {

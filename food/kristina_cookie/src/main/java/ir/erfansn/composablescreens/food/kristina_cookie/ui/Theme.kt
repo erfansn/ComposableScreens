@@ -14,7 +14,7 @@ import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 @Immutable
-internal data class FoodColor(
+internal data class KristinaCookieColor(
     val primary: Color,
     val onPrimary: Color,
     val secondary: Color,
@@ -25,7 +25,7 @@ internal data class FoodColor(
     val onBackground: Color
 )
 
-private val foodColor = FoodColor(
+private val kristinaCookieColor = KristinaCookieColor(
     primary = primary,
     onPrimary = onPrimary,
     secondary = secondary,
@@ -36,8 +36,8 @@ private val foodColor = FoodColor(
     onBackground = onBackground
 )
 
-private val LocalFoodColor = staticCompositionLocalOf {
-    FoodColor(
+private val LocalKristinaCookieColor = staticCompositionLocalOf {
+    KristinaCookieColor(
         primary = Color.Unspecified,
         onPrimary = Color.Unspecified,
         secondary = Color.Unspecified,
@@ -50,25 +50,25 @@ private val LocalFoodColor = staticCompositionLocalOf {
 }
 
 @Immutable
-internal data class FoodCornerSize(
+internal data class KristinaCookieCornerSize(
     val large: Dp
 )
 
-private val LocalFoodCornerSize = staticCompositionLocalOf {
-    FoodCornerSize(
+private val LocalKristinaCookieCornerSize = staticCompositionLocalOf {
+    KristinaCookieCornerSize(
         large = Dp.Unspecified
     )
 }
 
 @Composable
-internal fun FoodTheme(
+internal fun KristinaCookieTheme(
     content: @Composable () -> Unit
 ) {
     ProvideSystemBarStyle(BarStyle.Light) {
         CompositionLocalProvider(
-            LocalFoodColor provides foodColor,
+            LocalKristinaCookieColor provides kristinaCookieColor,
             LocalLayoutDirection provides LayoutDirection.Ltr,
-            LocalFoodCornerSize provides foodCornerSize
+            LocalKristinaCookieCornerSize provides kristinaCookieCornerSize
         ) {
             MaterialTheme(
                 typography = AppTypography,
@@ -78,16 +78,16 @@ internal fun FoodTheme(
     }
 }
 
-internal object FoodTheme {
-    val colors: FoodColor
+internal object KristinaCookieTheme {
+    val colors: KristinaCookieColor
         @Composable
-        get() = LocalFoodColor.current
+        get() = LocalKristinaCookieColor.current
 
     val typography: Typography
         @Composable
         get() = MaterialTheme.typography
 
-    val cornerSize: FoodCornerSize
+    val cornerSize: KristinaCookieCornerSize
         @Composable
-        get() = LocalFoodCornerSize.current
+        get() = LocalKristinaCookieCornerSize.current
 }

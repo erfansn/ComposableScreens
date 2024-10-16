@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.TemporarySystemBarStyleEffect
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import kotlinx.coroutines.launch
 import kotlin.math.hypot
 import kotlin.random.Random
@@ -69,7 +69,7 @@ internal fun PaymentSuccessfulPane(
     Box(
         modifier = modifier
             .circularReveal(progress = circleRadiusAnimatable.value)
-            .background(FoodTheme.colors.secondary)
+            .background(KristinaCookieTheme.colors.secondary)
     ) {
         MeteorShower(
             meteorCount = 16,
@@ -91,10 +91,10 @@ internal fun PaymentSuccessfulPane(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            CompositionLocalProvider(LocalContentColor provides FoodTheme.colors.onSecondary) {
+            CompositionLocalProvider(LocalContentColor provides KristinaCookieTheme.colors.onSecondary) {
                 Text(
                     text = "You're\ngreat!",
-                    style = FoodTheme.typography.displayLarge,
+                    style = KristinaCookieTheme.typography.displayLarge,
                     modifier = Modifier
                         .zIndex(3f)
                         .scale(1.3f)
@@ -107,7 +107,7 @@ internal fun PaymentSuccessfulPane(
                 )
                 Text(
                     text = "The order will\narrive by 12:30",
-                    style = FoodTheme.typography.titleLarge,
+                    style = KristinaCookieTheme.typography.titleLarge,
                     modifier = Modifier.zIndex(2f)
                         .graphicsLayer {
                             alpha = alphaAnimatable.value
@@ -153,7 +153,7 @@ private val colors = listOf(
 @Preview
 @Composable
 private fun PaymentSuccessfulPanePreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         PaymentSuccessfulPane()
     }
 }

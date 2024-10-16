@@ -24,7 +24,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-internal fun TravelTheme(content: @Composable () -> Unit) {
+internal fun QclayTripTheme(content: @Composable () -> Unit) {
     ProvideSystemBarStyle(BarStyle.Light) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             MaterialTheme(

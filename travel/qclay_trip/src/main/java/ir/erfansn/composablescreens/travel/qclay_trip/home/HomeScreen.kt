@@ -76,7 +76,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
@@ -91,24 +90,24 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.travel.qclay_trip.R
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.TravelButton
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.TravelIconButton
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripButton
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripIconButton
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.layout.OverlappingRow
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.modifier.shadow
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.AbrilFatfaceFontFamily
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.PoppinsFontFamily
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.TravelTheme
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.QclayTripTheme
 import kotlin.random.Random
 
 @Composable
-internal fun TravelHomeRoute(
+internal fun HomeRoute(
     onTravelGroupItemClick: () -> Unit,
 ) {
-    TravelHomeScreen(onTravelGroupItemClick = onTravelGroupItemClick)
+    HomeScreen(onTravelGroupItemClick = onTravelGroupItemClick)
 }
 
 @Composable
-private fun TravelHomeScreen(
+private fun HomeScreen(
     onTravelGroupItemClick: () -> Unit,
 ) {
     val baseModifier = Modifier.padding(horizontal = 24.dp)
@@ -118,12 +117,12 @@ private fun TravelHomeScreen(
             .fillMaxSize()
             .safeDrawingPadding(),
         topBar = {
-            TravelHomeTopBar(
+            HomeTopBar(
                 modifier = baseModifier
             )
         },
         bottomBar = {
-            TravelHomeBottomNavigationBar(
+            HomeBottomNavigationBar(
                 modifier = baseModifier
             )
         }
@@ -159,7 +158,7 @@ private fun TravelHomeScreen(
                         .align(Alignment.BottomCenter)
                 )
             }
-            TravelHomeContent(
+            HomeContent(
                 modifier = Modifier
                     .zIndex(0.0f)
                     .fillMaxSize()
@@ -172,7 +171,7 @@ private fun TravelHomeScreen(
 }
 
 @Composable
-private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
+private fun HomeTopBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(vertical = 16.dp),
@@ -183,7 +182,7 @@ private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row {
-                TravelButton(
+                QclayTripButton(
                     modifier = Modifier.size(56.dp),
                     onClick = { /*TODO*/ }
                 ) {
@@ -203,7 +202,7 @@ private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
                     )
                 )
             }
-            TravelIconButton(
+            QclayTripIconButton(
                 iconTint = Color.Black,
                 iconId = R.drawable.ic_category,
                 contentDescription = "Category",
@@ -225,13 +224,13 @@ private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             var query by remember { mutableStateOf("") }
-            TravelSearchBar(
+            SearchBar(
                 modifier = Modifier.weight(1.0f),
                 value = query,
                 onValueChange = { query = it }
             )
 
-            TravelButton(
+            QclayTripButton(
                 containerColor = Color.Transparent,
                 shadowColor = MaterialTheme.colors.primary,
                 onClick = { },
@@ -261,7 +260,7 @@ private fun TravelHomeTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
+private fun HomeBottomNavigationBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(bottom = 24.dp)
@@ -270,7 +269,7 @@ private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TravelIconButton(
+        QclayTripIconButton(
             modifier = Modifier.aspectRatio(1.0f),
             containerColor = Color.Transparent,
             onClick = { /*TODO*/ },
@@ -278,7 +277,7 @@ private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
             iconTint = Color.LightGray,
             contentDescription = "Home"
         )
-        TravelIconButton(
+        QclayTripIconButton(
             modifier = Modifier.aspectRatio(1.0f),
             containerColor = MaterialTheme.colors.secondaryVariant,
             onClick = { /*TODO*/ },
@@ -286,7 +285,7 @@ private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
             iconTint = Color.White,
             contentDescription = "Add"
         )
-        TravelIconButton(
+        QclayTripIconButton(
             modifier = Modifier.aspectRatio(1.0f),
             containerColor = Color.Transparent,
             onClick = { /*TODO*/ },
@@ -298,7 +297,7 @@ private fun TravelHomeBottomNavigationBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TravelHomeContent(
+private fun HomeContent(
     modifier: Modifier = Modifier,
     minHeightAvailable: Boolean = true,
     onTravelGroupItemClick: () -> Unit,
@@ -323,7 +322,7 @@ private fun TravelHomeContent(
                 onTabSelect = { selectedCategory = it }
             )
             Spacer(modifier = Modifier.width(8.dp))
-            TravelPlacesRow()
+            PlacesRow()
         }
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -333,7 +332,7 @@ private fun TravelHomeContent(
             },
             title = "Travel Groups",
         ) {
-            TravelGroupsRow(
+            GroupsRow(
                 onTravelGroupItemClick = onTravelGroupItemClick
             )
         }
@@ -462,7 +461,7 @@ private fun PlaceCategoryTab(
 }
 
 @Composable
-private fun TravelPlacesRow(
+private fun PlacesRow(
     modifier: Modifier = Modifier,
     trips: List<Trip> = remember {
         List(10) {
@@ -498,7 +497,7 @@ private fun TravelPlacesRow(
         contentPadding = PaddingValues(start = 8.dp, end = 24.dp)
     ) {
         items(trips) { trip ->
-            TravelPlaceItem(
+            PlaceItem(
                 modifier = Modifier
                     .fillParentMaxHeight()
                     .aspectRatio(4 / 5f),
@@ -509,7 +508,7 @@ private fun TravelPlacesRow(
 }
 
 @Composable
-private fun TravelPlaceItem(
+private fun PlaceItem(
     modifier: Modifier = Modifier,
     trip: Trip,
 ) {
@@ -652,7 +651,7 @@ private fun TravelPlaceItem(
 }
 
 @Composable
-private fun TravelGroupsRow(
+private fun GroupsRow(
     modifier: Modifier = Modifier,
     groups: List<Group> = remember {
         List(10) {
@@ -671,7 +670,7 @@ private fun TravelGroupsRow(
         contentPadding = PaddingValues(horizontal = 24.dp)
     ) {
         items(items = groups) { group ->
-            TravelGroupItem(
+            GroupItem(
                 modifier = Modifier
                     .fillParentMaxHeight()
                     .wrapContentWidth(),
@@ -683,7 +682,7 @@ private fun TravelGroupsRow(
 }
 
 @Composable
-private fun TravelGroupItem(
+private fun GroupItem(
     modifier: Modifier = Modifier,
     group: Group,
     onClick: () -> Unit,
@@ -783,7 +782,7 @@ private fun TravelGroupItem(
 }
 
 @Composable
-private fun TravelSearchBar(
+private fun SearchBar(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -877,14 +876,11 @@ private fun Modifier.intoVertical() = layout { measurable, constraints ->
     }
 }
 
-@Preview(
-    showBackground = true,
-    device = Devices.PHONE,
-)
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    TravelTheme {
-        TravelHomeScreen(
+    QclayTripTheme {
+        HomeScreen(
             onTravelGroupItemClick = { }
         )
     }

@@ -87,9 +87,9 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.dropUnlessResumed
 import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodScaffold
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodTopBar
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieScaffold
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieTopBar
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.VerticalHillButton
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.sharedElementAnimSpec
 import kotlin.math.sign
@@ -126,7 +126,7 @@ private fun HomeScreen(
         shouldApplyFullWidthAnimationToCartButton = false
     }
 
-    FoodScaffold(
+    KristinaCookieScaffold(
         topBar = {
             HomeTopBar(
                 onNavigateToCart = {
@@ -161,9 +161,9 @@ private fun HomeTopBar(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        FoodTopBar(
+        KristinaCookieTopBar(
             title = {
-                val titleTextStyle = FoodTheme.typography.displaySmall
+                val titleTextStyle = KristinaCookieTheme.typography.displaySmall
                 val title = buildAnnotatedString {
                     append("Choose ")
                     withStyle(
@@ -435,7 +435,7 @@ private val navItemsIcons = listOf(
 @Composable
 private fun HomeNavigationBar() {
     var navigationBarItemIndex by remember { mutableIntStateOf(0) }
-    FoodNavigationBar(
+    NavigationBar(
         modifier = Modifier
             .withSafeNavAnimatedContentScope {
                 animateEnterExit(
@@ -458,10 +458,10 @@ private fun HomeNavigationBar() {
                     exit = fadeOut(animationSpec = sharedElementAnimSpec())
                 )
             }
-            .clip(RoundedCornerShape(topStart = FoodTheme.cornerSize.large, topEnd = FoodTheme.cornerSize.large))
+            .clip(RoundedCornerShape(topStart = KristinaCookieTheme.cornerSize.large, topEnd = KristinaCookieTheme.cornerSize.large))
     ) {
         for ((index, icon) in navItemsIcons.withIndex()) {
-            FoodNavigationBarItem(
+            NavigationBarItem(
                 selected = index == navigationBarItemIndex,
                 onClick = {
                     navigationBarItemIndex = index
@@ -479,15 +479,15 @@ private fun HomeNavigationBar() {
 }
 
 @Composable
-private fun FoodNavigationBar(
+private fun NavigationBar(
     modifier: Modifier = Modifier,
     tonalElevation: Dp = NavigationBarDefaults.Elevation,
     windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
-        color = FoodTheme.colors.secondary,
-        contentColor = FoodTheme.colors.onSecondary,
+        color = KristinaCookieTheme.colors.secondary,
+        contentColor = KristinaCookieTheme.colors.onSecondary,
         tonalElevation = tonalElevation,
         modifier = modifier
     ) {
@@ -506,7 +506,7 @@ private fun FoodNavigationBar(
 }
 
 @Composable
-private fun FoodNavigationBarItem(
+private fun NavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: ImageVector,
@@ -517,7 +517,7 @@ private fun FoodNavigationBarItem(
         modifier = modifier
             .clip(CircleShape)
             .clickable(onClick = onClick)
-            .background(if (selected) FoodTheme.colors.primary else Color.Unspecified)
+            .background(if (selected) KristinaCookieTheme.colors.primary else Color.Unspecified)
             .padding(
                 vertical = 12.dp,
                 horizontal = 2.dp,
@@ -526,7 +526,7 @@ private fun FoodNavigationBarItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (selected) FoodTheme.colors.onPrimary else FoodTheme.colors.onSecondary,
+            tint = if (selected) KristinaCookieTheme.colors.onPrimary else KristinaCookieTheme.colors.onSecondary,
             modifier = Modifier.minimumInteractiveComponentSize()
         )
     }
@@ -535,7 +535,7 @@ private fun FoodNavigationBarItem(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         HomeScreen(
             onNavigateToCart = { },
             onNavigateToProduct = { },

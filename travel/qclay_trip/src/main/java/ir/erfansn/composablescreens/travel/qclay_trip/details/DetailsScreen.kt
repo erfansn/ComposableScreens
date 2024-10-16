@@ -47,7 +47,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -57,19 +56,19 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.travel.qclay_trip.R
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.TravelButton
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.TravelIconButton
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripButton
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripIconButton
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.layout.OverlappingRow
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.PoppinsFontFamily
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.TravelTheme
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.QclayTripTheme
 
 @Composable
-fun TravelDetailsRoute() {
-    TravelDetailsScreen()
+fun DetailsRoute() {
+    DetailsScreen()
 }
 
 @Composable
-private fun TravelDetailsScreen() {
+private fun DetailsScreen() {
     val baseModifier = Modifier.padding(horizontal = 24.dp)
     Scaffold(
         modifier = Modifier
@@ -78,17 +77,17 @@ private fun TravelDetailsScreen() {
             .safeDrawingPadding(),
         backgroundColor = MaterialTheme.colors.surface,
         topBar = {
-            TravelDetailsTopBar(
+            DetailsTopBar(
                 modifier = baseModifier
             )
         },
         bottomBar = {
-            TravelDetailsBottomNavigationBar(
+            DetailsBottomNavigationBar(
                 modifier = baseModifier
             )
         }
     ) { contentPadding ->
-        TravelDetailsContent(
+        DetailsContent(
             modifier = Modifier
                 .fillMaxHeight()
                 .padding(contentPadding)
@@ -98,7 +97,7 @@ private fun TravelDetailsScreen() {
 }
 
 @Composable
-private fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
+private fun DetailsTopBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -109,7 +108,7 @@ private fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TravelIconButton(
+        QclayTripIconButton(
             onClick = { /*TODO*/ },
             containerColor = Color.White,
             shadowColor = Color.Gray,
@@ -124,7 +123,7 @@ private fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
                 fontFamily = PoppinsFontFamily
             )
         )
-        TravelButton(
+        QclayTripButton(
             onClick = { /*TODO*/ }
         ) {
             Image(
@@ -138,7 +137,7 @@ private fun TravelDetailsTopBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TravelDetailsBottomNavigationBar(
+private fun DetailsBottomNavigationBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -147,7 +146,7 @@ private fun TravelDetailsBottomNavigationBar(
             .fillMaxWidth()
             .height(64.dp)
     ) {
-        TravelButton(
+        QclayTripButton(
             modifier = Modifier
                 .weight(0.30f)
                 .fillMaxHeight(),
@@ -162,7 +161,7 @@ private fun TravelDetailsBottomNavigationBar(
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
-        TravelButton(
+        QclayTripButton(
             modifier = Modifier
                 .weight(0.60f)
                 .fillMaxHeight(),
@@ -182,7 +181,7 @@ private fun TravelDetailsBottomNavigationBar(
 }
 
 @Composable
-private fun TravelDetailsContent(modifier: Modifier = Modifier) {
+private fun DetailsContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -259,7 +258,7 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TravelButton(
+            QclayTripButton(
                 modifier = Modifier
                     .size(104.dp, 42.dp),
                 shape = RoundedCornerShape(33),
@@ -274,7 +273,7 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
                     )
                 )
             }
-            TravelButton(
+            QclayTripButton(
                 modifier = Modifier.size(104.dp, 42.dp),
                 shape = RoundedCornerShape(33),
                 containerColor = Color.Transparent,
@@ -292,7 +291,7 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
             modifier = Modifier.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TravelDetailLabelsRow(
+            DetailLabelsRow(
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
@@ -340,7 +339,7 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.overline
                     )
                 }
-                TravelButton(
+                QclayTripButton(
                     modifier = Modifier
                         .aspectRatio(1.0f),
                     containerColor = MaterialTheme.colors.primaryVariant,
@@ -358,7 +357,7 @@ private fun TravelDetailsContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TravelDetailLabelsRow(
+private fun DetailLabelsRow(
     modifier: Modifier = Modifier,
     detailLabels: List<DetailLabel> = remember {
         listOf(
@@ -380,7 +379,7 @@ private fun TravelDetailLabelsRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         detailLabels.forEach {
-            TravelDetailLabel(
+            DetailLabel(
                 modifier = Modifier
                     .height(48.dp)
                     .fillMaxWidth()
@@ -392,7 +391,7 @@ private fun TravelDetailLabelsRow(
 }
 
 @Composable
-private fun TravelDetailLabel(
+private fun DetailLabel(
     modifier: Modifier = Modifier,
     detailLabel: DetailLabel,
 ) {
@@ -457,13 +456,10 @@ data class DetailLabel(
     val content: String,
 )
 
-@Preview(
-    showBackground = true,
-    device = Devices.PHONE,
-)
+@Preview(showBackground = true)
 @Composable
 fun DetailsScreenPreview() {
-    TravelTheme {
-        TravelDetailsScreen()
+    QclayTripTheme {
+        DetailsScreen()
     }
 }

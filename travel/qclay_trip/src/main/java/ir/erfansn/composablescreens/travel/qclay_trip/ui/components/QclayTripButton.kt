@@ -28,10 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.modifier.shadow
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.TravelTheme
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.QclayTripTheme
 
 @Composable
-internal fun TravelButton(
+internal fun QclayTripButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     containerColor: Color = MaterialTheme.colors.primary,
@@ -69,7 +69,7 @@ internal fun TravelButton(
 }
 
 @Composable
-internal fun TravelIconButton(
+internal fun QclayTripIconButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     @DrawableRes iconId: Int,
@@ -79,7 +79,7 @@ internal fun TravelIconButton(
     shadowColor: Color? = null,
     shape: Shape = RoundedCornerShape(36),
 ) {
-    TravelButton(
+    QclayTripButton(
         modifier = modifier,
         onClick = onClick,
         containerColor = containerColor,
@@ -98,9 +98,9 @@ private val TravelButtonSize = 56.dp
 
 @Preview
 @Composable
-fun TravelButtonText() {
-    TravelTheme {
-        TravelButton(
+fun QclayTripButtonText() {
+    QclayTripTheme {
+        QclayTripButton(
             modifier = Modifier.padding(16.dp),
             onClick = { /*TODO*/ }
         ) {
@@ -111,9 +111,9 @@ fun TravelButtonText() {
 
 @Preview
 @Composable
-fun TravelButtonIconShadow() {
-    TravelTheme {
-        TravelButton(
+fun QclayTripButtonIconShadow() {
+    QclayTripTheme {
+        QclayTripButton(
             modifier = Modifier.padding(16.dp),
             shadowColor = MaterialTheme.colors.primary,
             onClick = { /*TODO*/ },

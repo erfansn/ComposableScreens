@@ -25,7 +25,7 @@ import ir.erfansn.composablescreens.food.kristina_cookie.feature.home.HomeRoute
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.home.HomeViewModel
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.product.ProductRoute
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.product.ProductViewModel
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.sharedElementAnimSpec
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KType
@@ -151,7 +151,7 @@ private inline fun <reified T : Any> NavGraphBuilder.foodComposable(
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
     ) {
-        FoodTheme {
+        KristinaCookieTheme {
             CompositionLocalProvider(LocalNavAnimatedContentScope provides this) {
                 this.content(it)
             }

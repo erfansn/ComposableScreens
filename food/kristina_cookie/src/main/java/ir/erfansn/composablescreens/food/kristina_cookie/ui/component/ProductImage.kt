@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedTransitionScope
 import ir.erfansn.composablescreens.food.kristina_cookie.R
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.sharedElementAnimSpec
 
 internal data class ProductBackground(
@@ -32,7 +32,7 @@ internal data class ProductBackground(
 internal object ProductImageDefault {
     val productBackground @Composable get() = ProductBackground(
         color = Color(0xFFE4F9CD),
-        cornerSize = FoodTheme.cornerSize.large,
+        cornerSize = KristinaCookieTheme.cornerSize.large,
     )
 }
 
@@ -72,7 +72,7 @@ internal fun ProductImage(
 @Preview
 @Composable
 private fun ProductImagePreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         ProductImage(
             image = painterResource(id = R.drawable.caramel_sea_salt_cookie),
             modifier = Modifier.padding(8.dp)

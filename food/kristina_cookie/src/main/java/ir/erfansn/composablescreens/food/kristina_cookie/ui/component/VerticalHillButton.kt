@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 
 @Composable
 internal fun VerticalHillButton(
@@ -39,7 +39,7 @@ internal fun VerticalHillButton(
             .sizeIn(116.dp, 56.dp)
             .clip(HillShape)
             .clickable { onClick() }
-            .background(FoodTheme.colors.primary)
+            .background(KristinaCookieTheme.colors.primary)
             .padding(bottom = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -50,12 +50,12 @@ internal fun VerticalHillButton(
             modifier = Modifier
                 .size(16.dp)
                 .offset(y = 5.dp),
-            tint = FoodTheme.colors.onPrimary
+            tint = KristinaCookieTheme.colors.onPrimary
         )
         Text(
             text = title,
-            style = FoodTheme.typography.titleMedium,
-            color = FoodTheme.colors.onPrimary
+            style = KristinaCookieTheme.typography.titleMedium,
+            color = KristinaCookieTheme.colors.onPrimary
         )
     }
 }

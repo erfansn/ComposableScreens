@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 
 @Composable
-internal fun FoodScaffold(
+internal fun KristinaCookieScaffold(
     bottomBar: @Composable () -> Unit,
     topBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -34,14 +34,14 @@ internal fun FoodScaffold(
         topBar = topBar,
         bottomBar = bottomBar,
         contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = FoodTheme.colors.background,
-        contentColor = FoodTheme.colors.onBackground,
+        containerColor = KristinaCookieTheme.colors.background,
+        contentColor = KristinaCookieTheme.colors.onBackground,
         content = content
     )
 }
 
 @Composable
-internal fun FoodFloatingScaffold(
+internal fun KristinaCookieFloatingScaffold(
     topBar: @Composable () -> Unit,
     floatingBottomBar: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -54,8 +54,8 @@ internal fun FoodFloatingScaffold(
             // To prevent applying insets padding to bottom side
             Box(Modifier)
         },
-        containerColor = FoodTheme.colors.background,
-        contentColor = FoodTheme.colors.onBackground
+        containerColor = KristinaCookieTheme.colors.background,
+        contentColor = KristinaCookieTheme.colors.onBackground
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -80,9 +80,9 @@ internal fun FoodFloatingScaffold(
 
 @Preview
 @Composable
-private fun FoodScaffoldPreview() {
-    FoodTheme {
-        FoodScaffold(
+private fun KristinaCookieScaffoldPreview() {
+    KristinaCookieTheme {
+        KristinaCookieScaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 Text(text = "Top Bar")
@@ -100,9 +100,9 @@ private fun FoodScaffoldPreview() {
 
 @Preview
 @Composable
-private fun FoodFloatingScaffoldPreview() {
-    FoodTheme {
-        FoodFloatingScaffold(
+private fun KristinaCookieFloatingScaffoldPreview() {
+    KristinaCookieTheme {
+        KristinaCookieFloatingScaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 Text(text = "Top Bar")

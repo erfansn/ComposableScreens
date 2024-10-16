@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import kotlin.random.Random
 import androidx.compose.ui.unit.IntOffset as PixelOffset
 import androidx.compose.ui.unit.IntSize as PixelSize
@@ -86,7 +86,7 @@ internal data class MeteorState(val startX: Int, val delayInMillis: Int)
 @Preview
 @Composable
 private fun MeteorShowerPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         MeteorShower(40) {
             Icon(imageVector = Icons.Default.Star, contentDescription = null)
         }

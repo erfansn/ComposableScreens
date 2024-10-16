@@ -67,9 +67,9 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.currentStateAsState
 import androidx.lifecycle.compose.dropUnlessResumed
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodFloatingScaffold
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodTopBar
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieFloatingScaffold
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieTopBar
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.VerticalHillButton
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.modifier.overlappedBackgroundColor
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.Cent
@@ -108,7 +108,7 @@ private fun CartScreen(
     Box(
         contentAlignment = Alignment.Center
     ) {
-        FoodFloatingScaffold(
+        KristinaCookieFloatingScaffold(
             topBar = {
                 val isOverlapped by remember {
                     derivedStateOf {
@@ -215,7 +215,7 @@ private fun CartTopBar(
             1f
         }
     }
-    FoodTopBar(
+    KristinaCookieTopBar(
         modifier = modifier,
         navigation = {
             VerticalHillButton(
@@ -231,7 +231,7 @@ private fun CartTopBar(
         title = {
             Text(
                 "Cart",
-                style = FoodTheme.typography.displaySmall,
+                style = KristinaCookieTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold
             )
         },
@@ -246,12 +246,12 @@ private fun CartTopBar(
                     .padding(end = 24.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(FoodTheme.colors.primary)
+                    .background(KristinaCookieTheme.colors.primary)
             ) {
                 Text(
                     "3",
-                    style = FoodTheme.typography.titleLarge,
-                    color = FoodTheme.colors.onPrimary,
+                    style = KristinaCookieTheme.typography.titleLarge,
+                    color = KristinaCookieTheme.colors.onPrimary,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
@@ -313,7 +313,7 @@ private fun CartBottomBar(
         modifier = modifier
             .pointerInput(Unit) {}
             .clip(CurvedShape)
-            .background(FoodTheme.colors.primary)
+            .background(KristinaCookieTheme.colors.primary)
             .padding(bottom = 8.dp, top = 24.dp)
             .navigationBarsPadding()
             .fillMaxWidth()
@@ -324,12 +324,12 @@ private fun CartBottomBar(
         ) {
             Text(
                 "Total amount",
-                style = FoodTheme.typography.titleLarge,
+                style = KristinaCookieTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
                 totalPrice.convertToDollars(),
-                style = FoodTheme.typography.displaySmall,
+                style = KristinaCookieTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold,
             )
         }
@@ -344,18 +344,18 @@ private fun CartBottomBar(
                     scaleY = scaleEffectValue
                 }
                 .padding(end = 8.dp)
-                .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
+                .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
                 .clickable(
                     interactionSource = interactionSource,
                     indication = ripple()
                 ) { onPayClick() }
-                .background(FoodTheme.colors.background)
+                .background(KristinaCookieTheme.colors.background)
                 .padding(horizontal = 32.dp, vertical = 42.dp)
         ) {
-            CompositionLocalProvider(LocalContentColor provides FoodTheme.colors.onBackground) {
+            CompositionLocalProvider(LocalContentColor provides KristinaCookieTheme.colors.onBackground) {
                 Text(
                     text = "Pay",
-                    style = FoodTheme.typography.titleLarge,
+                    style = KristinaCookieTheme.typography.titleLarge,
                     modifier = Modifier
                         .offset(x = 6.dp)
                 )
@@ -421,7 +421,7 @@ private val CurvedShape = object : Shape {
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CartScreen(
             cartProducts = sampleCartProducts,
             onNavigateToHome = { },

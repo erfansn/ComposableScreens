@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.erfansn.composablescreens.food.kristina_cookie.R
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 
 internal val collections = listOf(
     Collection(
@@ -109,7 +109,7 @@ internal fun CollectionItem(
         },
         modifier = modifier
             .clip(CircleShape)
-            .background(FoodTheme.colors.tertiary)
+            .background(KristinaCookieTheme.colors.tertiary)
             .clickable(role = Role.RadioButton) { onClick() },
         contentAlignment = Alignment.CenterStart
     ) { extended ->
@@ -166,7 +166,7 @@ private fun ExpandedCollectionItemContent(
     Box(
         modifier = modifier
             .clip(CircleShape)
-            .background(FoodTheme.colors.secondary)
+            .background(KristinaCookieTheme.colors.secondary)
             .contentPadding(),
         contentAlignment = Alignment.Center
     ) {
@@ -179,21 +179,21 @@ private fun ExpandedCollectionItemContent(
             if (icon == null) {
                 Text(
                     text = name,
-                    style = FoodTheme.typography.labelLarge,
-                    color = FoodTheme.colors.onSecondary,
+                    style = KristinaCookieTheme.typography.labelLarge,
+                    color = KristinaCookieTheme.colors.onSecondary,
                 )
             } else {
                 Icon(
                     painter = icon,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = FoodTheme.colors.primary
+                    tint = KristinaCookieTheme.colors.primary
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = name,
-                    style = FoodTheme.typography.labelLarge,
-                    color = FoodTheme.colors.onSecondary,
+                    style = KristinaCookieTheme.typography.labelLarge,
+                    color = KristinaCookieTheme.colors.onSecondary,
                 )
             }
         }
@@ -217,8 +217,8 @@ private fun CollectionItemContent(
         if (icon == null) {
             Text(
                 text = name,
-                style = FoodTheme.typography.labelLarge.copy(textMotion = TextMotion.Static),
-                color = FoodTheme.colors.onTertiary,
+                style = KristinaCookieTheme.typography.labelLarge.copy(textMotion = TextMotion.Static),
+                color = KristinaCookieTheme.colors.onTertiary,
                 modifier = contentModifier,
             )
         } else {
@@ -227,7 +227,7 @@ private fun CollectionItemContent(
                 contentDescription = null,
                 modifier = contentModifier
                     .size(20.dp),
-                tint = FoodTheme.colors.onTertiary,
+                tint = KristinaCookieTheme.colors.onTertiary,
             )
         }
     }
@@ -242,7 +242,7 @@ private fun Modifier.contentPadding(): Modifier =
 @Preview
 @Composable
 private fun CollectionItemWithIconPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CollectionItem(
             selected = false,
             onClick = { },
@@ -256,7 +256,7 @@ private fun CollectionItemWithIconPreview() {
 @Preview
 @Composable
 private fun CollectionItemWithIconSelectedPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CollectionItem(
             selected = true,
             onClick = { },
@@ -270,7 +270,7 @@ private fun CollectionItemWithIconSelectedPreview() {
 @Preview
 @Composable
 private fun CollectionItemPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CollectionItem(
             selected = false,
             onClick = { },
@@ -283,7 +283,7 @@ private fun CollectionItemPreview() {
 @Preview
 @Composable
 private fun CollectionItemSelectedPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         CollectionItem(
             selected = true,
             onClick = { },
@@ -296,7 +296,7 @@ private fun CollectionItemSelectedPreview() {
 @Preview
 @Composable
 private fun CollectionItemInteractivePreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         var selected by remember { mutableStateOf(false) }
         CollectionItem(
             selected = selected,

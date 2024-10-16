@@ -45,7 +45,7 @@ import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.kristina_cookie.R
 import ir.erfansn.composablescreens.food.kristina_cookie.data.Product
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.scaleEffectValue
 
@@ -60,10 +60,10 @@ internal fun VitrineItemCard(
     val scaleEffectValue by interactionSource.scaleEffectValue()
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(FoodTheme.cornerSize.large),
+        shape = RoundedCornerShape(KristinaCookieTheme.cornerSize.large),
         colors = CardDefaults.cardColors(
             containerColor = vitrineItem.backgroundColor,
-            contentColor = FoodTheme.colors.onBackground
+            contentColor = KristinaCookieTheme.colors.onBackground
         ),
         modifier = modifier
             .graphicsLayer {
@@ -80,7 +80,7 @@ internal fun VitrineItemCard(
             Column(modifier = Modifier.haze(hazeState)) {
                 Text(
                     text = vitrineItem.title,
-                    style = FoodTheme.typography.displaySmall,
+                    style = KristinaCookieTheme.typography.displaySmall,
                     modifier = Modifier
                         .padding(horizontal = 32.dp)
                         .padding(top = 26.dp)
@@ -113,8 +113,8 @@ internal fun VitrineItemCard(
                     .padding(10.dp)
                     .fillMaxWidth()
                     .height(86.dp)
-                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
-                    .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(FoodTheme.cornerSize.large))
+                    .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
+                    .border(2.dp, color = Color(0xFFE8D0B8), shape = RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
                     .hazeChild(
                         state = hazeState,
                         style = HazeDefaults.style(
@@ -127,20 +127,20 @@ internal fun VitrineItemCard(
                 Text(
                     text = priceByQuantityText(priceInCent = vitrineItem.priceInCent),
                     modifier = Modifier.padding(start = 32.dp),
-                    style = FoodTheme.typography.headlineSmall,
+                    style = KristinaCookieTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                 )
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(color = FoodTheme.colors.secondary)
+                        .background(color = KristinaCookieTheme.colors.secondary)
                         .size(116.dp, 81.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.AddShoppingCart,
                         contentDescription = "Shopping Cart",
-                        tint = FoodTheme.colors.onSecondary
+                        tint = KristinaCookieTheme.colors.onSecondary
                     )
                 }
             }
@@ -235,7 +235,7 @@ internal val sampleVitrineItems = listOf(
 @Preview
 @Composable
 private fun VitrineCardPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         VitrineItemCard(
             vitrineItem = sampleVitrineItems.first(),
             onClick = { },

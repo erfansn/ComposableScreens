@@ -15,9 +15,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
-import ir.erfansn.composablescreens.travel.qclay_trip.details.TravelDetailsRoute
-import ir.erfansn.composablescreens.travel.qclay_trip.home.TravelHomeRoute
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.TravelTheme
+import ir.erfansn.composablescreens.travel.qclay_trip.details.DetailsRoute
+import ir.erfansn.composablescreens.travel.qclay_trip.home.HomeRoute
+import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.QclayTripTheme
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KType
 
@@ -35,14 +35,14 @@ fun NavGraphBuilder.qclayTripNavGraph(navController: NavController) {
         startDestination = HomeRoute
     ) {
         qclayTripComposable<HomeRoute> {
-            TravelHomeRoute(
+            HomeRoute(
                 onTravelGroupItemClick = {
                     navController.navigate(DetailsRoute)
                 }
             )
         }
         qclayTripComposable<DetailsRoute> {
-            TravelDetailsRoute()
+            DetailsRoute()
         }
     }
 }
@@ -81,7 +81,7 @@ private inline fun <reified T : Any> NavGraphBuilder.qclayTripComposable(
         popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
     ) {
-        TravelTheme {
+        QclayTripTheme {
             CompositionLocalProvider(LocalNavAnimatedContentScope provides this) {
                 this.content(it)
             }

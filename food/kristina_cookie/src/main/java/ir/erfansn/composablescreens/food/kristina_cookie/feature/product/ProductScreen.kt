@@ -96,9 +96,9 @@ import ir.erfansn.composablescreens.common.withSafeNavAnimatedContentScope
 import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.kristina_cookie.R
 import ir.erfansn.composablescreens.food.kristina_cookie.data.Product
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodFloatingScaffold
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.FoodTopBar
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieFloatingScaffold
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.KristinaCookieTopBar
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.ProductImage
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.ProductImageDefault
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.component.VerticalHillButton
@@ -138,7 +138,7 @@ private fun ProductScreen(
 ) {
     val scrollState = rememberScrollState()
     var shouldRunNavAnimations by rememberSaveable { mutableStateOf(true) }
-    FoodFloatingScaffold(
+    KristinaCookieFloatingScaffold(
         modifier = modifier,
         topBar = {
             val isOverlapped by remember { derivedStateOf { scrollState.value > 24 } }
@@ -307,13 +307,13 @@ private fun ProductTopBar(
     actionContent: @Composable RowScope.() -> Unit
 ) {
     var topPadding by remember { mutableStateOf(0.dp) }
-    FoodTopBar(
+    KristinaCookieTopBar(
         modifier = modifier
             .padding(top = topPadding),
         title = {
             Text(
                 text = title,
-                style = FoodTheme.typography.displaySmall,
+                style = KristinaCookieTheme.typography.displaySmall,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .offset((-16).dp)
@@ -393,7 +393,7 @@ private fun ProductContent(
             Text(
                 text = priceByQuantityText(
                     priceInCent = priceInCent,
-                    style = FoodTheme.typography.titleSmall
+                    style = KristinaCookieTheme.typography.titleSmall
                 ),
                 modifier = Modifier
                     .offset((12).dp, (12).dp)
@@ -414,14 +414,14 @@ private fun ProductContent(
                         )
                     }
                     .clip(CircleShape)
-                    .background(FoodTheme.colors.primary)
+                    .background(KristinaCookieTheme.colors.primary)
                     .padding(vertical = 24.dp, horizontal = 20.dp),
-                style = FoodTheme.typography.titleMedium
+                style = KristinaCookieTheme.typography.titleMedium
             )
         }
         Text(
             text = description,
-            style = FoodTheme.typography.bodyMedium,
+            style = KristinaCookieTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 24.dp),
             textAlign = TextAlign.Justify
         )
@@ -446,7 +446,7 @@ private fun ProductContent(
                             }
                         }
                         .clip(CircleShape)
-                        .background(FoodTheme.colors.tertiary)
+                        .background(KristinaCookieTheme.colors.tertiary)
                         .height(86.dp)
                         .weight(1f)
                         .padding(12.dp),
@@ -496,8 +496,8 @@ private fun ProductBottomBar(
                             exit = fadeOut(sharedElementAnimSpec())
                         )
                     }
-                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
-                    .background(FoodTheme.colors.secondary)
+                    .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
+                    .background(KristinaCookieTheme.colors.secondary)
                     .heightIn(112.dp)
                     .fillMaxWidth()
                     .clickable(
@@ -519,7 +519,7 @@ private fun ProductBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                CompositionLocalProvider(LocalContentColor provides FoodTheme.colors.onSecondary) {
+                CompositionLocalProvider(LocalContentColor provides KristinaCookieTheme.colors.onSecondary) {
                     Icon(imageVector = Icons.Rounded.AddShoppingCart, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = "Add to cart")
@@ -548,8 +548,8 @@ private fun ProductBottomBar(
                     }
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
-                    .clip(RoundedCornerShape(FoodTheme.cornerSize.large))
-                    .background(FoodTheme.colors.primary)
+                    .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
+                    .background(KristinaCookieTheme.colors.primary)
                     .heightIn(112.dp)
                     .fillMaxWidth()
             ) {
@@ -569,7 +569,7 @@ private fun ProductBottomBar(
                     append("${orderCount}qty")
                     append("\n")
                     withStyle(
-                        style = FoodTheme.typography.titleMedium.toSpanStyle()
+                        style = KristinaCookieTheme.typography.titleMedium.toSpanStyle()
                             .copy(color = Color(0xFF5A5350))
                     ) {
                         append((orderCount * producePriceInCent).convertToDollars())
@@ -577,7 +577,7 @@ private fun ProductBottomBar(
                 }
                 Text(
                     text = priceByQuantity,
-                    style = FoodTheme.typography.headlineSmall,
+                    style = KristinaCookieTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
                 SquareBox(
@@ -607,13 +607,13 @@ private fun SquareBox(
         modifier = modifier
             .size(112.dp)
             .padding(4.dp)
-            .clip(RoundedCornerShape(FoodTheme.cornerSize.large - 4.dp))
-            .background(FoodTheme.colors.background)
+            .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large - 4.dp))
+            .background(KristinaCookieTheme.colors.background)
             .clickable {
                 onClick()
             }
     ) {
-        CompositionLocalProvider(LocalContentColor provides FoodTheme.colors.onBackground) {
+        CompositionLocalProvider(LocalContentColor provides KristinaCookieTheme.colors.onBackground) {
             content()
         }
     }
@@ -641,7 +641,7 @@ private val sampleProduct = Product(
 @Preview
 @Composable
 private fun ProductScreenPreview() {
-    FoodTheme {
+    KristinaCookieTheme {
         var quntity by remember { mutableIntStateOf(0) }
         ProductScreen(
             product = sampleProduct,

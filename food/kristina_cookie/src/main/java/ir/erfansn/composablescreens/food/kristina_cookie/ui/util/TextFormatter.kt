@@ -7,13 +7,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import ir.erfansn.composablescreens.food.kristina_cookie.ui.FoodTheme
+import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 import java.util.Locale
 
 internal typealias Cent = Int
 
 @Composable
-internal fun priceByQuantityText(priceInCent: Cent, style: TextStyle = FoodTheme.typography.titleMedium): AnnotatedString {
+internal fun priceByQuantityText(priceInCent: Cent, style: TextStyle = KristinaCookieTheme.typography.titleMedium): AnnotatedString {
     return buildAnnotatedString {
         append(priceInCent.convertToDollars())
         withStyle(
