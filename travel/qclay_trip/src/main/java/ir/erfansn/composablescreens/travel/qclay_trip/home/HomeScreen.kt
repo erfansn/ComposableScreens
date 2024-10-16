@@ -104,9 +104,7 @@ import kotlin.random.Random
 internal fun TravelHomeRoute(
     onTravelGroupItemClick: () -> Unit,
 ) {
-    TravelTheme {
-        TravelHomeScreen(onTravelGroupItemClick = onTravelGroupItemClick)
-    }
+    TravelHomeScreen(onTravelGroupItemClick = onTravelGroupItemClick)
 }
 
 @Composable

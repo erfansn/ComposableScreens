@@ -65,9 +65,7 @@ import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.TravelTheme
 
 @Composable
 fun TravelDetailsRoute() {
-    TravelTheme {
-        TravelDetailsScreen()
-    }
+    TravelDetailsScreen()
 }
 
 @Composable
