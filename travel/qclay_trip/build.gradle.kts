@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.plugin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -37,6 +38,10 @@ kotlin {
     jvmToolchain(jvm.versions.toolchain.get().toInt())
 }
 
+ksp {
+    arg("group_name", "Travel")
+}
+
 dependencies {
     implementation(projects.common)
 
@@ -58,4 +63,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    compileOnly(projects.autoNavGraphWiringProcessors.core)
+    ksp(projects.autoNavGraphWiringProcessors.preparation)
 }

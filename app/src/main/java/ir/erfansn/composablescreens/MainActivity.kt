@@ -1,6 +1,5 @@
 package ir.erfansn.composablescreens
 
-import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
@@ -11,24 +10,29 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoAggregatedNavGraphs
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoWiredGraphLandscapeOrientationRoutes
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoWiredGraphPortraitOrientationRoutes
 import ir.erfansn.composablescreens.common.BarStyle
 import ir.erfansn.composablescreens.common.LocalSharedTransitionScope
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyleChanger
-import ir.erfansn.composablescreens.food.kristina_cookie.kristinaCookieNavGraph
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.navigation.qclayTripNavGraph
 import ir.erfansn.composablescreens.ui.ComposableScreensList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("RestrictedApi", "SourceLockedOrientationActivity")
     @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -74,25 +78,42 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
-                            qclayTripNavGraph(navController)
-                            kristinaCookieNavGraph(navController)
+                            autoAggregatedNavGraphs(navController)
                         }
 
-                        val currentBackStack by navController.currentBackStack.collectAsState()
-                        LaunchedEffect(currentBackStack) {
-                            requestedOrientation = when {
-                                currentBackStack.any { it.destination.route in listOf("food", "travel") } -> {
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                }
-
-                                else -> {
-                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR
-                                }
-                            }
-                        }
+                        ScreenOrientationEffect(navController)
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun ScreenOrientationEffect(navController: NavHostController) {
+        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+        DisposableEffect(currentBackStackEntry) {
+            fun NavDestination.hasAnyRoute(routes: List<Any>) = routes.any { hasRoute(it::class) }
+
+            val currentDestinationHierarchy = currentBackStackEntry?.destination?.hierarchy
+            requestedOrientation = when {
+                currentDestinationHierarchy?.any {
+                    it.hasAnyRoute(autoWiredGraphPortraitOrientationRoutes)
+                } == true -> {
+                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                }
+
+                currentDestinationHierarchy?.any {
+                    it.hasAnyRoute(autoWiredGraphLandscapeOrientationRoutes)
+                } == true -> {
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                }
+
+                else -> {
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                }
+            }
+
+            onDispose { }
         }
     }
 

@@ -17,7 +17,8 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.AutoNavGraphWiring
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.ScreenOrientation
 import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.cart.CartRoute
 import ir.erfansn.composablescreens.food.kristina_cookie.feature.cart.CartViewModel
@@ -34,90 +35,100 @@ import kotlin.reflect.KType
 data object KristinaCookieRoute
 
 @Serializable
-private data object HomeRoute
+internal data object HomeRoute
 @Serializable
-private data class ProductRoute(val id: Int)
+internal data class ProductRoute(val id: Int)
 @Serializable
-private data object CartRoute
+internal data object CartRoute
 
-fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController) {
-    navigation<KristinaCookieRoute>(startDestination = HomeRoute) {
-        foodComposable<HomeRoute>(
-            enterTransition = {
-                fadeIn(animationSpec = sharedElementAnimSpec())
+@AutoNavGraphWiring(
+    name = "Kristina Cookie",
+    route = KristinaCookieRoute::class,
+    startDestination = HomeRoute::class,
+    screenOrientation = ScreenOrientation.Portrait
+)
+internal fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController) {
+    kristinaCookieComposable<HomeRoute>(
+        enterTransition = {
+            fadeIn(animationSpec = sharedElementAnimSpec())
+        },
+        exitTransition = {
+            fadeOut(animationSpec = sharedElementAnimSpec())
+        },
+    ) {
+        val viewModel = viewModel<HomeViewModel>()
+        HomeRoute(
+            onNavigateToProduct = {
+                navController.navigate(ProductRoute(it))
             },
-            exitTransition = {
-                fadeOut(animationSpec = sharedElementAnimSpec())
+            onNavigateToCart = {
+                navController.navigate(CartRoute)
             },
-        ) {
-            val viewModel = viewModel<HomeViewModel>()
-            HomeRoute(
-                onNavigateToProduct = {
-                    navController.navigate(ProductRoute(it))
-                },
-                onNavigateToCart = {
-                    navController.navigate(CartRoute)
-                },
-                viewModel = viewModel
-            )
+            viewModel = viewModel
+        )
+    }
+    kristinaCookieComposable<ProductRoute>(
+        enterTransition = {
+            fadeIn(animationSpec = sharedElementAnimSpec())
+        },
+        exitTransition = {
+            fadeOut(animationSpec = sharedElementAnimSpec())
         }
-        foodComposable<ProductRoute>(
-            enterTransition = {
-                fadeIn(animationSpec = sharedElementAnimSpec())
-            },
-            exitTransition = {
-                fadeOut(animationSpec = sharedElementAnimSpec())
-            }
-        ) {
-            val viewModel = viewModel<ProductViewModel>()
-            ProductRoute(
-                viewModel = viewModel,
-                onNavigateToCart = {
-                    if (navController.previousBackStackEntry?.destination?.hasRoute<CartRoute>() == true) {
-                        // TODO: Should report this, this worked to restore state (rememberSaveable) but also saving argument passed to route
-                        // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
-                        navController.popBackStack()
-                    } else {
-                        navController.navigate(CartRoute) {
-                            popUpTo(HomeRoute) {
-                                // saveState = true
-                            }
+    ) {
+        val viewModel = viewModel<ProductViewModel>()
+        ProductRoute(
+            viewModel = viewModel,
+            onNavigateToCart = {
+                if (navController.previousBackStackEntry?.destination?.hasRoute<CartRoute>() == true) {
+                    // TODO: Should report this, this worked to restore state (rememberSaveable) but also saving argument passed to route
+                    // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(CartRoute) {
+                        popUpTo(HomeRoute) {
+                            // saveState = true
                         }
                     }
-                },
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        foodComposable<CartRoute>(
-            enterTransition = {
-                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = sharedElementAnimSpec())
+                }
             },
-            exitTransition = {
-                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End, animationSpec = sharedElementAnimSpec())
-            },
-        ) {
-            val viewModel = viewModel<CartViewModel>()
-            CartRoute(
-                onNavigateToHome = {
-                    // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
-                    /*navController.navigate(HomeRoute) {
-                        launchSingleTop = true
-                        popUpTo(HomeRoute)
-                    }*/
-                    navController.popBackStack(route = HomeRoute, inclusive = false)
-                },
-                onNavigateToProduct = {
-                    navController.navigate(ProductRoute(it)) {
-                        // restoreState = true
-                    }
-                },
-                viewModel = viewModel
+            onBackClick = { navController.popBackStack() }
+        )
+    }
+    kristinaCookieComposable<CartRoute>(
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = sharedElementAnimSpec()
             )
-        }
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = sharedElementAnimSpec()
+            )
+        },
+    ) {
+        val viewModel = viewModel<CartViewModel>()
+        CartRoute(
+            onNavigateToHome = {
+                // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
+                /*navController.navigate(HomeRoute) {
+                    launchSingleTop = true
+                    popUpTo(HomeRoute)
+                }*/
+                navController.popBackStack(route = HomeRoute, inclusive = false)
+            },
+            onNavigateToProduct = {
+                navController.navigate(ProductRoute(it)) {
+                    // restoreState = true
+                }
+            },
+            viewModel = viewModel
+        )
     }
 }
 
-private inline fun <reified T : Any> NavGraphBuilder.foodComposable(
+private inline fun <reified T : Any> NavGraphBuilder.kristinaCookieComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
     noinline enterTransition:

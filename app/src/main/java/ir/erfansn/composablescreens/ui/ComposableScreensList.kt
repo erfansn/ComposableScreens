@@ -3,9 +3,10 @@
 package ir.erfansn.composablescreens.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,40 +26,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.food.kristina_cookie.KristinaCookieRoute
-import ir.erfansn.composablescreens.travel.qclay_trip.ui.navigation.QclayTripRoute
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoWiredGraphsGroupToNameAndRouteList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
-private typealias NameRoutePair = Pair<String, Any>
-
-// TODO: Obtain from generated codes
-val routes: List<NameRoutePair> = listOf(
-    "Travel" to QclayTripRoute,
-    "Food" to KristinaCookieRoute
-)
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ComposableScreensList(
     onRouteClick: (Any) -> Unit
 ) {
-    Surface(color = MaterialTheme.colors.background) {
+    Surface(
+        color = MaterialTheme.colors.background,
+    ) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            contentPadding = WindowInsets.safeDrawing.add(WindowInsets(top = 16.dp))
-                .asPaddingValues()
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = WindowInsets.safeDrawing.asPaddingValues()
         ) {
-            items(routes) { (name, route) ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    onClick = { onRouteClick(route) },
-                    border = BorderStroke(2.dp, Color.LightGray)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(text = name)
+            autoWiredGraphsGroupToNameAndRouteList.forEach { (group, nameAndRouteList) ->
+                stickyHeader {
+                    Text(
+                        text = group,
+                        style = MaterialTheme.typography.h5,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .padding(horizontal = 24.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
+                items(nameAndRouteList) { (name, route) ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .padding(horizontal = 16.dp),
+                        onClick = { onRouteClick(route) },
+                        border = BorderStroke(2.dp, Color.LightGray)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(text = name)
+                        }
                     }
                 }
             }
@@ -66,7 +74,11 @@ fun ComposableScreensList(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    device = "spec:width=1080px,height=2424px,cutout=punch_hole"
+)
 @Composable
 fun ComposableScreensListPreview() {
     ComposableScreensTheme {
