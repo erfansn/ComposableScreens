@@ -38,5 +38,6 @@ private fun subprojects(path: String) =
         ":$path:${it.name}"
     }.orEmpty()
 
+include(subprojects("auto-nav-graph-wiring-processors"))
 include(subprojects("travel"))
 include(subprojects("food"))
