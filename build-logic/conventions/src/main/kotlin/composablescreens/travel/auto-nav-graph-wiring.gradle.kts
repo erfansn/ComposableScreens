@@ -7,7 +7,7 @@ plugins {
 }
 
 ksp {
-    arg("group_name", "Travel")
+    arg("category_name", "Travel")
 }
 
 dependencies {

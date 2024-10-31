@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.BINARY)
 annotation class InternalAutoNavGraphWiring(
-    val group: String,
+    val category: String,
     val name: String,
     val route: KClass<*>,
     val screenOrientation: ScreenOrientation

@@ -17,7 +17,7 @@ import java.util.Locale
 class AutoWiringPreparationProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return AutoWiringPreparationProcessor(
-            environment.options["group_name"]!!,
+            environment.options["category_name"]!!,
             environment.codeGenerator,
             environment.logger
         )

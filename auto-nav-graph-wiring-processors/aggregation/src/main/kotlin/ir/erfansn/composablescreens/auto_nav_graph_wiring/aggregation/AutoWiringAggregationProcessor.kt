@@ -46,7 +46,7 @@ class AutoWiringAggregationProcessor(
 
         generateAggregatedNavGraphsFunction(navGraphFunctions)
 
-        val groupToNames = mutableMapOf<String, List<String>>()
+        val categoryToNames = mutableMapOf<String, List<String>>()
         val nameToRouteQualifiedName = mutableMapOf<String, RouteQualifiedName>()
         val portraitOrientationRoutesQualifiedName = mutableListOf<RouteQualifiedName>()
         val landscapeOrientationRoutesQualifiedName = mutableListOf<RouteQualifiedName>()
@@ -57,14 +57,14 @@ class AutoWiringAggregationProcessor(
 
             val args = annotation.arguments.associateBy { it.name?.asString()!! }
 
-            val group = args["group"]?.value!! as String
+            val category = args["category"]?.value!! as String
             val name = args["name"]?.value!! as String
             val routeType = args["route"]?.value!! as KSType
             val screenOrientation = args["screenOrientation"]?.value as KSType
 
             val routeQualifiedName = routeType.declaration.qualifiedName!!.asString()
 
-            groupToNames[group] = groupToNames.getOrDefault(group, emptyList()) + name
+            categoryToNames[category] = categoryToNames.getOrDefault(category, emptyList()) + name
             nameToRouteQualifiedName[name] = routeQualifiedName
 
             with(screenOrientation.declaration) {
@@ -81,7 +81,7 @@ class AutoWiringAggregationProcessor(
                 }
             }
         }
-        generateMetadataExpressions(groupToNames, nameToRouteQualifiedName, portraitOrientationRoutesQualifiedName, landscapeOrientationRoutesQualifiedName)
+        generateMetadataExpressions(categoryToNames, nameToRouteQualifiedName, portraitOrientationRoutesQualifiedName, landscapeOrientationRoutesQualifiedName)
 
         return emptyList()
     }
@@ -112,20 +112,20 @@ class AutoWiringAggregationProcessor(
     }
 
     private fun generateMetadataExpressions(
-        groupToNames: Map<String, List<String>>,
+        categoryToNames: Map<String, List<String>>,
         nameToRouteQualifiedName: Map<String, RouteQualifiedName>,
         portraitOrientationRoutesQualifiedName: List<RouteQualifiedName>,
         landscapeOrientationRoutesQualifiedName: List<RouteQualifiedName>
     ) {
-        val sortedGroutToNames = groupToNames.toSortedMap().map { (group, names) -> group to names.sorted() }.toMap()
+        val sortedGroutToNames = categoryToNames.toSortedMap().map { (category, names) -> category to names.sorted() }.toMap()
 
         val fileContent = buildString {
             appendLine("package $DST_PACKAGE_NAME")
             appendLine()
-            appendLine("val autoWiredGraphsGroupToNameAndRouteList = mapOf(")
-            sortedGroutToNames.forEach { (group, names) ->
+            appendLine("val autoWiredGraphsCategoryToNameAndRouteList = mapOf(")
+            sortedGroutToNames.forEach { (category, names) ->
                 val kotlinNameList = "listOf(${names.joinToString(", ") { "\"$it\" to ${nameToRouteQualifiedName[it]}" }})"
-                appendLine("    \"$group\" to $kotlinNameList,")
+                appendLine("    \"$category\" to $kotlinNameList,")
             }
             appendLine(")")
             appendLine()
