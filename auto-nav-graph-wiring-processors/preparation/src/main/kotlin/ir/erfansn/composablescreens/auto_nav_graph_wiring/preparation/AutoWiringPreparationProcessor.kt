@@ -33,14 +33,13 @@ class AutoWiringPreparationProcessor(
     private var round = 0
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        if (round++ != 0) return emptyList()
+
         val navGraphFunctions =
             resolver.getSymbolsWithAnnotation(AutoNavGraphWiring::class.qualifiedName!!)
                 .filterIsInstance<KSFunctionDeclaration>()
 
-        if (round++ == 0 && navGraphFunctions.count() == 0) {
-            logger.warn("No function found with AutoNavGraphWiring annotation.")
-            return emptyList()
-        }
+        if (navGraphFunctions.count() == 0) return emptyList()
 
         navGraphFunctions.forEach { navGraphFunction ->
             val annotation = navGraphFunction.annotations
