@@ -33,8 +33,8 @@ android {
 }
 
 dependencies {
-    for (module in projects.travel) implementation(module)
-    for (module in projects.food) implementation(module)
+    for (module in projects.category.travel) implementation(module)
+    for (module in projects.category.food) implementation(module)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material)

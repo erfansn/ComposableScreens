@@ -80,7 +80,7 @@ internal fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController
             viewModel = viewModel,
             onNavigateToCart = {
                 if (navController.previousBackStackEntry?.destination?.hasRoute<CartRoute>() == true) {
-                    // TODO: Should report this, this worked to restore state (rememberSaveable) but also saving argument passed to route
+                    // TODO: Remove product state restore related codes
                     // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
                     navController.popBackStack()
                 } else {

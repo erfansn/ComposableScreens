@@ -137,6 +137,7 @@ private fun ProductScreen(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    // TODO: Replace with a flag from navController Slack discussion
     var shouldRunNavAnimations by rememberSaveable { mutableStateOf(true) }
     KristinaCookieFloatingScaffold(
         modifier = modifier,
@@ -146,10 +147,10 @@ private fun ProductScreen(
                 modifier = Modifier
                     .withSafeSharedElementAnimationScopes {
                         renderInSharedTransitionScopeOverlay(zIndexInOverlay = 2f)
-                        .animateEnterExit(
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        )
+                            .animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            )
                     }
                     .overlappedBackgroundColor(isOverlapped)
             ) {
@@ -221,12 +222,12 @@ private fun ProductScreen(
                             } else {
                                 this
                             }
-                            .sharedElement(
-                                state = rememberSharedContentState("cart_button"),
-                                animatedVisibilityScope = this,
-                                zIndexInOverlay = 3f,
-                                boundsTransform = { _, _ -> sharedElementAnimSpec() }
-                            )
+                                .sharedElement(
+                                    state = rememberSharedContentState("cart_button"),
+                                    animatedVisibilityScope = this,
+                                    zIndexInOverlay = 3f,
+                                    boundsTransform = { _, _ -> sharedElementAnimSpec() }
+                                )
                         }
                 )
             }
@@ -402,16 +403,16 @@ private fun ProductContent(
                         renderInSharedTransitionScopeOverlay(
                             zIndexInOverlay = 1f
                         )
-                        .then(
-                            if (shouldRunNavAnimations) {
-                                Modifier.animateEnterExit(
-                                    enter = scaleIn(animationSpec = sharedElementAnimSpec()),
-                                    exit = scaleOut(animationSpec = sharedElementAnimSpec()),
-                                )
-                            } else {
-                                Modifier
-                            }
-                        )
+                            .then(
+                                if (shouldRunNavAnimations) {
+                                    Modifier.animateEnterExit(
+                                        enter = scaleIn(animationSpec = sharedElementAnimSpec()),
+                                        exit = scaleOut(animationSpec = sharedElementAnimSpec()),
+                                    )
+                                } else {
+                                    Modifier
+                                }
+                            )
                     }
                     .clip(CircleShape)
                     .background(KristinaCookieTheme.colors.primary)
@@ -438,7 +439,10 @@ private fun ProductContent(
                         .withSafeNavAnimatedContentScope {
                             if (shouldRunNavAnimations) {
                                 animateEnterExit(
-                                    enter = slideInVertically(initialOffsetY = { 40 * index }, animationSpec = sharedElementAnimSpec()),
+                                    enter = slideInVertically(
+                                        initialOffsetY = { 40 * index },
+                                        animationSpec = sharedElementAnimSpec()
+                                    ),
                                     exit = ExitTransition.None
                                 )
                             } else {
