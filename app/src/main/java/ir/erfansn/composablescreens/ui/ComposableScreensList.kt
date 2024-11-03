@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 @file:OptIn(ExperimentalMaterialApi::class)
 
 package ir.erfansn.composablescreens.ui
@@ -31,59 +47,60 @@ import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ComposableScreensList(
-    onRouteClick: (Any) -> Unit
-) {
-    Surface(
-        color = MaterialTheme.colors.background,
+fun ComposableScreensList(onRouteClick: (Any) -> Unit) {
+  Surface(
+    color = MaterialTheme.colors.background,
+  ) {
+    LazyColumn(
+      modifier =
+        Modifier
+          .fillMaxSize(),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
+      contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = WindowInsets.safeDrawing.asPaddingValues()
-        ) {
-            autoWiredGraphsCategoryToNameAndRouteList.forEach { (group, nameAndRouteList) ->
-                stickyHeader {
-                    Text(
-                        text = group,
-                        style = MaterialTheme.typography.h5,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .padding(horizontal = 24.dp)
-                            .fillMaxWidth()
-                    )
-                }
-
-                items(nameAndRouteList) { (name, route) ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .padding(horizontal = 16.dp),
-                        onClick = { onRouteClick(route) },
-                        border = BorderStroke(2.dp, Color.LightGray)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(text = name)
-                        }
-                    }
-                }
-            }
+      autoWiredGraphsCategoryToNameAndRouteList.forEach { (group, nameAndRouteList) ->
+        stickyHeader {
+          Text(
+            text = group,
+            style = MaterialTheme.typography.h5,
+            modifier =
+              Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 24.dp)
+                .fillMaxWidth(),
+          )
         }
+
+        items(nameAndRouteList) { (name, route) ->
+          Card(
+            modifier =
+              Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .padding(horizontal = 16.dp),
+            onClick = { onRouteClick(route) },
+            border = BorderStroke(2.dp, Color.LightGray),
+          ) {
+            Box(contentAlignment = Alignment.Center) {
+              Text(text = name)
+            }
+          }
+        }
+      }
     }
+  }
 }
 
 @Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=1080px,height=2424px,cutout=punch_hole"
+  showBackground = true,
+  showSystemUi = true,
+  device = "spec:width=1080px,height=2424px,cutout=punch_hole",
 )
 @Composable
 fun ComposableScreensListPreview() {
-    ComposableScreensTheme {
-        ComposableScreensList(
-            onRouteClick = { }
-        )
-    }
+  ComposableScreensTheme {
+    ComposableScreensList(
+      onRouteClick = { },
+    )
+  }
 }

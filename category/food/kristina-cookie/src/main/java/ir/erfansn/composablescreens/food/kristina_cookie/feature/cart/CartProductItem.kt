@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ir.erfansn.composablescreens.food.kristina_cookie.feature.cart
 
 import androidx.annotation.DrawableRes
@@ -28,99 +44,104 @@ import kotlin.random.Random
 
 @Composable
 internal fun CartProductItem(
-    onClick: () -> Unit,
-    cartProduct: CartProduct,
-    modifier: Modifier = Modifier
+  onClick: () -> Unit,
+  cartProduct: CartProduct,
+  modifier: Modifier = Modifier,
 ) {
-    ListItem(
-        leadingContent = {
-            CompositionLocalProvider(LocalNavAnimatedContentScope provides null) {
-                ProductImage(
-                    background = ProductBackground(
-                        color = cartProduct.backgroundColor,
-                        cornerSize = 12.dp,
-                    ),
-                    image = painterResource(id = cartProduct.imageId),
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-        },
-        headlineContent = {
-            Text(
-                text = cartProduct.title,
-                style = KristinaCookieTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        },
-        supportingContent = {
-            Text(
-                text = "Qty: ${cartProduct.quantity}",
-                style = KristinaCookieTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 8.dp),
-                fontWeight = FontWeight.SemiBold
-            )
-        },
-        trailingContent = {
-            Text(
-                text = cartProduct.totalPrice.convertToDollars(),
-                style = KristinaCookieTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(end = 6.dp)
-            )
-        },
-        modifier = modifier
-            .clickable { onClick() }
-            .height(128.dp)
-            .fillMaxWidth(),
-        colors = ListItemDefaults.colors(
-            containerColor = KristinaCookieTheme.colors.background,
-            headlineColor = KristinaCookieTheme.colors.onBackground,
-            trailingIconColor = KristinaCookieTheme.colors.onBackground,
-            supportingColor = Color(0xFF5A5350)
+  ListItem(
+    leadingContent = {
+      CompositionLocalProvider(LocalNavAnimatedContentScope provides null) {
+        ProductImage(
+          background =
+            ProductBackground(
+              color = cartProduct.backgroundColor,
+              cornerSize = 12.dp,
+            ),
+          image = painterResource(id = cartProduct.imageId),
+          modifier = Modifier.padding(8.dp),
         )
-    )
+      }
+    },
+    headlineContent = {
+      Text(
+        text = cartProduct.title,
+        style = KristinaCookieTheme.typography.titleLarge,
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+      )
+    },
+    supportingContent = {
+      Text(
+        text = "Qty: ${cartProduct.quantity}",
+        style = KristinaCookieTheme.typography.bodyLarge,
+        modifier = Modifier.padding(top = 8.dp),
+        fontWeight = FontWeight.SemiBold,
+      )
+    },
+    trailingContent = {
+      Text(
+        text = cartProduct.totalPrice.convertToDollars(),
+        style = KristinaCookieTheme.typography.titleLarge,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier.padding(end = 6.dp),
+      )
+    },
+    modifier =
+      modifier
+        .clickable { onClick() }
+        .height(128.dp)
+        .fillMaxWidth(),
+    colors =
+      ListItemDefaults.colors(
+        containerColor = KristinaCookieTheme.colors.background,
+        headlineColor = KristinaCookieTheme.colors.onBackground,
+        trailingIconColor = KristinaCookieTheme.colors.onBackground,
+        supportingColor = Color(0xFF5A5350),
+      ),
+  )
 }
 
 internal data class CartProduct(
-    val id: Int,
-    val backgroundColor: Color,
-    @DrawableRes val imageId: Int,
-    val title: String,
-    val quantity: Int,
-    val price: Int,
+  val id: Int,
+  val backgroundColor: Color,
+  @DrawableRes val imageId: Int,
+  val title: String,
+  val quantity: Int,
+  val price: Int,
 ) {
-    val totalPrice: Int = quantity * price
+  val totalPrice: Int = quantity * price
 }
 
-internal fun Product.toCartProduct(quantity: Int) = CartProduct(
+internal fun Product.toCartProduct(quantity: Int) =
+  CartProduct(
     id = id,
     backgroundColor = backgroundColor,
     imageId = imageId,
     title = title,
     quantity = quantity,
-    price = priceInCent
-)
+    price = priceInCent,
+  )
 
-internal val sampleCartProducts = sampleVitrineItems.map {
+internal val sampleCartProducts =
+  sampleVitrineItems.map {
     CartProduct(
-        id = it.id,
-        backgroundColor = it.backgroundColor,
-        imageId = it.imageId,
-        title = it.title,
-        quantity = Random.nextInt(1, 10),
-        price = it.priceInCent
+      id = it.id,
+      backgroundColor = it.backgroundColor,
+      imageId = it.imageId,
+      title = it.title,
+      quantity = Random.nextInt(1, 10),
+      price = it.priceInCent,
     )
-}
+  }
 
 @Preview
 @Composable
 private fun CartProductItemPreview() {
-    KristinaCookieTheme {
-        CartProductItem(
-            cartProduct = sampleCartProducts.first(),
-            onClick = { }
-        )
-    }
+  KristinaCookieTheme {
+    CartProductItem(
+      cartProduct = sampleCartProducts.first(),
+      onClick = { },
+    )
+  }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 @file:OptIn(ExperimentalMaterialApi::class)
 
 package ir.erfansn.composablescreens.travel.qclay_trip.ui.components
@@ -32,66 +48,67 @@ import ir.erfansn.composablescreens.travel.qclay_trip.ui.theme.QclayTripTheme
 
 @Composable
 internal fun QclayTripButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    containerColor: Color = MaterialTheme.colors.primary,
-    shadowColor: Color? = null,
-    shape: Shape = RoundedCornerShape(36),
-    content: @Composable BoxScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+  containerColor: Color = MaterialTheme.colors.primary,
+  shadowColor: Color? = null,
+  shape: Shape = RoundedCornerShape(36),
+  content: @Composable BoxScope.() -> Unit,
 ) {
-    Surface(
-        modifier = modifier
-            .shadow(
-                shape = shape,
-                radius = 24.dp,
-                color = shadowColor?.copy(alpha = 0.2f) ?: Color.Transparent,
-                dx = 10.dp,
-                dy = 10.dp
+  Surface(
+    modifier =
+      modifier
+        .shadow(
+          shape = shape,
+          radius = 24.dp,
+          color = shadowColor?.copy(alpha = 0.2f) ?: Color.Transparent,
+          dx = 10.dp,
+          dy = 10.dp,
+        ),
+    onClick = onClick,
+    shape = shape,
+    color = containerColor,
+  ) {
+    CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
+      ProvideTextStyle(value = MaterialTheme.typography.button) {
+        Box(
+          Modifier
+            .defaultMinSize(
+              minWidth = TravelButtonSize,
+              minHeight = TravelButtonSize,
             ),
-        onClick = onClick,
-        shape = shape,
-        color = containerColor,
-    ) {
-        CompositionLocalProvider(LocalContentColor provides contentColorFor(containerColor)) {
-            ProvideTextStyle(value = MaterialTheme.typography.button) {
-                Box(
-                    Modifier
-                        .defaultMinSize(
-                            minWidth = TravelButtonSize,
-                            minHeight = TravelButtonSize
-                        ),
-                    contentAlignment = Alignment.Center,
-                    content = content
-                )
-            }
-        }
+          contentAlignment = Alignment.Center,
+          content = content,
+        )
+      }
     }
+  }
 }
 
 @Composable
 internal fun QclayTripIconButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    @DrawableRes iconId: Int,
-    iconTint: Color = LocalContentColor.current,
-    contentDescription: String,
-    containerColor: Color = MaterialTheme.colors.primary,
-    shadowColor: Color? = null,
-    shape: Shape = RoundedCornerShape(36),
+  modifier: Modifier = Modifier,
+  onClick: () -> Unit,
+  @DrawableRes iconId: Int,
+  iconTint: Color = LocalContentColor.current,
+  contentDescription: String,
+  containerColor: Color = MaterialTheme.colors.primary,
+  shadowColor: Color? = null,
+  shape: Shape = RoundedCornerShape(36),
 ) {
-    QclayTripButton(
-        modifier = modifier,
-        onClick = onClick,
-        containerColor = containerColor,
-        shadowColor = shadowColor,
-        shape = shape
-    ) {
-        Icon(
-            tint = iconTint,
-            painter = painterResource(id = iconId),
-            contentDescription = contentDescription
-        )
-    }
+  QclayTripButton(
+    modifier = modifier,
+    onClick = onClick,
+    containerColor = containerColor,
+    shadowColor = shadowColor,
+    shape = shape,
+  ) {
+    Icon(
+      tint = iconTint,
+      painter = painterResource(id = iconId),
+      contentDescription = contentDescription,
+    )
+  }
 }
 
 private val TravelButtonSize = 56.dp
@@ -99,29 +116,29 @@ private val TravelButtonSize = 56.dp
 @Preview
 @Composable
 fun QclayTripButtonText() {
-    QclayTripTheme {
-        QclayTripButton(
-            modifier = Modifier.padding(16.dp),
-            onClick = { /*TODO*/ }
-        ) {
-            Text("Preview")
-        }
+  QclayTripTheme {
+    QclayTripButton(
+      modifier = Modifier.padding(16.dp),
+      onClick = { /*TODO*/ },
+    ) {
+      Text("Preview")
     }
+  }
 }
 
 @Preview
 @Composable
 fun QclayTripButtonIconShadow() {
-    QclayTripTheme {
-        QclayTripButton(
-            modifier = Modifier.padding(16.dp),
-            shadowColor = MaterialTheme.colors.primary,
-            onClick = { /*TODO*/ },
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Preview,
-                contentDescription = null
-            )
-        }
+  QclayTripTheme {
+    QclayTripButton(
+      modifier = Modifier.padding(16.dp),
+      shadowColor = MaterialTheme.colors.primary,
+      onClick = { /*TODO*/ },
+    ) {
+      Icon(
+        imageVector = Icons.Rounded.Preview,
+        contentDescription = null,
+      )
     }
+  }
 }

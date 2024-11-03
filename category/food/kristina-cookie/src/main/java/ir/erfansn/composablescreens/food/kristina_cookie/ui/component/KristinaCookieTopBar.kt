@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ir.erfansn.composablescreens.food.kristina_cookie.ui.component
 
 import androidx.compose.foundation.background
@@ -29,104 +45,105 @@ import ir.erfansn.composablescreens.food.kristina_cookie.ui.KristinaCookieTheme
 
 @Composable
 internal fun KristinaCookieTopBar(
-    title: @Composable RowScope.() -> Unit,
-    action: @Composable RowScope.() -> Unit,
-    modifier: Modifier = Modifier,
-    navigation: @Composable RowScope.() -> Unit = { },
+  title: @Composable RowScope.() -> Unit,
+  action: @Composable RowScope.() -> Unit,
+  modifier: Modifier = Modifier,
+  navigation: @Composable RowScope.() -> Unit = { },
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-            .padding(top = 28.dp)
-            .heightIn(min = 116.dp)
-            .wrapContentSize()
-            .fillMaxWidth()
-    ) {
-        navigation()
-        title()
-        action()
-    }
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically,
+    modifier =
+      modifier
+        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+        .padding(top = 28.dp)
+        .heightIn(min = 116.dp)
+        .wrapContentSize()
+        .fillMaxWidth(),
+  ) {
+    navigation()
+    title()
+    action()
+  }
 }
 
 @Preview
 @Composable
 private fun KristinaCookieTopBarSingleLineTitlePreview() {
-    KristinaCookieTheme {
-        KristinaCookieTopBar(
-            title = {
-                Text(
-                    "Food",
-                    modifier = Modifier.weight(1f),
-                    style = KristinaCookieTheme.typography.headlineMedium
-                )
-            },
-            action = {
-                IconButton(onClick = { }) {
-                    Icon(Icons.Rounded.MoreVert, contentDescription = null)
-                }
-            },
-            navigation = {
-                IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
-                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
-                }
-            },
-            modifier = Modifier.background(color = Color.White)
+  KristinaCookieTheme {
+    KristinaCookieTopBar(
+      title = {
+        Text(
+          "Food",
+          modifier = Modifier.weight(1f),
+          style = KristinaCookieTheme.typography.headlineMedium,
         )
-    }
+      },
+      action = {
+        IconButton(onClick = { }) {
+          Icon(Icons.Rounded.MoreVert, contentDescription = null)
+        }
+      },
+      navigation = {
+        IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
+          Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
+        }
+      },
+      modifier = Modifier.background(color = Color.White),
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun KristinaCookieTopBarTwoLineTitlePreview() {
-    KristinaCookieTheme {
-        KristinaCookieTopBar(
-            title = {
-                Text(
-                    "Food\nModule",
-                    modifier = Modifier.weight(1f),
-                    style = KristinaCookieTheme.typography.headlineMedium
-                )
-            },
-            action = {
-                IconButton(onClick = { }) {
-                    Icon(Icons.Rounded.MoreVert, contentDescription = null)
-                }
-            },
-            navigation = {
-                IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
-                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
-                }
-            },
-            modifier = Modifier.background(color = Color.White)
+  KristinaCookieTheme {
+    KristinaCookieTopBar(
+      title = {
+        Text(
+          "Food\nModule",
+          modifier = Modifier.weight(1f),
+          style = KristinaCookieTheme.typography.headlineMedium,
         )
-    }
+      },
+      action = {
+        IconButton(onClick = { }) {
+          Icon(Icons.Rounded.MoreVert, contentDescription = null)
+        }
+      },
+      navigation = {
+        IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
+          Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
+        }
+      },
+      modifier = Modifier.background(color = Color.White),
+    )
+  }
 }
 
 @Preview
 @Composable
 private fun KristinaCookieTopBarThreeLinePreview() {
-    KristinaCookieTheme {
-        KristinaCookieTopBar(
-            title = {
-                Text(
-                    "Food\nModule\nTopBar",
-                    modifier = Modifier.weight(1f),
-                    style = KristinaCookieTheme.typography.headlineMedium
-                )
-            },
-            action = {
-                IconButton(onClick = { }) {
-                    Icon(Icons.Rounded.MoreVert, contentDescription = null)
-                }
-            },
-            navigation = {
-                IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
-                    Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
-                }
-            },
-            modifier = Modifier.background(color = Color.White)
+  KristinaCookieTheme {
+    KristinaCookieTopBar(
+      title = {
+        Text(
+          "Food\nModule\nTopBar",
+          modifier = Modifier.weight(1f),
+          style = KristinaCookieTheme.typography.headlineMedium,
         )
-    }
+      },
+      action = {
+        IconButton(onClick = { }) {
+          Icon(Icons.Rounded.MoreVert, contentDescription = null)
+        }
+      },
+      navigation = {
+        IconButton(onClick = { }, modifier = Modifier.align(Alignment.Top)) {
+          Icon(Icons.Rounded.ArrowBackIosNew, contentDescription = null)
+        }
+      },
+      modifier = Modifier.background(color = Color.White),
+    )
+  }
 }

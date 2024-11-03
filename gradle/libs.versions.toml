@@ -15,6 +15,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 kotlinxSerialization = "1.7.3"
 symbolProcessingApi = "2.0.21-1.0.25"
+spotless = "7.0.0.BETA4"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -52,3 +53,4 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "symbolProcessingApi" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

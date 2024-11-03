@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 plugins {
     id("composablescreens.application")
     id("composablescreens.common-dependencies")
@@ -21,7 +37,10 @@ android {
         release {
             isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug")
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 
@@ -42,15 +61,14 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
 }
 
-private operator fun ProjectDependency.iterator() = object : Iterator<ProjectDependency> {
+private operator fun ProjectDependency.iterator() =
+    object : Iterator<ProjectDependency> {
+        var moduleCount = this@iterator::class.java.declaredMethods.size
 
-    var moduleCount = this@iterator::class.java.declaredMethods.size
+        override fun hasNext(): Boolean = moduleCount-- != 0
 
-    override fun hasNext(): Boolean {
-        return moduleCount-- != 0
+        override fun next(): ProjectDependency =
+            this@iterator::class.java.declaredMethods[moduleCount].invoke(
+                this@iterator,
+            ) as ProjectDependency
     }
-
-    override fun next(): ProjectDependency {
-        return this@iterator::class.java.declaredMethods[moduleCount].invoke(this@iterator) as ProjectDependency
-    }
-}

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 Erfan Sn
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ir.erfansn.composablescreens.food.kristina_cookie.feature.cart
 
 import androidx.compose.animation.core.Animatable
@@ -80,353 +96,376 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun CartRoute(
-    viewModel: CartViewModel,
-    onNavigateToHome: () -> Unit,
-    onNavigateToProduct: (id: Int) -> Unit,
-    modifier: Modifier = Modifier
+  viewModel: CartViewModel,
+  onNavigateToHome: () -> Unit,
+  onNavigateToProduct: (id: Int) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    CartScreen(
-        onNavigateToHome = onNavigateToHome,
-        onNavigateToProduct = onNavigateToProduct,
-        modifier = modifier,
-        cartProducts = viewModel.cartProducts,
-        totalPrice = viewModel.productsTotalPrice
-    )
+  CartScreen(
+    onNavigateToHome = onNavigateToHome,
+    onNavigateToProduct = onNavigateToProduct,
+    modifier = modifier,
+    cartProducts = viewModel.cartProducts,
+    totalPrice = viewModel.productsTotalPrice,
+  )
 }
 
 @Composable
 private fun CartScreen(
-    cartProducts: List<CartProduct>,
-    onNavigateToHome: () -> Unit,
-    onNavigateToProduct: (id: Int) -> Unit,
-    totalPrice: Int,
-    modifier: Modifier = Modifier
+  cartProducts: List<CartProduct>,
+  onNavigateToHome: () -> Unit,
+  onNavigateToProduct: (id: Int) -> Unit,
+  totalPrice: Int,
+  modifier: Modifier = Modifier,
 ) {
-    val lazyListState = rememberLazyListState()
+  val lazyListState = rememberLazyListState()
 
-    var paymentIsSuccessful by remember { mutableStateOf(false) }
-    Box(
-        contentAlignment = Alignment.Center
+  var paymentIsSuccessful by remember { mutableStateOf(false) }
+  Box(
+    contentAlignment = Alignment.Center,
+  ) {
+    KristinaCookieFloatingScaffold(
+      topBar = {
+        val isOverlapped by remember {
+          derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0 ||
+              lazyListState.firstVisibleItemScrollOffset > 46
+          }
+        }
+        CartTopBar(
+          onNavigateToHome = onNavigateToHome,
+          modifier = Modifier.overlappedBackgroundColor(isOverlapped),
+        )
+      },
+      floatingBottomBar = {
+        if (cartProducts.isNotEmpty()) {
+          var bottomBarHeight by remember { mutableIntStateOf(0) }
+          val bottomBarOffsetY =
+            remember(bottomBarHeight) { Animatable(bottomBarHeight.toFloat()) }
+
+          val scope = rememberCoroutineScope()
+          LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+            scope.launch {
+              bottomBarOffsetY.animateTo(0f, animationSpec = sharedElementAnimSpec())
+            }
+          }
+          CartBottomBar(
+            totalPrice = totalPrice,
+            onPayClick = {
+              paymentIsSuccessful = true
+            },
+            modifier =
+              Modifier
+                .onSizeChanged {
+                  bottomBarHeight = it.height
+                }.offset {
+                  IntOffset(y = bottomBarOffsetY.value.fastRoundToInt(), x = 0)
+                },
+          )
+        }
+      },
+      modifier =
+        modifier
+          .fillMaxSize()
+          .then(
+            if (paymentIsSuccessful) Modifier.pointerInput(Unit) { } else Modifier,
+          ),
     ) {
-        KristinaCookieFloatingScaffold(
-            topBar = {
-                val isOverlapped by remember {
-                    derivedStateOf {
-                        lazyListState.firstVisibleItemIndex > 0 || lazyListState.firstVisibleItemScrollOffset > 46
-                    }
-                }
-                CartTopBar(
-                    onNavigateToHome = onNavigateToHome,
-                    modifier = Modifier.overlappedBackgroundColor(isOverlapped)
-                )
-            },
-            floatingBottomBar = {
-                if (cartProducts.isNotEmpty()) {
-                    var bottomBarHeight by remember { mutableIntStateOf(0) }
-                    val bottomBarOffsetY = remember(bottomBarHeight) { Animatable(bottomBarHeight.toFloat()) }
+      var bottomOffsetY by rememberSaveable {
+        mutableIntStateOf(0)
+      }
+      LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
+        bottomOffsetY =
+          lazyListState.layoutInfo.viewportSize.height -
+          (
+            lazyListState.layoutInfo.visibleItemsInfo
+              .lastOrNull()
+              ?.let { info -> info.size + info.offset } ?: 0
+          )
+      }
 
-                    val scope = rememberCoroutineScope()
-                    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-                        scope.launch {
-                            bottomBarOffsetY.animateTo(0f, animationSpec = sharedElementAnimSpec())
-                        }
-                    }
-                    CartBottomBar(
-                        totalPrice = totalPrice,
-                        onPayClick = {
-                            paymentIsSuccessful = true
-                        },
-                        modifier = Modifier
-                            .onSizeChanged {
-                                bottomBarHeight = it.height
-                            }
-                            .offset {
-                                IntOffset(y = bottomBarOffsetY.value.fastRoundToInt(), x = 0)
-                            }
-                    )
-                }
-            },
-            modifier = modifier
-                .fillMaxSize()
-                .then(
-                    if (paymentIsSuccessful) Modifier.pointerInput(Unit) { } else Modifier
-                )
-        ) {
-            var bottomOffsetY by rememberSaveable {
-                mutableIntStateOf(0)
-            }
-            LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
-                bottomOffsetY = lazyListState.layoutInfo.viewportSize.height - (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()
-                    ?.let { info -> info.size + info.offset } ?: 0)
-            }
-
-            val scope = rememberCoroutineScope()
-            LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-                scope.launch {
-                    if (bottomOffsetY > 0) {
-                        lazyListState.animateScrollBy(bottomOffsetY.toFloat(), animationSpec = sharedElementAnimSpec())
-                        bottomOffsetY = 0
-                    }
-                }
-            }
-
-            CartContent(
-                cartProducts = cartProducts,
-                contentPadding = it,
-                state = lazyListState,
-                onNavigateToProduct = onNavigateToProduct,
+      val scope = rememberCoroutineScope()
+      LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        scope.launch {
+          if (bottomOffsetY > 0) {
+            lazyListState.animateScrollBy(
+              bottomOffsetY.toFloat(),
+              animationSpec = sharedElementAnimSpec(),
             )
+            bottomOffsetY = 0
+          }
         }
-        if (paymentIsSuccessful) {
-            PaymentSuccessfulPane(
-                modifier = Modifier
-                    .pointerInput(Unit) { }
-            )
-        }
+      }
+
+      CartContent(
+        cartProducts = cartProducts,
+        contentPadding = it,
+        state = lazyListState,
+        onNavigateToProduct = onNavigateToProduct,
+      )
     }
+    if (paymentIsSuccessful) {
+      PaymentSuccessfulPane(
+        modifier =
+          Modifier
+            .pointerInput(Unit) { },
+      )
+    }
+  }
 }
 
 @Composable
 private fun CartTopBar(
-    onNavigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
+  onNavigateToHome: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    var enteredCompletely by remember { mutableStateOf(false) }
-    val transition = updateTransition(enteredCompletely, label = "topbar_transition")
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        enteredCompletely = true
-    }
+  var enteredCompletely by remember { mutableStateOf(false) }
+  val transition = updateTransition(enteredCompletely, label = "topbar_transition")
+  LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+    enteredCompletely = true
+  }
 
-    val catalogOffsetX by transition.animateDp(
-        label = "catalog",
-        transitionSpec = { sharedElementAnimSpec() }) {
-        if (!it) {
-            (-56).dp
-        } else {
-            0.dp
-        }
+  val catalogOffsetX by transition.animateDp(
+    label = "catalog",
+    transitionSpec = { sharedElementAnimSpec() },
+  ) {
+    if (!it) {
+      (-56).dp
+    } else {
+      0.dp
     }
-    val numberScale by transition.animateFloat(
-        label = "number",
-        transitionSpec = { sharedElementAnimSpec() }) {
-        if (!it) {
-            0f
-        } else {
-            1f
-        }
+  }
+  val numberScale by transition.animateFloat(
+    label = "number",
+    transitionSpec = { sharedElementAnimSpec() },
+  ) {
+    if (!it) {
+      0f
+    } else {
+      1f
     }
-    KristinaCookieTopBar(
-        modifier = modifier,
-        navigation = {
-            VerticalHillButton(
-                onClick = onNavigateToHome,
-                title = "Catalog",
-                modifier = Modifier
-                    .offset {
-                        IntOffset(x = catalogOffsetX.roundToPx(), y = 0)
-                    }
-                    .rotate(180f)
-            )
-        },
-        title = {
-            Text(
-                "Cart",
-                style = KristinaCookieTheme.typography.displaySmall,
-                fontWeight = FontWeight.SemiBold
-            )
-        },
-        action = {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = numberScale
-                        scaleY = scaleX
-                    }
-                    .padding(end = 24.dp)
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(KristinaCookieTheme.colors.primary)
-            ) {
-                Text(
-                    "3",
-                    style = KristinaCookieTheme.typography.titleLarge,
-                    color = KristinaCookieTheme.colors.onPrimary,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        }
-    )
+  }
+  KristinaCookieTopBar(
+    modifier = modifier,
+    navigation = {
+      VerticalHillButton(
+        onClick = onNavigateToHome,
+        title = "Catalog",
+        modifier =
+          Modifier
+            .offset {
+              IntOffset(x = catalogOffsetX.roundToPx(), y = 0)
+            }.rotate(180f),
+      )
+    },
+    title = {
+      Text(
+        "Cart",
+        style = KristinaCookieTheme.typography.displaySmall,
+        fontWeight = FontWeight.SemiBold,
+      )
+    },
+    action = {
+      Box(
+        contentAlignment = Alignment.Center,
+        modifier =
+          Modifier
+            .graphicsLayer {
+              scaleX = numberScale
+              scaleY = scaleX
+            }.padding(end = 24.dp)
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(KristinaCookieTheme.colors.primary),
+      ) {
+        Text(
+          "3",
+          style = KristinaCookieTheme.typography.titleLarge,
+          color = KristinaCookieTheme.colors.onPrimary,
+          fontWeight = FontWeight.SemiBold,
+        )
+      }
+    },
+  )
 }
 
 @Composable
 private fun CartContent(
-    cartProducts: List<CartProduct>,
-    onNavigateToProduct: (id: Int) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    state: LazyListState = rememberLazyListState()
+  cartProducts: List<CartProduct>,
+  onNavigateToProduct: (id: Int) -> Unit,
+  modifier: Modifier = Modifier,
+  contentPadding: PaddingValues = PaddingValues(0.dp),
+  state: LazyListState = rememberLazyListState(),
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .fillMaxWidth(),
-        contentPadding = contentPadding,
-        state = state
-    ) {
-        itemsIndexed(cartProducts) { index, product ->
-            val itemOffsetX = remember {
-                Animatable(
-                    initialValue = 24.dp * index,
-                    typeConverter = Dp.VectorConverter
-                )
-            }
-            val currentLifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
-            LaunchedEffect(currentLifecycleState) {
-                if (currentLifecycleState == Lifecycle.State.STARTED) {
-                    itemOffsetX.animateTo(0.dp, animationSpec = sharedElementAnimSpec())
-                } else {
-                    itemOffsetX.snapTo(0.dp)
-                }
-            }
-
-            CartProductItem(
-                cartProduct = product,
-                onClick = dropUnlessResumed { onNavigateToProduct(product.id) },
-                modifier = Modifier.offset {
-                    IntOffset(x = itemOffsetX.value.roundToPx(), y = 0)
-                }
-            )
+  LazyColumn(
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+    modifier =
+      modifier
+        .fillMaxWidth(),
+    contentPadding = contentPadding,
+    state = state,
+  ) {
+    itemsIndexed(cartProducts) { index, product ->
+      val itemOffsetX =
+        remember {
+          Animatable(
+            initialValue = 24.dp * index,
+            typeConverter = Dp.VectorConverter,
+          )
         }
+      val currentLifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
+      LaunchedEffect(currentLifecycleState) {
+        if (currentLifecycleState == Lifecycle.State.STARTED) {
+          itemOffsetX.animateTo(0.dp, animationSpec = sharedElementAnimSpec())
+        } else {
+          itemOffsetX.snapTo(0.dp)
+        }
+      }
+
+      CartProductItem(
+        cartProduct = product,
+        onClick = dropUnlessResumed { onNavigateToProduct(product.id) },
+        modifier =
+          Modifier.offset {
+            IntOffset(x = itemOffsetX.value.roundToPx(), y = 0)
+          },
+      )
     }
+  }
 }
 
 @Composable
 private fun CartBottomBar(
-    totalPrice: Cent,
-    onPayClick: () -> Unit,
-    modifier: Modifier = Modifier,
+  totalPrice: Cent,
+  onPayClick: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .pointerInput(Unit) {}
-            .clip(CurvedShape)
-            .background(KristinaCookieTheme.colors.primary)
-            .padding(bottom = 8.dp, top = 24.dp)
-            .navigationBarsPadding()
-            .fillMaxWidth()
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically,
+    modifier =
+      modifier
+        .pointerInput(Unit) {}
+        .clip(CurvedShape)
+        .background(KristinaCookieTheme.colors.primary)
+        .padding(bottom = 8.dp, top = 24.dp)
+        .navigationBarsPadding()
+        .fillMaxWidth(),
+  ) {
+    Column(
+      modifier = Modifier.padding(start = 48.dp),
+      verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(start = 48.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                "Total amount",
-                style = KristinaCookieTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Text(
-                totalPrice.convertToDollars(),
-                style = KristinaCookieTheme.typography.displaySmall,
-                fontWeight = FontWeight.SemiBold,
-            )
-        }
-        val interactionSource = remember { MutableInteractionSource() }
-        val scaleEffectValue by interactionSource.scaleEffectValue()
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .graphicsLayer {
-                    scaleX = scaleEffectValue
-                    scaleY = scaleEffectValue
-                }
-                .padding(end = 8.dp)
-                .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
-                .clickable(
-                    interactionSource = interactionSource,
-                    indication = ripple()
-                ) { onPayClick() }
-                .background(KristinaCookieTheme.colors.background)
-                .padding(horizontal = 32.dp, vertical = 42.dp)
-        ) {
-            CompositionLocalProvider(LocalContentColor provides KristinaCookieTheme.colors.onBackground) {
-                Text(
-                    text = "Pay",
-                    style = KristinaCookieTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .offset(x = 6.dp)
-                )
-                repeat(3) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                        contentDescription = null,
-                        tint = LocalContentColor.current.copy(alpha = 1f / (3 - it)),
-                        modifier = Modifier
-                            .size(24.dp)
-                            .offset(x = 6.dp * (3 - 1 - it))
-                    )
-                }
-            }
-        }
+      Text(
+        "Total amount",
+        style = KristinaCookieTheme.typography.titleLarge,
+        fontWeight = FontWeight.SemiBold,
+      )
+      Text(
+        totalPrice.convertToDollars(),
+        style = KristinaCookieTheme.typography.displaySmall,
+        fontWeight = FontWeight.SemiBold,
+      )
     }
+    val interactionSource = remember { MutableInteractionSource() }
+    val scaleEffectValue by interactionSource.scaleEffectValue()
+    Row(
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically,
+      modifier =
+        Modifier
+          .graphicsLayer {
+            scaleX = scaleEffectValue
+            scaleY = scaleEffectValue
+          }.padding(end = 8.dp)
+          .clip(RoundedCornerShape(KristinaCookieTheme.cornerSize.large))
+          .clickable(
+            interactionSource = interactionSource,
+            indication = ripple(),
+          ) { onPayClick() }
+          .background(KristinaCookieTheme.colors.background)
+          .padding(horizontal = 32.dp, vertical = 42.dp),
+    ) {
+      CompositionLocalProvider(
+        LocalContentColor provides KristinaCookieTheme.colors.onBackground,
+      ) {
+        Text(
+          text = "Pay",
+          style = KristinaCookieTheme.typography.titleLarge,
+          modifier =
+            Modifier
+              .offset(x = 6.dp),
+        )
+        repeat(3) {
+          Icon(
+            imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+            contentDescription = null,
+            tint = LocalContentColor.current.copy(alpha = 1f / (3 - it)),
+            modifier =
+              Modifier
+                .size(24.dp)
+                .offset(x = 6.dp * (3 - 1 - it)),
+          )
+        }
+      }
+    }
+  }
 }
 
-private val CurvedShape = object : Shape {
+private val CurvedShape =
+  object : Shape {
     override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
+      size: Size,
+      layoutDirection: LayoutDirection,
+      density: Density,
     ): Outline {
-        val (width, height) = size
-        return Outline.Generic(
-            Path().apply {
-                moveTo(
-                    x = width * 0f,
-                    y = height * 1f
-                )
-                lineTo(
-                    x = width * 0f,
-                    y = height * 0.35f
-                )
-                quadraticTo(
-                    x1 = width * 0f,
-                    y1 = height * 0.103f,
-                    x2 = width * 0.08f,
-                    y2 = height * 0.08f,
-                )
-                quadraticTo(
-                    x1 = width * 0.5f,
-                    y1 = height * -0.07f,
-                    x2 = width - (width * 0.08f),
-                    y2 = height * 0.08f,
-                )
-                quadraticTo(
-                    x1 = width - (width * 0f),
-                    y1 = height * 0.103f,
-                    x2 = width - (width * 0f),
-                    y2 = height * 0.35f,
-                )
-                lineTo(
-                    x = width * 1f,
-                    y = height * 1f
-                )
-            }
-        )
+      val (width, height) = size
+      return Outline.Generic(
+        Path().apply {
+          moveTo(
+            x = width * 0f,
+            y = height * 1f,
+          )
+          lineTo(
+            x = width * 0f,
+            y = height * 0.35f,
+          )
+          quadraticTo(
+            x1 = width * 0f,
+            y1 = height * 0.103f,
+            x2 = width * 0.08f,
+            y2 = height * 0.08f,
+          )
+          quadraticTo(
+            x1 = width * 0.5f,
+            y1 = height * -0.07f,
+            x2 = width - (width * 0.08f),
+            y2 = height * 0.08f,
+          )
+          quadraticTo(
+            x1 = width - (width * 0f),
+            y1 = height * 0.103f,
+            x2 = width - (width * 0f),
+            y2 = height * 0.35f,
+          )
+          lineTo(
+            x = width * 1f,
+            y = height * 1f,
+          )
+        },
+      )
     }
-}
+  }
 
 @Preview
 @Composable
 private fun CartScreenPreview() {
-    KristinaCookieTheme {
-        CartScreen(
-            cartProducts = sampleCartProducts,
-            onNavigateToHome = { },
-            onNavigateToProduct = { },
-            totalPrice = 8900
-        )
-    }
+  KristinaCookieTheme {
+    CartScreen(
+      cartProducts = sampleCartProducts,
+      onNavigateToHome = { },
+      onNavigateToProduct = { },
+      totalPrice = 8900,
+    )
+  }
 }
