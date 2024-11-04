@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-import org.gradle.api.JavaVersion
+import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.the
 
-object SdkVersions {
-  const val COMPILE = 34
-  const val TARGET = 34
-  const val MIN = 24
-}
-
-val JVM_COMPATIBILITY_VERSION = JavaVersion.VERSION_1_8
+internal val Project.libs get() = the<LibrariesForLibs>()
