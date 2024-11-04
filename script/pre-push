@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Run Spotless check
+echo "Running Spotless check..."
+
+# Run the Spotless check command
+./gradlew spotlessCheck
+
+# Check the exit status of the Spotless command
+if [ $? -ne 0 ]; then
+    echo "Spotless check failed. Please format your code before pushing."
+    echo "Run './gradlew spotlessApply' to apply formatting."
+    exit 1  # Prevent the push
+else
+    echo "Spotless check passed. Proceeding with push."
+fi

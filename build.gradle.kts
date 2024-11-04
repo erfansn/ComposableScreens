@@ -37,3 +37,12 @@ spotless {
         ktlint(ktlintVersion)
     }
 }
+
+tasks.register<Copy>("installGitHook") {
+    from(file("$rootDir/script/pre-push"))
+    into(file("$rootDir/.git/hooks"))
+}
+
+projects.app.dependencyProject.afterEvaluate {
+    tasks.named("preBuild").dependsOn(":installGitHook")
+}
