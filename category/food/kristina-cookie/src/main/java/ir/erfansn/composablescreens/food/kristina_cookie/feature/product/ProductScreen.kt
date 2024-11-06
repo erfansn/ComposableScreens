@@ -124,12 +124,14 @@ import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.convertToDollar
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.priceByQuantityText
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.scaleEffectValue
 import ir.erfansn.composablescreens.food.kristina_cookie.ui.util.sharedElementAnimSpec
+import kotlin.random.Random
 
 @Composable
 internal fun ProductRoute(
   viewModel: ProductViewModel,
   onNavigateToCart: () -> Unit,
   onBackClick: () -> Unit,
+  shouldRunNavAnimations: Boolean,
   modifier: Modifier = Modifier,
 ) {
   ProductScreen(
@@ -139,6 +141,7 @@ internal fun ProductRoute(
     modifier = modifier,
     quantity = viewModel.quantity,
     onChangeQuantity = viewModel::changeProductQuantity,
+    shouldRunNavAnimations = shouldRunNavAnimations,
   )
 }
 
@@ -150,11 +153,11 @@ private fun ProductScreen(
   onChangeQuantity: (value: Int) -> Unit,
   onNavigateToCart: () -> Unit,
   onBackClick: () -> Unit,
+  shouldRunNavAnimations: Boolean,
   modifier: Modifier = Modifier,
 ) {
   val scrollState = rememberScrollState()
-  // TODO: Replace with a flag from navController Slack discussion
-  var shouldRunNavAnimations by rememberSaveable { mutableStateOf(true) }
+  var mutableShouldRunNavAnimations by rememberSaveable { mutableStateOf(shouldRunNavAnimations) }
   KristinaCookieFloatingScaffold(
     modifier = modifier,
     topBar = {
@@ -210,7 +213,7 @@ private fun ProductScreen(
         VerticalHillButton(
           onClick =
             dropUnlessResumed {
-              shouldRunNavAnimations = false
+              mutableShouldRunNavAnimations = false
               onNavigateToCart()
             },
           title = "Cart",
@@ -277,7 +280,7 @@ private fun ProductScreen(
             Modifier
               .wrapContentSize()
               .navigationBarsPadding(),
-          shouldRunNavAnimations = shouldRunNavAnimations,
+          shouldRunNavAnimations = mutableShouldRunNavAnimations,
         )
       }
     },
@@ -291,7 +294,7 @@ private fun ProductScreen(
       description = product.description,
       scrollState = scrollState,
       contentPadding = it,
-      shouldRunNavAnimations = shouldRunNavAnimations,
+      shouldRunNavAnimations = mutableShouldRunNavAnimations,
     )
   }
 }
@@ -694,10 +697,11 @@ private fun ProductScreenPreview() {
     var quntity by remember { mutableIntStateOf(0) }
     ProductScreen(
       product = sampleProduct,
-      onBackClick = { },
-      onNavigateToCart = { },
       quantity = quntity,
       onChangeQuantity = { quntity = it },
+      onNavigateToCart = { },
+      onBackClick = { },
+      shouldRunNavAnimations = Random.nextBoolean(),
     )
   }
 }

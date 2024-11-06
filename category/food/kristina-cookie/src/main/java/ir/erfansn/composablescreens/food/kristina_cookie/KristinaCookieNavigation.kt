@@ -100,18 +100,15 @@ internal fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController
       viewModel = viewModel,
       onNavigateToCart = {
         if (navController.previousBackStackEntry?.destination?.hasRoute<CartRoute>() == true) {
-          // TODO: Remove product state restore related codes
-          // navController.popBackStack(route = it.destination.route!!, inclusive = true, saveState = true)
           navController.popBackStack()
         } else {
           navController.navigate(CartRoute) {
-            popUpTo(HomeRoute) {
-              // saveState = true
-            }
+            popUpTo(HomeRoute)
           }
         }
       },
       onBackClick = { navController.popBackStack() },
+      shouldRunNavAnimations = navController.previousBackStackEntry?.destination?.hasRoute<HomeRoute>() ?: false,
     )
   }
   kristinaCookieComposable<CartRoute>(
@@ -132,16 +129,14 @@ internal fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController
     CartRoute(
       onNavigateToHome = {
         // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
-        // navController.navigate(HomeRoute) {
-        //     launchSingleTop = true
-        //     popUpTo(HomeRoute)
-        // }
-        navController.popBackStack(route = HomeRoute, inclusive = false)
+        navController.navigate(HomeRoute) {
+          launchSingleTop = true
+          popUpTo(HomeRoute)
+        }
+        // navController.popBackStack(route = HomeRoute, inclusive = false)
       },
       onNavigateToProduct = {
-        navController.navigate(ProductRoute(it)) {
-          // restoreState = true
-        }
+        navController.navigate(ProductRoute(it))
       },
       viewModel = viewModel,
     )
