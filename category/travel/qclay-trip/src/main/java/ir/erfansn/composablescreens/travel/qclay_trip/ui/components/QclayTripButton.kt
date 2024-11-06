@@ -119,7 +119,7 @@ fun QclayTripButtonText() {
   QclayTripTheme {
     QclayTripButton(
       modifier = Modifier.padding(16.dp),
-      onClick = { /*TODO*/ },
+      onClick = { },
     ) {
       Text("Preview")
     }
@@ -133,7 +133,7 @@ fun QclayTripButtonIconShadow() {
     QclayTripButton(
       modifier = Modifier.padding(16.dp),
       shadowColor = MaterialTheme.colors.primary,
-      onClick = { /*TODO*/ },
+      onClick = { },
     ) {
       Icon(
         imageVector = Icons.Rounded.Preview,

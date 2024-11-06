@@ -128,7 +128,7 @@ private fun DetailsTopBar(modifier: Modifier = Modifier) {
     verticalAlignment = Alignment.CenterVertically,
   ) {
     QclayTripIconButton(
-      onClick = { /*TODO*/ },
+      onClick = { },
       containerColor = Color.White,
       shadowColor = Color.Gray,
       iconTint = Color.Black,
@@ -144,7 +144,7 @@ private fun DetailsTopBar(modifier: Modifier = Modifier) {
         ),
     )
     QclayTripButton(
-      onClick = { /*TODO*/ },
+      onClick = { },
     ) {
       Image(
         modifier = Modifier.matchParentSize(),
@@ -171,7 +171,7 @@ private fun DetailsBottomNavigationBar(modifier: Modifier = Modifier) {
           .weight(0.30f)
           .fillMaxHeight(),
       shape = RoundedCornerShape(20),
-      onClick = { /*TODO*/ },
+      onClick = { },
     ) {
       Text(
         text = "$270",
@@ -189,7 +189,7 @@ private fun DetailsBottomNavigationBar(modifier: Modifier = Modifier) {
           .fillMaxHeight(),
       containerColor = Color.Black,
       shape = RoundedCornerShape(20),
-      onClick = { /*TODO*/ },
+      onClick = { },
     ) {
       Text(
         text = "Book Now",
@@ -298,7 +298,7 @@ private fun DetailsContent(modifier: Modifier = Modifier) {
         shape = RoundedCornerShape(33),
         shadowColor = MaterialTheme.colors.primaryVariant,
         containerColor = MaterialTheme.colors.primaryVariant,
-        onClick = { /*TODO*/ },
+        onClick = { },
       ) {
         Text(
           text = "Details",
@@ -312,7 +312,7 @@ private fun DetailsContent(modifier: Modifier = Modifier) {
         modifier = Modifier.size(104.dp, 42.dp),
         shape = RoundedCornerShape(33),
         containerColor = Color.Transparent,
-        onClick = { /*TODO*/ },
+        onClick = { },
       ) {
         Text(
           text = "Reviews",
@@ -382,7 +382,7 @@ private fun DetailsContent(modifier: Modifier = Modifier) {
               .aspectRatio(1.0f),
           containerColor = MaterialTheme.colors.primaryVariant,
           shape = RoundedCornerShape(30),
-          onClick = { /*TODO*/ },
+          onClick = { },
         ) {
           Icon(
             painter = painterResource(id = R.drawable.ic_arrow),

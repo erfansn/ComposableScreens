@@ -28,17 +28,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-
-    versionCatalogs {
-        create("sdk") {
-            version("compile", "35")
-            version("min", "24")
-            version("target", "35")
-        }
-        create("jvm") {
-            version("toolchain", "17")
-        }
-    }
 }
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

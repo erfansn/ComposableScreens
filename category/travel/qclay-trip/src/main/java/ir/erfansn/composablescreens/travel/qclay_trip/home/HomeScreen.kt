@@ -202,7 +202,7 @@ private fun HomeTopBar(modifier: Modifier = Modifier) {
       Row {
         QclayTripButton(
           modifier = Modifier.size(56.dp),
-          onClick = { /*TODO*/ },
+          onClick = { },
         ) {
           Image(
             painter = painterResource(id = R.drawable.profile),
@@ -227,7 +227,7 @@ private fun HomeTopBar(modifier: Modifier = Modifier) {
         contentDescription = "Category",
         shadowColor = Color.DarkGray,
         containerColor = Color.White,
-        onClick = { /*TODO*/ },
+        onClick = { },
       )
     }
     Text(
@@ -296,7 +296,7 @@ private fun HomeBottomNavigationBar(modifier: Modifier = Modifier) {
     QclayTripIconButton(
       modifier = Modifier.aspectRatio(1.0f),
       containerColor = Color.Transparent,
-      onClick = { /*TODO*/ },
+      onClick = { },
       iconId = R.drawable.ic_home,
       iconTint = Color.LightGray,
       contentDescription = "Home",
@@ -304,7 +304,7 @@ private fun HomeBottomNavigationBar(modifier: Modifier = Modifier) {
     QclayTripIconButton(
       modifier = Modifier.aspectRatio(1.0f),
       containerColor = MaterialTheme.colors.secondaryVariant,
-      onClick = { /*TODO*/ },
+      onClick = { },
       iconId = R.drawable.ic_add,
       iconTint = Color.White,
       contentDescription = "Add",
@@ -312,7 +312,7 @@ private fun HomeBottomNavigationBar(modifier: Modifier = Modifier) {
     QclayTripIconButton(
       modifier = Modifier.aspectRatio(1.0f),
       containerColor = Color.Transparent,
-      onClick = { /*TODO*/ },
+      onClick = { },
       iconId = R.drawable.ic_chat,
       iconTint = Color.LightGray,
       contentDescription = "Chat",
