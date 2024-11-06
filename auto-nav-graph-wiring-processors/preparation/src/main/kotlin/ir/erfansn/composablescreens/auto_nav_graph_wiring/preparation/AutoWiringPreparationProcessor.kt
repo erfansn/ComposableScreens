@@ -28,7 +28,6 @@ import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.AutoNavGraphWiring
 import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.InternalAutoNavGraphWiring
-import java.util.Locale
 
 class AutoWiringPreparationProcessorProvider : SymbolProcessorProvider {
   override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor =
@@ -102,17 +101,12 @@ class AutoWiringPreparationProcessor(
         codeGenerator.createNewFile(
           Dependencies(false),
           DEST_PACKAGE_NAME,
-          "Generated${name.toPascalCase()}NavigationGraph",
+          "Generated${name.hashCode()}NavigationGraph",
         )
       file.writer().use { it.write(fileContent) }
     }
     return emptyList()
   }
-
-  private fun String.toPascalCase(): String =
-    split(" ").joinToString(separator = "") {
-      it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase(Locale.ROOT) else c.toString() }
-    }
 
   companion object {
     private const val DEST_PACKAGE_NAME = "ir.erfansn.composablescreens"
