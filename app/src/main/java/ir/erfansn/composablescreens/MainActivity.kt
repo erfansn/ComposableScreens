@@ -46,6 +46,10 @@ import ir.erfansn.composablescreens.common.LocalSharedTransitionScope
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyleChanger
 import ir.erfansn.composablescreens.ui.ComposableScreensList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object ComposableScreensList
 
 class MainActivity : ComponentActivity() {
   @OptIn(ExperimentalSharedTransitionApi::class)
@@ -86,9 +90,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(
               navController = navController,
-              startDestination = "screens_list",
+              startDestination = ComposableScreensList,
             ) {
-              composable("screens_list") {
+              composable<ComposableScreensList> {
                 ComposableScreensTheme {
                   ComposableScreensList(
                     onRouteClick = navController::navigate,
