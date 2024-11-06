@@ -128,12 +128,7 @@ internal fun NavGraphBuilder.kristinaCookieNavGraph(navController: NavController
     val viewModel = viewModel<CartViewModel>()
     CartRoute(
       onNavigateToHome = {
-        // TODO: Should report this, state restoration when navigation is slowly that pop operation (rememberSaveable)
-        navController.navigate(HomeRoute) {
-          launchSingleTop = true
-          popUpTo(HomeRoute)
-        }
-        // navController.popBackStack(route = HomeRoute, inclusive = false)
+        navController.popBackStack(route = HomeRoute, inclusive = false)
       },
       onNavigateToProduct = {
         navController.navigate(ProductRoute(it))
