@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import ir.erfansn.composablescreens.common.BarStyle
+import ir.erfansn.composablescreens.common.PortraitOrientationLockerEffect
 import ir.erfansn.composablescreens.common.ProvideSystemBarStyle
 
 @Immutable
@@ -81,6 +82,8 @@ private val LocalKristinaCookieCornerSize =
 
 @Composable
 internal fun KristinaCookieTheme(content: @Composable () -> Unit) {
+  PortraitOrientationLockerEffect()
+
   ProvideSystemBarStyle(BarStyle.Light) {
     CompositionLocalProvider(
       LocalKristinaCookieColor provides kristinaCookieColor,

@@ -27,5 +27,4 @@ annotation class InternalAutoNavGraphWiring(
   val category: String,
   val name: String,
   val route: KClass<*>,
-  val screenOrientation: ScreenOrientation,
 )

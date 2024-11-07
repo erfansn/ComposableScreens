@@ -137,28 +137,17 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
 
       package $packageName
 
-      import androidx.compose.animation.AnimatedContentScope
-      import androidx.compose.animation.AnimatedContentTransitionScope
-      import androidx.compose.animation.EnterTransition
-      import androidx.compose.animation.ExitTransition
-      import androidx.compose.animation.SizeTransform
       import androidx.compose.foundation.layout.fillMaxSize
       import androidx.compose.material3.Surface
       import androidx.compose.material3.Text
       import androidx.compose.runtime.Composable
-      import androidx.compose.runtime.CompositionLocalProvider
       import androidx.compose.ui.Modifier
-      import androidx.navigation.NavBackStackEntry
-      import androidx.navigation.NavController
-      import androidx.navigation.NavDeepLink
-      import androidx.navigation.NavGraphBuilder
-      import androidx.navigation.NavType
-      import androidx.navigation.compose.composable
+      import androidx.navigation.compose.NavHost
+      import androidx.navigation.compose.rememberNavController
       import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.AutoNavGraphWiring
-      import ir.erfansn.composablescreens.common.LocalNavAnimatedContentScope
+      import ir.erfansn.composablescreens.common.navAnimatedComposable
       import $packageName.ui.${moduleName.get().toPascalCase()}Theme
       import kotlinx.serialization.Serializable
-      import kotlin.reflect.KType
 
       @Serializable
       data object ${moduleName.get().toPascalCase()}Route
@@ -168,54 +157,16 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
 
       @AutoNavGraphWiring(
         name = "${moduleName.get().toSpacedPascalCase()}",
-        route = ${moduleName.get().toPascalCase()}Route::class,
-        startDestination = HomeRoute::class,
+        route = ${moduleName.get().toPascalCase()}Route::class
       )
-      internal fun NavGraphBuilder.${moduleName.get().toCamelCase()}NavGraph(navController: NavController) {
-        ${moduleName.get().toCamelCase()}Composable<HomeRoute> {
-          Surface(modifier = Modifier.fillMaxSize()) {
-            Text("Hello Composable Screens to ${moduleName.get().toSpacedPascalCase()}")
-          }
-        }
-      }
-
-      private inline fun <reified T : Any> NavGraphBuilder.${moduleName.get().toCamelCase()}Composable(
-        typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
-        deepLinks: List<NavDeepLink> = emptyList(),
-        noinline enterTransition: (
-          @JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-        )? =
-          null,
-        noinline exitTransition: (
-          @JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-        )? =
-          null,
-        noinline popEnterTransition: (
-          @JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?
-        )? =
-          enterTransition,
-        noinline popExitTransition: (
-          @JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?
-        )? =
-          exitTransition,
-        noinline sizeTransform: (
-          @JvmSuppressWildcards AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?
-        )? =
-          null,
-        crossinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
-      ) {
-        composable<T>(
-          typeMap = typeMap,
-          deepLinks = deepLinks,
-          enterTransition = enterTransition,
-          exitTransition = exitTransition,
-          popEnterTransition = popEnterTransition,
-          popExitTransition = popExitTransition,
-          sizeTransform = sizeTransform,
-        ) {
-          ${moduleName.get().toPascalCase()}Theme {
-            CompositionLocalProvider(LocalNavAnimatedContentScope provides this) {
-              this.content(it)
+      @Composable
+      fun ${moduleName.get().toPascalCase()}App() {
+        ${moduleName.get().toPascalCase()}Theme {
+          NavHost(rememberNavController(), startDestination = HomeRoute) {
+            navAnimatedComposable<HomeRoute> {
+              Surface(modifier = Modifier.fillMaxSize()) {
+                Text("Hello Composable Screens to ${moduleName.get().toSpacedPascalCase()}")
+              }
             }
           }
         }
@@ -350,8 +301,3 @@ private fun String.toSnakeCase(): String = split('-').joinToString(separator = "
 private fun String.toPascalCase(): String = split('-').joinToString(separator = "") { it.replaceFirstChar { it.uppercase() } }
 
 private fun String.toSpacedPascalCase(): String = split('-').joinToString(separator = " ") { it.replaceFirstChar { it.uppercase() } }
-
-private fun String.toCamelCase(): String =
-  split('-')
-    .mapIndexed { index, s -> s.replaceFirstChar { if (index == 0) it.lowercase() else it.uppercase() } }
-    .joinToString(separator = "")

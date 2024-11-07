@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-ir.erfansn.composablescreens.auto_nav_graph_wiring.preparation.AutoWiringPreparationProcessorProvider
+ir.erfansn.composablescreens.auto_nav_graph_wiring.preparation.NavGraphRoutePreparationProcessorProvider

@@ -23,6 +23,4 @@ import kotlin.reflect.KClass
 annotation class AutoNavGraphWiring(
   val name: String,
   val route: KClass<*>,
-  val startDestination: KClass<*>,
-  val screenOrientation: ScreenOrientation = ScreenOrientation.Auto,
 )

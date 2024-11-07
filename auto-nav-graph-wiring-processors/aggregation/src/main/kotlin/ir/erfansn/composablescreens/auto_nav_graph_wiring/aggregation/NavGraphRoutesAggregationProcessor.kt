@@ -29,11 +29,10 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.InternalAutoNavGraphWiring
-import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.ScreenOrientation
 
-class AutoWiringAggregationProcessorProvider : SymbolProcessorProvider {
+class NavGraphRoutesAggregationProcessorProvider : SymbolProcessorProvider {
   override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor =
-    AutoWiringAggregationProcessor(
+    NavGraphRoutesAggregationProcessor(
       environment.codeGenerator,
       environment.logger,
     )
@@ -41,7 +40,7 @@ class AutoWiringAggregationProcessorProvider : SymbolProcessorProvider {
 
 typealias RouteQualifiedName = String
 
-class AutoWiringAggregationProcessor(
+class NavGraphRoutesAggregationProcessor(
   private val codeGenerator: CodeGenerator,
   private val logger: KSPLogger,
 ) : SymbolProcessor {
@@ -49,7 +48,7 @@ class AutoWiringAggregationProcessor(
 
   @OptIn(KspExperimental::class)
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    val navGraphFunctions =
+    val navGraphRoutesFunctions =
       resolver
         .getDeclarationsFromPackage(SRC_PACKAGE_NAME)
         .filterIsInstance<KSFunctionDeclaration>()
@@ -59,15 +58,13 @@ class AutoWiringAggregationProcessor(
       return emptyList()
     }
 
-    generateAggregatedNavGraphsFunction(navGraphFunctions)
+    generateAggregatedNavGraphRoutesFunction(navGraphRoutesFunctions)
 
     val categoryToNames = mutableMapOf<String, List<String>>()
     val nameToRouteQualifiedName = mutableMapOf<String, RouteQualifiedName>()
-    val portraitOrientationRoutesQualifiedName = mutableListOf<RouteQualifiedName>()
-    val landscapeOrientationRoutesQualifiedName = mutableListOf<RouteQualifiedName>()
-    navGraphFunctions.forEach { navGraphFunction ->
+    navGraphRoutesFunctions.forEach { navGraphRoutesFunction ->
       val annotation =
-        navGraphFunction.annotations
+        navGraphRoutesFunction.annotations
           .firstOrNull {
             it.shortName.asString() ==
               InternalAutoNavGraphWiring::class.simpleName
@@ -79,38 +76,21 @@ class AutoWiringAggregationProcessor(
       val category = args["category"]?.value!! as String
       val name = args["name"]?.value!! as String
       val routeType = args["route"]?.value!! as KSType
-      val screenOrientation = args["screenOrientation"]?.value as KSType
 
       val routeQualifiedName = routeType.declaration.qualifiedName!!.asString()
 
       categoryToNames[category] = categoryToNames.getOrDefault(category, emptyList()) + name
       nameToRouteQualifiedName[name] = routeQualifiedName
-
-      with(screenOrientation.declaration) {
-        when (ScreenOrientation.valueOf(simpleName.asString())) {
-          ScreenOrientation.Portrait -> {
-            portraitOrientationRoutesQualifiedName += routeQualifiedName
-          }
-
-          ScreenOrientation.Landscape -> {
-            landscapeOrientationRoutesQualifiedName += routeQualifiedName
-          }
-
-          ScreenOrientation.Auto -> { }
-        }
-      }
     }
     generateMetadataExpressions(
       categoryToNames,
       nameToRouteQualifiedName,
-      portraitOrientationRoutesQualifiedName,
-      landscapeOrientationRoutesQualifiedName,
     )
 
     return emptyList()
   }
 
-  private fun generateAggregatedNavGraphsFunction(functions: Sequence<KSFunctionDeclaration>) {
+  private fun generateAggregatedNavGraphRoutesFunction(functions: Sequence<KSFunctionDeclaration>) {
     val fileContent =
       buildString {
         appendLine("package $DST_PACKAGE_NAME")
@@ -122,10 +102,10 @@ class AutoWiringAggregationProcessor(
         }
         appendLine()
         appendLine(
-          "fun NavGraphBuilder.autoAggregatedNavGraphs(navController: NavController) {",
+          "fun NavGraphBuilder.autoAggregatedNavGraphRoutes() {",
         )
         functions.forEach {
-          appendLine("    ${it.simpleName.asString()}(navController)")
+          appendLine("    ${it.simpleName.asString()}()")
         }
         appendLine("}")
       }
@@ -134,7 +114,7 @@ class AutoWiringAggregationProcessor(
       codeGenerator.createNewFile(
         Dependencies.ALL_FILES,
         DST_PACKAGE_NAME,
-        "AutoAggregatedNavGraphs",
+        "AutoAggregatedNavGraphRoutes",
       )
     file.writer().use { it.write(fileContent) }
   }
@@ -142,8 +122,6 @@ class AutoWiringAggregationProcessor(
   private fun generateMetadataExpressions(
     categoryToNames: Map<String, List<String>>,
     nameToRouteQualifiedName: Map<String, RouteQualifiedName>,
-    portraitOrientationRoutesQualifiedName: List<RouteQualifiedName>,
-    landscapeOrientationRoutesQualifiedName: List<RouteQualifiedName>,
   ) {
     val sortedGroutToNames =
       categoryToNames
@@ -157,42 +135,20 @@ class AutoWiringAggregationProcessor(
       buildString {
         appendLine("package $DST_PACKAGE_NAME")
         appendLine()
-        appendLine("val autoWiredGraphsCategoryToNameAndRouteList = mapOf(")
+        appendLine("val autoWiredRoutesCategoryToNameAndRouteList = mapOf(")
         sortedGroutToNames.forEach { (category, names) ->
-          val kotlinNameList = "listOf(${names.joinToString(", ") {
-            "\"$it\" to ${nameToRouteQualifiedName[it]}"
-          }})"
+          val kotlinNameList =
+            "listOf(${names.joinToString(", ") { """"$it" to ${nameToRouteQualifiedName[it]}""" }})"
           appendLine("    \"$category\" to $kotlinNameList,")
         }
         appendLine(")")
-        appendLine()
-        if (portraitOrientationRoutesQualifiedName.isNotEmpty()) {
-          appendLine("val autoWiredGraphPortraitOrientationRoutes = listOf(")
-          portraitOrientationRoutesQualifiedName.forEach { routeQualifiedName ->
-            appendLine("    $routeQualifiedName,")
-          }
-          appendLine(")")
-          appendLine()
-        } else {
-          appendLine("val autoWiredGraphPortraitOrientationRoutes = emptyList<String>()")
-          appendLine()
-        }
-        if (landscapeOrientationRoutesQualifiedName.isNotEmpty()) {
-          appendLine("val autoWiredGraphLandscapeOrientationRoutes = listOf(")
-          landscapeOrientationRoutesQualifiedName.forEach { routeQualifiedName ->
-            appendLine("    $routeQualifiedName,")
-          }
-          appendLine(")")
-        } else {
-          appendLine("val autoWiredGraphLandscapeOrientationRoutes = emptyList<String>()")
-        }
       }
 
     val file =
       codeGenerator.createNewFile(
         Dependencies.ALL_FILES,
         DST_PACKAGE_NAME,
-        "AutoWiringNavGraphMetadata",
+        "AutoWiringNavGraphRoutesMetadata",
       )
     file.writer().use { it.write(fileContent) }
   }

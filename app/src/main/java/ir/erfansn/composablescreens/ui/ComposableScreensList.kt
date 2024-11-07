@@ -42,7 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoWiredGraphsCategoryToNameAndRouteList
+import ir.erfansn.composablescreens.auto_nav_graph_wiring.autoWiredRoutesCategoryToNameAndRouteList
 import ir.erfansn.composablescreens.ui.theme.ComposableScreensTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -58,7 +58,7 @@ fun ComposableScreensList(onRouteClick: (Any) -> Unit) {
       verticalArrangement = Arrangement.spacedBy(8.dp),
       contentPadding = WindowInsets.safeDrawing.asPaddingValues(),
     ) {
-      autoWiredGraphsCategoryToNameAndRouteList.forEach { (group, nameAndRouteList) ->
+      autoWiredRoutesCategoryToNameAndRouteList.forEach { (group, nameAndRouteList) ->
         stickyHeader {
           Text(
             text = group,

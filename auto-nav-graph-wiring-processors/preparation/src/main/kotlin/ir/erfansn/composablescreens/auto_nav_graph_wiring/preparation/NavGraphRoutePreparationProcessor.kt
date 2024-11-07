@@ -29,16 +29,16 @@ import com.google.devtools.ksp.symbol.KSType
 import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.AutoNavGraphWiring
 import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.InternalAutoNavGraphWiring
 
-class AutoWiringPreparationProcessorProvider : SymbolProcessorProvider {
+class NavGraphRoutePreparationProcessorProvider : SymbolProcessorProvider {
   override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor =
-    AutoWiringPreparationProcessor(
+    NavGraphRoutePreparationProcessor(
       environment.options["category_name"]!!,
       environment.codeGenerator,
       environment.logger,
     )
 }
 
-class AutoWiringPreparationProcessor(
+class NavGraphRoutePreparationProcessor(
   private val categoryName: String,
   private val codeGenerator: CodeGenerator,
   private val logger: KSPLogger,
@@ -48,30 +48,26 @@ class AutoWiringPreparationProcessor(
   override fun process(resolver: Resolver): List<KSAnnotated> {
     if (round++ != 0) return emptyList()
 
-    val navGraphFunctions =
+    val targetFunctions =
       resolver
         .getSymbolsWithAnnotation(AutoNavGraphWiring::class.qualifiedName!!)
         .filterIsInstance<KSFunctionDeclaration>()
 
-    if (navGraphFunctions.count() == 0) return emptyList()
+    if (targetFunctions.count() == 0) return emptyList()
 
-    navGraphFunctions.forEach { navGraphFunction ->
+    targetFunctions.forEach { targetFunction ->
       val annotation =
-        navGraphFunction.annotations
+        targetFunction.annotations
           .firstOrNull { it.shortName.asString() == AutoNavGraphWiring::class.simpleName }
           ?: return@forEach
 
       val args = annotation.arguments.associateBy { it.name?.asString()!! }
 
       val routeType = args["route"]?.value!! as KSType
-      val startDestinationType = args["startDestination"]?.value!! as KSType
       val name = args["name"]?.value!! as String
-      val screenOrientation = args["screenOrientation"]?.value!!
 
       val routeQualifiedName =
         routeType.declaration.qualifiedName?.asString() ?: return@forEach
-      val startDestinationQualifiedName =
-        startDestinationType.declaration.qualifiedName?.asString() ?: return@forEach
 
       val fileContent =
         buildString {
@@ -80,19 +76,16 @@ class AutoWiringPreparationProcessor(
           appendLine("import androidx.navigation.NavGraphBuilder")
           appendLine("import androidx.navigation.NavController")
           appendLine("import androidx.navigation.navigation")
-          appendLine("import ${navGraphFunction.qualifiedName!!.asString()}")
+          appendLine("import androidx.navigation.compose.composable")
+          appendLine("import ${targetFunction.qualifiedName!!.asString()}")
           appendLine()
           appendLine("/** Use aggregator version instead of this */")
-          appendLine(
-            "@${InternalAutoNavGraphWiring::class.qualifiedName!!}(\"$categoryName\", \"$name\", $routeQualifiedName::class, $screenOrientation)",
-          )
-          appendLine(
-            "fun NavGraphBuilder.${navGraphFunction.simpleName.asString()}Generated(navController: NavController) {",
-          )
-          appendLine("    navigation<$routeQualifiedName>(")
-          appendLine("        startDestination = $startDestinationQualifiedName")
-          appendLine("    ) {")
-          appendLine("        ${navGraphFunction.simpleName.asString()}(navController)")
+          appendLine("@${InternalAutoNavGraphWiring::class.qualifiedName!!}(\"$categoryName\", \"$name\", $routeQualifiedName::class)")
+
+          val targetFunctionTransformedName = targetFunction.simpleName.asString().replaceFirstChar { it.lowercase() }
+          appendLine("fun NavGraphBuilder.${targetFunctionTransformedName}AsGeneratedDestinationRoute() {")
+          appendLine("    composable<$routeQualifiedName> {")
+          appendLine("        ${targetFunction.simpleName.asString()}()")
           appendLine("    }")
           appendLine("}")
         }
@@ -101,7 +94,7 @@ class AutoWiringPreparationProcessor(
         codeGenerator.createNewFile(
           Dependencies(false),
           DEST_PACKAGE_NAME,
-          "Generated${name.hashCode()}NavigationGraph",
+          "Generated${name.hashCode()}NavGraphRoute",
         )
       file.writer().use { it.write(fileContent) }
     }
