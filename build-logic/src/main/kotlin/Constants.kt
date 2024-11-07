@@ -17,8 +17,8 @@
 import org.gradle.api.JavaVersion
 
 internal object SdkVersions {
-  const val COMPILE = 34
-  const val TARGET = 34
+  const val COMPILE = 35
+  const val TARGET = 35
   const val MIN = 24
 }
 
