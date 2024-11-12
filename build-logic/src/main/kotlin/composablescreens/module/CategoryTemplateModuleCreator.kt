@@ -44,7 +44,7 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
     }
 
     if (!moduleName.get().isKebabCase()) {
-      throw GradleException("Module name must be in kebab-case format")
+      throw GradleException("Module name must be in kebab-case format valid pattern is \"[a-z]+[0-9]*(-[a-z]+[0-9]*)*\"")
     }
 
     if (File(category, moduleName.get()).exists()) {
@@ -137,11 +137,14 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
 
       package $packageName
 
+      import androidx.compose.foundation.layout.consumeWindowInsets
       import androidx.compose.foundation.layout.fillMaxSize
-      import androidx.compose.material3.Surface
+      import androidx.compose.foundation.layout.padding
+      import androidx.compose.material3.Scaffold
       import androidx.compose.material3.Text
       import androidx.compose.runtime.Composable
       import androidx.compose.ui.Modifier
+      import androidx.compose.ui.tooling.preview.Preview
       import androidx.navigation.compose.NavHost
       import androidx.navigation.compose.rememberNavController
       import ir.erfansn.composablescreens.auto_nav_graph_wiring.core.AutoNavGraphWiring
@@ -153,7 +156,7 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
       data object ${moduleName.get().toPascalCase()}Route
 
       @Serializable
-      internal data object HomeRoute
+      internal data object GreetingRoute
 
       @AutoNavGraphWiring(
         name = "${moduleName.get().toSpacedPascalCase()}",
@@ -162,13 +165,29 @@ internal abstract class CategoryTemplateModuleCreator : DefaultTask() {
       @Composable
       fun ${moduleName.get().toPascalCase()}App() {
         ${moduleName.get().toPascalCase()}Theme {
-          NavHost(rememberNavController(), startDestination = HomeRoute) {
-            navAnimatedComposable<HomeRoute> {
-              Surface(modifier = Modifier.fillMaxSize()) {
-                Text("Hello Composable Screens to ${moduleName.get().toSpacedPascalCase()}")
+          NavHost(rememberNavController(), startDestination = GreetingRoute) {
+            navAnimatedComposable<GreetingRoute> {
+              Scaffold(modifier = Modifier.fillMaxSize()) {
+                Greeting(modifier = Modifier.padding(it).consumeWindowInsets(it))
               }
             }
           }
+        }
+      }
+
+      @Composable
+      private fun Greeting(modifier: Modifier = Modifier) {
+        Text(
+          modifier = modifier,
+          text = "Hello Composable Screens to ${moduleName.get().toSpacedPascalCase()}",
+        )
+      }
+
+      @Preview(showBackground = true)
+      @Composable
+      private fun GreetingPreview() {
+        ${moduleName.get().toPascalCase()}Theme {
+          Greeting()
         }
       }
       """.trimIndent()
