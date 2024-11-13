@@ -5,9 +5,7 @@
 <img src="media/nav_graph.png" width="65%"/>
 
 ## 🎥 Demo
-| <video src="media/demo.mp4"/> |
-|-------------------------------|
-| _                             |
+<image src="media/demo.gif" width="30%"/>
 
 ## ✨ About & Features
 This design features various animations, which I implemented using Compose's rich animation API, especially the Shared Element Animation API.
