@@ -1,4 +1,4 @@
 # 🍴 Food's category
 | <img src="./kristina-cookie/media/home_screen.png" width="240x"/> |
 | :---: |
-| [Kristina Cookie](food/kristina-cookie) | 
+| [Kristina Cookie](kristina-cookie) | 
