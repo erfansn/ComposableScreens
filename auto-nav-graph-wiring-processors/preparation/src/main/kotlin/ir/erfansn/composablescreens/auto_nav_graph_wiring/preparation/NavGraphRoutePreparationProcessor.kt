@@ -43,61 +43,59 @@ class NavGraphRoutePreparationProcessor(
   private val codeGenerator: CodeGenerator,
   private val logger: KSPLogger,
 ) : SymbolProcessor {
-  private var round = 0
-
   override fun process(resolver: Resolver): List<KSAnnotated> {
-    if (round++ != 0) return emptyList()
-
-    val targetFunctions =
+    val targetFunction =
       resolver
         .getSymbolsWithAnnotation(AutoNavGraphWiring::class.qualifiedName!!)
         .filterIsInstance<KSFunctionDeclaration>()
+        .singleOrNull()
 
-    if (targetFunctions.count() == 0) return emptyList()
+    if (targetFunction == null) return emptyList()
 
-    targetFunctions.forEach { targetFunction ->
-      val annotation =
-        targetFunction.annotations
-          .firstOrNull { it.shortName.asString() == AutoNavGraphWiring::class.simpleName }
-          ?: return@forEach
+    val annotation =
+      targetFunction.annotations
+        .firstOrNull { it.shortName.asString() == AutoNavGraphWiring::class.simpleName }!!
 
-      val args = annotation.arguments.associateBy { it.name?.asString()!! }
+    val args = annotation.arguments.associateBy { it.name?.asString()!! }
 
-      val routeType = args["route"]?.value!! as KSType
-      val name = args["name"]?.value!! as String
+    val routeType = args["route"]?.value!! as KSType
+    val name = args["name"]?.value!! as String
 
-      val routeQualifiedName =
-        routeType.declaration.qualifiedName?.asString() ?: return@forEach
+    val routeQualifiedName =
+      routeType.declaration.qualifiedName?.asString()!!
 
-      val fileContent =
-        buildString {
-          appendLine("package $DEST_PACKAGE_NAME")
-          appendLine()
-          appendLine("import androidx.navigation.NavGraphBuilder")
-          appendLine("import androidx.navigation.NavController")
-          appendLine("import androidx.navigation.navigation")
-          appendLine("import androidx.navigation.compose.composable")
-          appendLine("import ${targetFunction.qualifiedName!!.asString()}")
-          appendLine()
-          appendLine("/** Use aggregator version instead of this */")
-          appendLine("@${InternalAutoNavGraphWiring::class.qualifiedName!!}(\"$categoryName\", \"$name\", $routeQualifiedName::class)")
+    val fileContent =
+      buildString {
+        appendLine("package $DEST_PACKAGE_NAME")
+        appendLine()
+        appendLine("import androidx.navigation.NavGraphBuilder")
+        appendLine("import androidx.navigation.NavController")
+        appendLine("import androidx.navigation.navigation")
+        appendLine("import androidx.navigation.compose.composable")
+        appendLine("import ${targetFunction.qualifiedName!!.asString()}")
+        appendLine()
+        appendLine("/** Use aggregator version instead of this */")
+        appendLine("@${InternalAutoNavGraphWiring::class.qualifiedName!!}(\"$categoryName\", \"$name\", $routeQualifiedName::class)")
 
-          val targetFunctionTransformedName = targetFunction.simpleName.asString().replaceFirstChar { it.lowercase() }
-          appendLine("fun NavGraphBuilder.${targetFunctionTransformedName}AsGeneratedDestinationRoute() {")
-          appendLine("    composable<$routeQualifiedName> {")
-          appendLine("        ${targetFunction.simpleName.asString()}()")
-          appendLine("    }")
-          appendLine("}")
-        }
+        val targetFunctionTransformedName = targetFunction.simpleName.asString().replaceFirstChar { it.lowercase() }
+        appendLine("fun NavGraphBuilder.${targetFunctionTransformedName}AsGeneratedDestinationRoute() {")
+        appendLine("    composable<$routeQualifiedName> {")
+        appendLine("        ${targetFunction.simpleName.asString()}()")
+        appendLine("    }")
+        appendLine("}")
+      }
 
-      val file =
-        codeGenerator.createNewFile(
-          Dependencies(false),
-          DEST_PACKAGE_NAME,
-          "Generated${name.hashCode()}NavGraphRoute",
-        )
-      file.writer().use { it.write(fileContent) }
-    }
+    val file =
+      codeGenerator.createNewFile(
+        Dependencies(
+          aggregating = false,
+          targetFunction.containingFile!!,
+        ),
+        DEST_PACKAGE_NAME,
+        "Generated${name.hashCode()}NavGraphRoute",
+      )
+    file.writer().use { it.write(fileContent) }
+
     return emptyList()
   }
 

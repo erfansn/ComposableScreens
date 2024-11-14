@@ -44,8 +44,6 @@ class NavGraphRoutesAggregationProcessor(
   private val codeGenerator: CodeGenerator,
   private val logger: KSPLogger,
 ) : SymbolProcessor {
-  private var round = 0
-
   @OptIn(KspExperimental::class)
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val navGraphRoutesFunctions =
@@ -53,44 +51,17 @@ class NavGraphRoutesAggregationProcessor(
         .getDeclarationsFromPackage(SRC_PACKAGE_NAME)
         .filterIsInstance<KSFunctionDeclaration>()
         .filter { it.isAnnotationPresent(InternalAutoNavGraphWiring::class) }
+        .toList()
 
-    if (round++ != 0) {
-      return emptyList()
-    }
+    if (navGraphRoutesFunctions.isEmpty()) return emptyList()
 
     generateAggregatedNavGraphRoutesFunction(navGraphRoutesFunctions)
-
-    val categoryToNames = mutableMapOf<String, List<String>>()
-    val nameToRouteQualifiedName = mutableMapOf<String, RouteQualifiedName>()
-    navGraphRoutesFunctions.forEach { navGraphRoutesFunction ->
-      val annotation =
-        navGraphRoutesFunction.annotations
-          .firstOrNull {
-            it.shortName.asString() ==
-              InternalAutoNavGraphWiring::class.simpleName
-          }
-          ?: return@forEach
-
-      val args = annotation.arguments.associateBy { it.name?.asString()!! }
-
-      val category = args["category"]?.value!! as String
-      val name = args["name"]?.value!! as String
-      val routeType = args["route"]?.value!! as KSType
-
-      val routeQualifiedName = routeType.declaration.qualifiedName!!.asString()
-
-      categoryToNames[category] = categoryToNames.getOrDefault(category, emptyList()) + name
-      nameToRouteQualifiedName[name] = routeQualifiedName
-    }
-    generateMetadataExpressions(
-      categoryToNames,
-      nameToRouteQualifiedName,
-    )
+    generateMetadataExpressions(navGraphRoutesFunctions)
 
     return emptyList()
   }
 
-  private fun generateAggregatedNavGraphRoutesFunction(functions: Sequence<KSFunctionDeclaration>) {
+  private fun generateAggregatedNavGraphRoutesFunction(functions: List<KSFunctionDeclaration>) {
     val fileContent =
       buildString {
         appendLine("package $DST_PACKAGE_NAME")
@@ -110,19 +81,43 @@ class NavGraphRoutesAggregationProcessor(
         appendLine("}")
       }
 
-    val file =
-      codeGenerator.createNewFile(
-        Dependencies.ALL_FILES,
-        DST_PACKAGE_NAME,
-        "AutoAggregatedNavGraphRoutes",
-      )
-    file.writer().use { it.write(fileContent) }
+    try {
+      val file =
+        codeGenerator.createNewFile(
+          Dependencies.ALL_FILES,
+          DST_PACKAGE_NAME,
+          "AutoAggregatedNavGraphRoutes",
+        )
+      file.writer().use { it.write(fileContent) }
+    } catch (e: FileAlreadyExistsException) {
+      // Error swallowing :)
+    }
   }
 
-  private fun generateMetadataExpressions(
-    categoryToNames: Map<String, List<String>>,
-    nameToRouteQualifiedName: Map<String, RouteQualifiedName>,
-  ) {
+  private fun generateMetadataExpressions(functions: List<KSFunctionDeclaration>) {
+    val categoryToNames = mutableMapOf<String, List<String>>()
+    val nameToRouteQualifiedName = mutableMapOf<String, RouteQualifiedName>()
+    functions.forEach { navGraphRoutesFunction ->
+      val annotation =
+        navGraphRoutesFunction.annotations
+          .firstOrNull {
+            it.shortName.asString() ==
+              InternalAutoNavGraphWiring::class.simpleName
+          }
+          ?: return@forEach
+
+      val args = annotation.arguments.associateBy { it.name?.asString()!! }
+
+      val category = args["category"]?.value!! as String
+      val name = args["name"]?.value!! as String
+      val routeType = args["route"]?.value!! as KSType
+
+      val routeQualifiedName = routeType.declaration.qualifiedName!!.asString()
+
+      categoryToNames[category] = categoryToNames.getOrDefault(category, emptyList()) + name
+      nameToRouteQualifiedName[name] = routeQualifiedName
+    }
+
     val sortedGroutToNames =
       categoryToNames
         .toSortedMap()
@@ -144,13 +139,17 @@ class NavGraphRoutesAggregationProcessor(
         appendLine(")")
       }
 
-    val file =
-      codeGenerator.createNewFile(
-        Dependencies.ALL_FILES,
-        DST_PACKAGE_NAME,
-        "AutoWiringNavGraphRoutesMetadata",
-      )
-    file.writer().use { it.write(fileContent) }
+    try {
+      val file =
+        codeGenerator.createNewFile(
+          Dependencies.ALL_FILES,
+          DST_PACKAGE_NAME,
+          "AutoWiringNavGraphRoutesMetadata",
+        )
+      file.writer().use { it.write(fileContent) }
+    } catch (e: FileAlreadyExistsException) {
+      // Error swallowing :)
+    }
   }
 
   companion object {
