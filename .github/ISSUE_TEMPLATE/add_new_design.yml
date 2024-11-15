@@ -16,7 +16,7 @@ body:
       options:
         - Food
         - Travel
-      default: Food
+      default: 0
     validations:
       required: true
 
