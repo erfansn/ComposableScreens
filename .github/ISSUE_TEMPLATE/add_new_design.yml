@@ -1,0 +1,46 @@
+name: Add New Design
+description: Select a design, implement it, and add it to the project.
+title: "[New Design] {Design Name}"
+labels: new-design
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to our project! Please fill out this form to propose a design you'd like to implement and add to the project.  
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Design Category
+      description: Select the category of the design you are implementing. This will help organize the designs in the project.
+      options:
+        - Food
+        - Travel
+      default: Food
+    validations:
+      required: true
+
+  - type: input
+    id: design_name
+    attributes:
+      label: Design Name
+      description: Provide a unique and descriptive name for the design.
+      placeholder: e.g., Modern Signup Form
+    validations:
+      required: true
+
+  - type: input
+    id: design_link
+    attributes:
+      label: Design Reference Link
+      description: Provide the link to the design you have selected (e.g., from Dribbble, Behance, or another source).
+      placeholder: e.g., https://dribbble.com/shots/example
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional Notes
+      description: Provide any other details about the design, such as interactions, animations, or specific requirements.
+      placeholder: e.g., This design includes hover effects for buttons and should be responsive.
