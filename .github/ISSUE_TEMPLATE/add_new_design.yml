@@ -1,6 +1,6 @@
 name: Add New Design
 description: Select a design, implement it, and add it to the project.
-title: "[New Design] {Design Name}"
+title: "[Design]: "
 labels: new-design
 assignees:
   - erfansn
@@ -8,28 +8,10 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for contributing to our project! Please fill out this form to propose a design you'd like to implement and add to the project.  
-
-  - type: dropdown
-    id: category
-    attributes:
-      label: Design Category
-      description: Select the category of the design you are implementing. This will help organize the designs in the project.
-      options:
-        - Food
-        - Travel
-      default: 0
-    validations:
-      required: true
-
-  - type: input
-    id: design_name
-    attributes:
-      label: Design Name
-      description: Provide a unique and descriptive name for the design.
-      placeholder: e.g., Modern Signup Form
-    validations:
-      required: true
+        Thank you for contributing to our project! Please fill out this form to propose a design you'd like to implement and add to the project.
+        
+        **Notice**
+        Please update the title of this issue to include the design name & set the appropriate category name using labels (e.g. `food-category`)
 
   - type: input
     id: design_link
