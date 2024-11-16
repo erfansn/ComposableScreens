@@ -16,7 +16,7 @@ The success of this project depends on your contributions. If you’re intereste
 ## 📂 Project Structure
 To simplify the workflow, the project uses a single module and category for drawing the navigation graph.
 
-[<img src="/media/youtube_banner.png" width="60%"/>](https://www.youtube.com/playlist?list=PLR2bo9emkoLyKbP6ZjBxpCZEvckYAqbOp)
+[<img src="/media/youtube_banner.png" width="75%"/>](https://www.youtube.com/playlist?list=PLR2bo9emkoLyKbP6ZjBxpCZEvckYAqbOp)
 
 ## 📸 Instagram Page of the Project
 Designs that are successfully converted into code and integrated into the project will be showcased on the project's dedicated Instagram page. This offers increased visibility and recognition for your work, while also serving as an excellent portfolio addition to highlight your skills.
@@ -26,7 +26,7 @@ Follow the page [here](https://instagram.com/composable_screens).
 ## 🎥 Behind the Scenes
 Partway through the project, I decided to document the journey and share insights on YouTube. If you’re curious about how I prepared the project for collaboration, check out the **Composable Screens** video series on my YouTube channel. (Note: The videos are in Persian.)
 
-<img src="/media/project_structure.png" width="60%"/>
+<img src="/media/project_structure.png" width="75%"/>
 
 ## 📜 License
 **Composable Screens** is licensed under the Apache License (Version 2.0).  
