@@ -27,7 +27,7 @@ android {
         applicationId = "ir.erfansn.composablescreens"
 
         versionCode = 1
-        versionName = "1.0"
+        versionName = "2024.11"
 
         vectorDrawables {
             useSupportLibrary = true
