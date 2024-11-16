@@ -16,5 +16,5 @@
   -->
 
 <resources>
-    <style name="Theme.ComposableScreens" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.ComposableScreens" parent="@style/Theme.AppCompat.DayNight.NoActionBar" />
 </resources>
