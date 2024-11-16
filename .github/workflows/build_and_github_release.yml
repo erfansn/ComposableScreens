@@ -4,7 +4,7 @@ run-name: Cooking the next version
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 jobs:
   build:
     name: Build APK
