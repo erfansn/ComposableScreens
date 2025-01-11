@@ -69,8 +69,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import ir.erfansn.composablescreens.travel.qclay_trip.R
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripButton
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripIconButton
@@ -213,11 +213,11 @@ private fun DetailsContent(modifier: Modifier = Modifier) {
       val hazeState = remember { HazeState() }
       Image(
         modifier =
-        Modifier
-          .fillMaxWidth()
-          .aspectRatio(10 / 9f)
-          .clip(MaterialTheme.shapes.medium)
-          .hazeSource(hazeState),
+          Modifier
+            .fillMaxWidth()
+            .aspectRatio(10 / 9f)
+            .clip(MaterialTheme.shapes.medium)
+            .haze(hazeState),
         painter = painterResource(id = R.drawable.the_wave),
         contentDescription = null,
         contentScale = ContentScale.Crop,
@@ -242,20 +242,21 @@ private fun DetailsContent(modifier: Modifier = Modifier) {
         )
         Box(
           modifier =
-          Modifier
-            .size(96.dp, 48.dp)
-            .clip(RoundedCornerShape(33))
-            .border(
-              Dp.Hairline,
-              color = Color(0x50FFFFFF),
-              shape = RoundedCornerShape(33),
-            ).hazeEffect(
-              state = hazeState,
-              style = HazeDefaults.style(
-                backgroundColor = Color.Transparent,
-                blurRadius = 6.dp,
-              )
-            ).background(
+            Modifier
+              .size(96.dp, 48.dp)
+              .clip(RoundedCornerShape(33))
+              .border(
+                Dp.Hairline,
+                color = Color(0x50FFFFFF),
+                shape = RoundedCornerShape(33),
+              ).hazeChild(
+                state = hazeState,
+                style =
+                  HazeDefaults.style(
+                    backgroundColor = Color.Transparent,
+                    blurRadius = 6.dp,
+                  ),
+              ).background(
                 Brush.horizontalGradient(
                   0.0f to Color.Transparent,
                   1.0f to Color.White.copy(alpha = 0.25f),
