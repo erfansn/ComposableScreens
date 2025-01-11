@@ -56,8 +56,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import ir.erfansn.composablescreens.common.withSafeSharedElementAnimationScopes
 import ir.erfansn.composablescreens.food.kristina_cookie.R
 import ir.erfansn.composablescreens.food.kristina_cookie.data.Product
@@ -95,7 +95,7 @@ internal fun VitrineItemCard(
       modifier = Modifier.fillMaxSize(),
     ) {
       val hazeState = remember { HazeState() }
-      Column(modifier = Modifier.haze(hazeState)) {
+      Column(modifier = Modifier.hazeSource(hazeState)) {
         Text(
           text = vitrineItem.title,
           style = KristinaCookieTheme.typography.displaySmall,
@@ -139,7 +139,7 @@ internal fun VitrineItemCard(
               2.dp,
               color = Color(0xFFE8D0B8),
               shape = RoundedCornerShape(KristinaCookieTheme.cornerSize.large),
-            ).hazeChild(
+            ).hazeEffect(
               state = hazeState,
               style =
                 HazeDefaults.style(

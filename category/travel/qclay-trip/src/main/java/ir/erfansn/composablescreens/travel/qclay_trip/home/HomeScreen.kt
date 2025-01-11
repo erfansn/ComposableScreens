@@ -103,8 +103,8 @@ import androidx.constraintlayout.compose.ConstrainScope
 import androidx.constraintlayout.compose.ConstraintLayout
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import ir.erfansn.composablescreens.travel.qclay_trip.R
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripButton
 import ir.erfansn.composablescreens.travel.qclay_trip.ui.components.QclayTripIconButton
@@ -590,33 +590,32 @@ private fun PlaceItem(
           val hazeState = remember { HazeState() }
           Image(
             modifier =
-              Modifier
-                .aspectRatio(10 / 9f)
-                .clip(MaterialTheme.shapes.medium.copy(CornerSize(22.dp)))
-                .haze(hazeState),
+            Modifier
+              .aspectRatio(10 / 9f)
+              .clip(MaterialTheme.shapes.medium.copy(CornerSize(22.dp)))
+              .hazeSource(hazeState),
             painter = painterResource(id = trip.destination.imageId),
             contentDescription = "Place",
             contentScale = ContentScale.Crop,
           )
           Box(
             modifier =
-              Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 10.dp, bottom = 12.dp)
-                .size(64.dp, 32.dp)
-                .clip(RoundedCornerShape(33))
-                .border(
-                  Dp.Hairline,
-                  color = Color(0x50FFFFFF),
-                  shape = RoundedCornerShape(33),
-                ).hazeChild(
-                  state = hazeState,
-                  style =
-                    HazeDefaults.style(
-                      backgroundColor = Color.Transparent,
-                      blurRadius = 4.dp,
-                    ),
-                ).background(
+            Modifier
+              .align(Alignment.BottomEnd)
+              .padding(end = 10.dp, bottom = 12.dp)
+              .size(64.dp, 32.dp)
+              .clip(RoundedCornerShape(33))
+              .border(
+                Dp.Hairline,
+                color = Color(0x50FFFFFF),
+                shape = RoundedCornerShape(33),
+              ).hazeEffect(
+                state = hazeState,
+                style = HazeDefaults.style(
+                  backgroundColor = Color.Transparent,
+                  blurRadius = 4.dp,
+                )
+              ).background(
                   Brush.horizontalGradient(
                     0.0f to Color.Transparent,
                     1.0f to Color.White.copy(alpha = 0.25f),

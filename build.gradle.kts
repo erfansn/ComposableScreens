@@ -43,6 +43,6 @@ tasks.register<Copy>("installGitHook") {
     into(file("$rootDir/.git/hooks"))
 }
 
-projects.app.dependencyProject.afterEvaluate {
+project(":app").afterEvaluate {
     tasks.named("preBuild").dependsOn(":installGitHook")
 }
