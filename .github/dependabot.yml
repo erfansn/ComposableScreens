@@ -14,7 +14,6 @@ updates:
         patterns:
           - "*"
         update-types:
-          - "minor"
           - "patch"
       kotlin-ksp:
         patterns:
