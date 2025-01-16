@@ -2,7 +2,7 @@
 androidGradlePlugin = "8.7.3"
 haze = "0.9.0-alpha08"
 kotlin = "2.1.0"
-androidxComposeBom = "2024.12.01"
+androidxComposeBom = "2025.01.00"
 androidxActivity = "1.9.3"
 androidxCore = "1.15.0"
 androidxConstraintLayoutCompose = "1.1.0"
