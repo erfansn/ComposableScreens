@@ -13,7 +13,7 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinxSerialization = "1.7.3"
 symbolProcessingApi = "2.1.0-1.0.29"
-spotless = "7.0.0.BETA4"
+spotless = "7.0.2"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
