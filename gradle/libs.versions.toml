@@ -1,19 +1,19 @@
 [versions]
 androidGradlePlugin = "8.7.3"
 haze = "0.9.0-alpha08"
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 androidxComposeBom = "2024.12.01"
 androidxActivity = "1.9.3"
 androidxCore = "1.15.0"
 androidxConstraintLayoutCompose = "1.1.0"
-androidxNavigation = "2.8.5"
+androidxNavigation = "2.8.6"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinxSerialization = "1.7.3"
-symbolProcessingApi = "2.1.0-1.0.29"
-spotless = "7.0.0.BETA4"
+symbolProcessingApi = "2.1.10-1.0.29"
+spotless = "7.0.2"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
